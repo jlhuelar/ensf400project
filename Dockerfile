@@ -31,7 +31,7 @@ RUN ls -l tomcat/
 
 RUN mkdir -p tomcat/webapps/
 
-RUN cp build/libs/app.war tomcat/webapps/ROOT.war
+RUN cp build/libs/app.war tomcat/webapps/demo.war
 
 
 
