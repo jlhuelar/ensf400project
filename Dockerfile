@@ -5,8 +5,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     chromium chromium-driver \
     python3 python3-pip pipenv \
-    wget unzip && \
+    wget unzip xvfb fonts-liberation && \
     rm -rf /var/lib/apt/lists/*
+
+# Start Xvfb and set DISPLAY
+ENV DISPLAY=:99
+# Set up Python environment
+RUN pipenv install --python 3 \
+    && pipenv install pytest requests behave behave2cucumber selenium PyHamcrest 
+
 
 
 # gradle copy and set permission
@@ -39,4 +46,5 @@ RUN cp build/libs/app.war tomcat/webapps/demo.war
 EXPOSE 8080
 
 # run tomcat server
-CMD ["sh", "-c", "./tomcat/bin/catalina.sh run"]
+CMD Xvfb :99 -screen 0 1920x1080x24 & \
+    sh -c "./tomcat/bin/catalina.sh run"
