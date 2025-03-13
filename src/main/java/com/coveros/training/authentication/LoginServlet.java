@@ -24,6 +24,18 @@ public class LoginServlet extends HttpServlet {
     static LoginUtils loginUtils = new LoginUtils();
 
     @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        domain = config.getServletContext().getInitParameter("com.auth0.domain");
+        try {
+            authenticationController = AuthenticationControllerProvider.getInstance(config);
+        } catch (UnsupportedEncodingException e) {
+            throw new ServletException(
+                    "Couldn't create the AuthenticationController instance. Check the configuration.", e);
+        }
+    }
+    
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String username = StringUtils.makeNotNullable(request.getParameter("username"));
         request.setAttribute("username", username);
