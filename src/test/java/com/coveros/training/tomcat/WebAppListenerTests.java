@@ -4,7 +4,7 @@ import com.coveros.training.persistence.IPersistenceLayer;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextEvent;
 
 public class WebAppListenerTests {
 

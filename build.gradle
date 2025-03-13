@@ -18,7 +18,7 @@ plugins {
     id 'org.gretty' version '4.1.6'
 
     // provides access to a database versioning tool.
-    id "org.flywaydb.flyway" version "6.0.8"
+    id "org.flywaydb.flyway" version "8.5.1"
 
     // scans our code for static analysis
     id "org.sonarqube" version "3.0"
@@ -133,7 +133,7 @@ configurations {
 
 dependencies {
     // necessary for the servlet functionality.  See any class ending in "Servlet"
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 
     // junit, for running unit tests
     testImplementation 'junit:junit:4.13'
@@ -149,7 +149,7 @@ dependencies {
     // for equals and hashcode are met.  It's very strict.  Because it's very
     // strict, it forces us to create very safe, very solid code.
     // https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier
-    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.1.13'
+    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.16.1'
 
     testImplementation 'io.cucumber:cucumber-java:5.7.0'
     testImplementation 'io.cucumber:cucumber-junit:5.7.0'
@@ -170,18 +170,21 @@ dependencies {
 
     // we'll use this as our database
     // https://mvnrepository.com/artifact/com.h2database/h2
-    localDeps group: 'com.h2database', name: 'h2', version: '1.4.200'
+    localDeps group: 'com.h2database', name: 'h2', version: '2.2.224'
 
     // so we can programmatically run flyway at startup
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-    implementation "org.flywaydb:flyway-core:6.4.1"
+    implementation "org.flywaydb:flyway-core:8.5.1"
 
     // provides monitoring of the application during runtime.
     // go to http://url/demo/monitoring
     // https://mvnrepository.com/artifact/net.bull.javamelody/javamelody-core
     implementation group: 'net.bull.javamelody', name: 'javamelody-core', version: '2.5.0'
 
-    implementation 'com.h2database:h2:1.4.200'
+    implementation 'com.h2database:h2:2.1.210'
+
+    implementation 'org.apache.logging.log4j:log4j-web:2.16.0' // Replace with the correct version
+
 
 }
 

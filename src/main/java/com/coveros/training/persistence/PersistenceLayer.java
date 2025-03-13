@@ -450,7 +450,7 @@ public class PersistenceLayer implements IPersistenceLayer {
         CheckUtils.StringMustNotBeNullOrEmpty(username);
         return executeInsertTemplate(
                 "Creates a new user in the database",
-                "INSERT INTO auth.user (name) VALUES (?);", username);
+                "INSERT INTO auth.users (name) VALUES (?);", username);
     }
 
 
@@ -464,7 +464,7 @@ public class PersistenceLayer implements IPersistenceLayer {
 
         return runQuery(new SqlData<>(
                 "search for a user by id, return that user if found, otherwise return an empty user",
-                "SELECT id  FROM auth.user WHERE name = ?;",
+                "SELECT id  FROM auth.users WHERE name = ?;",
                 extractor, username));
     }
 
@@ -480,7 +480,7 @@ public class PersistenceLayer implements IPersistenceLayer {
         final String hexHash = createHashedValueFromPassword(password);
         return runQuery(new SqlData<>(
                 "check to see if the credentials for a user are valid",
-                "SELECT id FROM auth.user WHERE name = ? AND password_hash = ?;",
+                "SELECT id FROM auth.users WHERE name = ? AND password_hash = ?;",
                 extractor, username, hexHash));
     }
 
@@ -491,7 +491,7 @@ public class PersistenceLayer implements IPersistenceLayer {
         String hashedPassword = createHashedValueFromPassword(password);
         executeUpdateTemplate(
                 "Updates the user's password field with a new hash",
-                "UPDATE auth.user SET password_hash = ? WHERE id = ?;", hashedPassword, id);
+                "UPDATE auth.users SET password_hash = ? WHERE id = ?;", hashedPassword, id);
     }
 
 

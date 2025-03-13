@@ -25,7 +25,7 @@ create table library.LOAN (
 
 -- this holds the list of librarians, mainly their name and their
 -- password hash (used during authentication)
-create table auth.USER (
+create table auth.USERS(
     id serial PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     password_hash VARCHAR(100)
