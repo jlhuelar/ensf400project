@@ -15,7 +15,7 @@ plugins {
 
     // gretty is a gradle plugin to make it easy to run a server and hotswap code at runtime.
     // https://plugins.gradle.org/plugin/org.gretty
-    id 'org.gretty' version '3.0.4'
+    id 'org.gretty' version '4.1.6'
 
     // provides access to a database versioning tool.
     id "org.flywaydb.flyway" version "6.0.8"
@@ -63,7 +63,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
@@ -116,7 +116,7 @@ checkerFramework {
 // configure jetty to run on port 8080 when we run "./gradlew appRun"
 gretty {
     httpPort = 8080
-    servletContainer = 'tomcat9'
+    servletContainer = 'tomcat10'
     contextPath = "demo"
     def jacocoAgent = zipTree(configurations.jacocoAgent.singleFile).filter { it.name == "jacocoagent.jar" }.singleFile
     jvmArgs = ["-javaagent:$jacocoAgent=output=tcpserver,address=localhost,port=6300", '-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.port=9999', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
@@ -172,9 +172,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.h2database/h2
     localDeps group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-    // so we can put a copy of h2 in a convenient place
-    implementation configurations.localDeps
-
     // so we can programmatically run flyway at startup
     // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
     implementation "org.flywaydb:flyway-core:6.4.1"
@@ -182,7 +179,9 @@ dependencies {
     // provides monitoring of the application during runtime.
     // go to http://url/demo/monitoring
     // https://mvnrepository.com/artifact/net.bull.javamelody/javamelody-core
-    implementation group: 'net.bull.javamelody', name: 'javamelody-core', version: '1.85.0'
+    implementation group: 'net.bull.javamelody', name: 'javamelody-core', version: '2.5.0'
+
+    implementation 'com.h2database:h2:1.4.200'
 
 }
 
@@ -254,8 +253,6 @@ generateCucumberReports.dependsOn(cucumber)
 jacocoTestReport {
     executionData(fileTree(dir: "$buildDir/jacoco", include: '*.exec'))
     reports {
-        xml.enabled true
-        csv.enabled false
         xml.destination file("${buildDir}/jacoco/jacoco.xml")
         html.destination file("${buildDir}/reports/jacoco")
     }
