@@ -4,6 +4,8 @@ FROM openjdk:11
  
  COPY . .
  
+ 
+
  EXPOSE 8080
  
  RUN ./gradlew build
