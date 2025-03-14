@@ -29,6 +29,14 @@ For our github workflow, we created rules to ensure branch protections. Those ru
 
 ## Containerization (20%)
 
+### Background/Development
+
+Below is the process taken to containerize the application:
+
+1. Created a Dockerfile
+2. Build the Docker image using `docker build --tag 'ensf400-g20' .`
+3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`
+
 ❗ TODO ❗
 
 ## CI/CD Pipeline Automation (40%)
