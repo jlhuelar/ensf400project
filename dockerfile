@@ -11,7 +11,9 @@ FROM openjdk:11
      && mv chromedriver /usr/local/bin/ \
      && rm chromedriver.zip
  
- 
+RUN pip3 install --upgrade pip \
+    && pip3 install pipenv \ 
+    && pipenv install 
 
  EXPOSE 8080
  
