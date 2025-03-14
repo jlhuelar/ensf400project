@@ -14,5 +14,8 @@ RUN chmod +x gradlew
 # Copy the source code
 COPY src src
 
-# Run the application
-CMD ["./gradlew", "apprun"]
+# Expose port
+EXPOSE 8080
+
+# Run the application in the background and keep container alive
+CMD ./gradlew appRun & tail -f /dev/null
