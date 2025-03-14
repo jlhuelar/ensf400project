@@ -1,7 +1,9 @@
+version: '3'
 services:
   app:
-    container_name: gradle_app
+    container_name: demo_app
     build: .
     ports:
       - "8080:8080"
-    restart: always
+    # This flag ensures the container keeps running
+    tty: true
