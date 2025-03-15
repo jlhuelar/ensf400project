@@ -1,0 +1,5 @@
+# filepath: .dockerignore
+build/
+.gradle/
+.git/
+*.log
