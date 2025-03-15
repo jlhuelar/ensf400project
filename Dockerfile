@@ -11,3 +11,6 @@ RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN apt-get install -y curl
 RUN apt-get install -y unzip
+
+# cleaning up the cache to make the imahe as small as possible
+RUN apt-get clean
