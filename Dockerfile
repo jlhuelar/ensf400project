@@ -1,5 +1,5 @@
 # Use the correct gradle jdk image to avoid versioning issues
-FROM gradle:7.6-jdk11
+FROM gradle:7.6.1-jdk11
 
 # Make the working directory
 RUN mkdir /home/app
