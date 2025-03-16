@@ -24,7 +24,7 @@ For our github workflow, we created rules to ensure branch protections. Those ru
 
 ## Containerization (20%)
 
-### Background/Development
+### Background/Development/Usage
 
 Below is the process taken to containerize the application:
 
@@ -32,7 +32,10 @@ Below is the process taken to containerize the application:
 2. Build the Docker image using `docker build --tag 'ensf400-g20' .`
 3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`
 
-❗ TODO ❗
+### Dockerfile
+
+The Dockerfile can be found [here](./Dockerfile)
+As seen in the Dockerfile, we had to use the same versioning requirements that were needed to run the application locally. This meant using an exact gradle image with the correct version of gradle and java JDK. Afterwards the Dockerfile copies the project directory into the container and then runs the application using gradle instead of the gradle wrapper provided in the project.
 
 ## CI/CD Pipeline Automation (40%)
 
