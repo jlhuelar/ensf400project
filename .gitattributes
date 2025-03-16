@@ -10,3 +10,6 @@ gradlew.bat text eol=crlf
 
 # jar files are binary.
 *.jar binary
+
+# mp4 files are binary.
+*.mp4 binary
