@@ -1,3 +1,4 @@
+# Use OpenJDK 17 as base image
 FROM openjdk:17-jdk-slim
 
 # Set the working directory inside the container
@@ -13,7 +14,7 @@ RUN apt-get update && apt-get install -y wget unzip && \
     rm /tmp/gradle-7.3.3-bin.zip && \
     ln -s /opt/gradle-7.3.3/bin/gradle /usr/bin/gradle
 
-# Expose the port used by the application (8080 in this case)
+# Expose the port used by the application (8080 in this case) to allow external access
 EXPOSE 8080
 
 # Make the Gradle wrapper executable
