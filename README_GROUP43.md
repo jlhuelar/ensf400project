@@ -5,6 +5,19 @@
 |FAHEEM MAZHAR
 |AFSANA ASHA
 |SAIF YOUSSEF
-|MOIZ BHATTI                         |
+|MOIZ BHATTI            30163705     |
 
 FIRST CHECK_IN
+
+
+
+
+CI/CD Process:
+
+
+
+
+
+
+
+Environment Replication Instructions:
