@@ -1,7 +1,5 @@
 # Progress Report:
 
-## Git Flow
-
 ## Screenshots of Work Done:
 
 ### Thursday March 13th 2025
