@@ -103,6 +103,3 @@ Container images will be pushed to **Docker Hub**. To push an image, use the fol
 ## Running the Project  
 Instructions for running the application locally, including prerequisites.  
 
-## Testing  
-- **Testing Framework**: Briefly describe tools used for testing.  
-- **Code Quality Reports**: Link to generated SonarQube reports. 
