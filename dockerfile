@@ -1,26 +1,23 @@
-
-FROM gradle:7.6.1-jdk11 AS builder
-
+   
+    # Establishing the Base Image and where the image will build
+FROM gradle:7.6.1-jdk11 AS build
 WORKDIR /desktop_app
 
-# Copy Gradle wrapper and configuration files
-COPY . /app      
+    # Setting up the file to be sent from the machine into the image
+COPY gradle/ gradle/   
+COPY gradlew .          
+COPY gradlew gradlew.bat ./      
+COPY build.gradle ./               
 
-# Make Gradle wrapper executable and build the application
+    # Copying the file components present in the project into the image
+COPY . .
+
+    # Made the Gradle wrapper to be executable, as well as build the application
 RUN chmod +x gradlew
 RUN ./gradlew build    
 
-# Step 2: Runtime stage - Use a minimal Java runtime image
-FROM openjdk:11-jre-slim
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the JAR file from the builder stage
-COPY --from=builder /app/build/libs/your-app.jar .
-
-# Expose port 8080 (adjust this if needed for your application)
+    # Exposing the port to be accessed
 EXPOSE 8080
 
-# Command to run the application
-CMD ["java", "-jar", "your-app.jar"]
+    # The commands used to for the CMD own its own
+CMD ["./gradlew", "apprun"]
