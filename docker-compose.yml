@@ -1,8 +1,6 @@
 services:
   gradle-app:
-    build:
-      context: .
-      dockerfile: burtonjong/ensf400fp:latest
+    image: burtonjong/ensf400fp:latest # Pulls the image from Docker Hub
     ports:
       - "8080:8080"
     container_name: gradle-app
