@@ -34,9 +34,9 @@ For our github workflow, we created rules to ensure branch protections. Those ru
 Below is the process taken to containerize the application:
 
 1. Created a Dockerfile
-2. Build the Docker image using `docker build --tag 'ensf400-g20' .`
-3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`, NOTE: the application will close immediately after starting up, use step 4. or use the image on Docker Hub below.
-4. Run `docker compose up` to start the application and keep it running.
+2. Built the Docker image using `docker build --tag 'ensf400-g20' .`
+3. Run the Docker image using `docker run -it -p 8080:8080 ensf400-g20`
+4. An alternative way to run the Dockerfile: Run `docker compose up` to start the application and keep it running.
 5. Access the application at `http://localhost:8080/demo`
 
 ### Dockerfile
