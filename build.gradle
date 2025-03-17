@@ -116,10 +116,17 @@ checkerFramework {
 // configure jetty to run on port 8080 when we run "./gradlew appRun"
 gretty {
     httpPort = 8080
+    host = '0.0.0.0'  // ← ADD THIS LINE
     servletContainer = 'tomcat9'
     contextPath = "demo"
     def jacocoAgent = zipTree(configurations.jacocoAgent.singleFile).filter { it.name == "jacocoagent.jar" }.singleFile
-    jvmArgs = ["-javaagent:$jacocoAgent=output=tcpserver,address=localhost,port=6300", '-Dcom.sun.management.jmxremote', '-Dcom.sun.management.jmxremote.port=9999', '-Dcom.sun.management.jmxremote.ssl=false', '-Dcom.sun.management.jmxremote.authenticate=false']
+    jvmArgs = [
+            "-javaagent:$jacocoAgent=output=tcpserver,address=localhost,port=6300",
+            '-Dcom.sun.management.jmxremote',
+            '-Dcom.sun.management.jmxremote.port=9999',
+            '-Dcom.sun.management.jmxremote.ssl=false',
+            '-Dcom.sun.management.jmxremote.authenticate=false'
+    ]
 }
 
 repositories {
