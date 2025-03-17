@@ -35,12 +35,22 @@ Below is the process taken to containerize the application:
 
 1. Created a Dockerfile
 2. Build the Docker image using `docker build --tag 'ensf400-g20' .`
-3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`
+3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`, NOTE: the application will close immediately after starting up, use step 4. instead.
+4. Run `docker compose up` to start the application and keep it running.
+5. Access the application at `http://localhost:8080/demo`
 
 ### Dockerfile
 
 The Dockerfile can be found [here](./Dockerfile)
 As seen in the Dockerfile, we had to use the same versioning requirements that were needed to run the application locally. This meant using an exact gradle image with the correct version of gradle and java JDK. Afterwards the Dockerfile copies the project directory into the container and then runs the application using gradle instead of the gradle wrapper provided in the project.
+
+### Docker Compose
+
+The Docker Compose file can be found [here](./docker-compose.yml), this helps ensure that the containerization procedure will scale moving forward with the project. Additionally, we used the docker-compose.yml to ensure that the application did not immediately exit after starting up.
+
+### Docker Image on Docker Hub
+
+❗ TODO ❗
 
 ## CI/CD Pipeline Automation (40%)
 
