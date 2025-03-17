@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  demo:
+    image: gradle:7.6-jdk11
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    stdin_open: true
+    tty: true
+    
+    
+    #command: ["gradle", "build"]
+    #working_dir: /home/desktop_app
