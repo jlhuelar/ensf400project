@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: my-gradle-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/home/app
+    working_dir: /home/app
+    command: ["./gradlew", "appRun"]
+    # so that the container doesn't immediately close after building
+    stdin_open: true
+    tty: true   
