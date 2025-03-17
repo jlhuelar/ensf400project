@@ -50,7 +50,7 @@ The Docker Compose file can be found [here](./docker-compose.yml), this helps en
 
 ### Docker Image on Docker Hub
 
-❗ TODO ❗
+Our docker image can be found in a repository on docker hub [here](https://hub.docker.com/repository/docker/mattmcdou/ci-cd-pipeline-automation-app/tags/latest/sha256-cedc83a81df4c45f3a1312ecd1c3a48de0c5cf1e51c645d8446d645863fcfaca).
 
 ## CI/CD Pipeline Automation (40%)
 
