@@ -3,6 +3,7 @@ FROM gradle:7.6-jdk17 AS builder
 WORKDIR /home/gradle/project
 # Copying all project files into the container
 COPY . .
+
 # Clean and build the project without using the daemon; forces dependency refresh
 RUN gradle clean build --no-daemon --refresh-dependencies
 
