@@ -3,12 +3,6 @@
 FROM gradle:7.6.1-jdk11 AS build
 WORKDIR /desktop_app
 
-    # Setting up the file to be sent from the machine into the image
-COPY gradle/ gradle/   
-COPY gradlew .          
-COPY gradlew gradlew.bat ./      
-COPY build.gradle ./               
-
     # Copying the file components present in the project into the image
 COPY . .
 
