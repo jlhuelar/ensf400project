@@ -35,7 +35,7 @@ Below is the process taken to containerize the application:
 
 1. Created a Dockerfile
 2. Build the Docker image using `docker build --tag 'ensf400-g20' .`
-3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`, NOTE: the application will close immediately after starting up, use step 4. instead.
+3. Run the Docker image using `docker run -p 8080:8080 ensf400-g20`, NOTE: the application will close immediately after starting up, use step 4. or use the image on Docker Hub below.
 4. Run `docker compose up` to start the application and keep it running.
 5. Access the application at `http://localhost:8080/demo`
 
@@ -51,6 +51,18 @@ The Docker Compose file can be found [here](./docker-compose.yml), this helps en
 ### Docker Image on Docker Hub
 
 Our docker image can be found in a repository on docker hub [here](https://hub.docker.com/repository/docker/mattmcdou/ci-cd-pipeline-automation-app/tags/latest/sha256-cedc83a81df4c45f3a1312ecd1c3a48de0c5cf1e51c645d8446d645863fcfaca).
+
+use the following command to pull the image:
+
+```bash
+docker pull mattmcdou/ci-cd-pipeline-automation-app:latest
+```
+
+use the following command to run the container, and keep it open:
+
+```bash
+docker run -it -p 8080:8080 mattmcdou/ci-cd-pipeline-automation-app:latest
+```
 
 ## CI/CD Pipeline Automation (40%)
 
