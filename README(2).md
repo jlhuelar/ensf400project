@@ -62,7 +62,7 @@ ________________________________________________________________________________
 
 ## Team Members  
 - Josral Frederick UCID: 30195360
-- Muhammad Aun Raza UCID: 30172183
+- Muhammad Aun Raza My UCID: 30172183
 - Natnael Tekli UCID: 30171167
 - Jaden Chow UCID: 30173676
 
