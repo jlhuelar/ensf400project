@@ -2,15 +2,15 @@
 FROM gradle:7.6-jdk11 AS builder
 WORKDIR /home/gradle/project
 
+# Copy all project files into the container
 COPY . .
 
+# Update the package lists to fetch the latest versions of available packages
 RUN apt-get update
 
 # installing necessary dependencies
-RUN apt-get install -y python3
-RUN apt-get install -y python3-pip
-RUN apt-get install -y curl
-RUN apt-get install -y unzip
+RUN apt-get install -y python3 python3-pip curl unzip
+#cleaned up so more image layers arent present
 
 # cleaning up the cache to make the imahe as small as possible
 RUN apt-get clean
@@ -30,5 +30,5 @@ RUN rm -rf ROOT
 # copy war file that was built from initial stage to tomcat webapps directory, renamed to ROOT
 COPY --from=builder /home/gradle/project/build/libs/*.war ./ROOT.war
 
-# Localhost 8080 here
+# Expose port 8080 so the application can be accessed from outside the container
 EXPOSE 8080
