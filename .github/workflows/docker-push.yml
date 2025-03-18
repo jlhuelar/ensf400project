@@ -3,7 +3,7 @@ name: Docker Push to Docker Hub
 on:
   push:
     branches:
-      - main  # Only push on changes to main
+      - master  # Only push on changes to main
 
 jobs:
   push:
