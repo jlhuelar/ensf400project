@@ -1,8 +1,10 @@
+version: "3"
 services:
   gradle-app:
     build:
       context: .
       dockerfile: Dockerfile
+    image: burtonjong/ensf400fp:latest
     ports:
       - "8080:8080"
     container_name: gradle-app

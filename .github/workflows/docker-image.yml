@@ -1,4 +1,4 @@
-name: Docker Build and Test
+name: Docker Build, Test and Push to Docker Hub
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         options: --privileged
         ports:
           - '8080:8080'
-          
+
     steps:
       # Checkout repository
       - name: Checkout code
@@ -46,7 +46,20 @@ jobs:
           docker-compose -f docker-compose.yml up -d
           docker-compose -f docker-compose.yml ps
 
-      # Optionally, stop the containers after the test
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Push the Docker images to Docker Hub
+      - name: Push Docker images
+        run: |
+          # Tag the images with the Docker Hub repository name
+          docker-compose -f docker-compose.yml push
+
+      # Optionally, stop and clean up containers
       - name: Stop and clean up containers
         run: |
           docker-compose -f docker-compose.yml down
