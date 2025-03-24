@@ -7,6 +7,7 @@ build/
 # ignore the intellij directory
 .idea/
 
+jenkins_home/
 # ignore the database text file we create
 authentication.txt
 books.txt
