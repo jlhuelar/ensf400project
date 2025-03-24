@@ -132,58 +132,43 @@ configurations {
 }
 
 dependencies {
-    // necessary for the servlet functionality.  See any class ending in "Servlet"
+    // Servlets (still fine at 4.0.1 unless you need Jakarta EE)
     providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    
+    // JUnit 4 – latest minor release
+    testImplementation 'junit:junit:4.13.2'
 
-    // junit, for running unit tests
-    testImplementation 'junit:junit:4.13'
-
-    // mockito, for mocking objects in our unit tests
-    testImplementation 'org.mockito:mockito-core:3.3.3'
-
-    // nbvcxz is a tool to determine how robust a password is.  See
-    // https://github.com/GoSimpleLLC/nbvcxz
-    implementation group: 'me.gosimple', name: 'nbvcxz', version: '1.4.3'
-
-    // the glorious equalsverifier.  This is a tool that tests the contract
-    // for equals and hashcode are met.  It's very strict.  Because it's very
-    // strict, it forces us to create very safe, very solid code.
-    // https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier
-    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.1.13'
-
-    testImplementation 'io.cucumber:cucumber-java:5.7.0'
-    testImplementation 'io.cucumber:cucumber-junit:5.7.0'
-
-    // The commons-lang3 package has some utility classes that are very helpful
-    // for those interested in safer coding.  Particularly, the equalsbuilder and hashcodebuilder.
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-
-    // a logging framework, so it becomes easily possible to see what is happening
-    // in our code in realtime.
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.2'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.2'
-
-    // The following gives us the ability to use slf4j api calls.
-    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.2'
-
-    // we'll use this as our database
-    // https://mvnrepository.com/artifact/com.h2database/h2
-    localDeps group: 'com.h2database', name: 'h2', version: '1.4.200'
-
-    // so we can put a copy of h2 in a convenient place
+    // Mockito – updated to a Java 17–compatible version
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    
+    // NBVCXZ – if you need a more recent version, you can check for 1.5.x or above
+    implementation 'me.gosimple:nbvcxz:1.5.0'
+    
+    // EqualsVerifier – updated to support Java 17
+    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.14'
+    
+    // Cucumber – updated to 7.x for Java 17 compatibility
+    testImplementation 'io.cucumber:cucumber-java:7.11.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.11.0'
+    
+    // Apache Commons Lang – updated
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    
+    // Log4j – updated to a later 2.x release
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+    
+    // H2 – newer 2.x line is more Java 17–friendly
+    localDeps 'com.h2database:h2:2.1.214'
+    
     implementation configurations.localDeps
-
-    // so we can programmatically run flyway at startup
-    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
-    implementation "org.flywaydb:flyway-core:6.4.1"
-
-    // provides monitoring of the application during runtime.
-    // go to http://url/demo/monitoring
-    // https://mvnrepository.com/artifact/net.bull.javamelody/javamelody-core
-    implementation group: 'net.bull.javamelody', name: 'javamelody-core', version: '1.85.0'
-
+    
+    // Flyway – updated major version for better Java 17 support
+    implementation 'org.flywaydb:flyway-core:9.17.0'
+    
+    // JavaMelody – updated for Java 17
+    implementation 'net.bull.javamelody:javamelody-core:1.93.0'
 }
 
 pitest {
