@@ -194,6 +194,22 @@ pipeline {
       }
     }
 
+    stage('Build & Push Docker Image') {
+      when {
+          branch 'main'
+      }
+      steps {
+          script {
+              // Building a unique Docker image using the commit hash
+              def dockerImage = "charbel123456/ensf400-finalproject:${GIT_COMMIT}"
+              echo "Building Docker image: ${dockerImage}"
+              sh "docker build -t ${dockerImage} ."
+              echo "Pushing Docker image to registry..."
+              sh "docker push ${dockerImage}"
+          }
+      }
+    }
+
 
     // This is the stage where we deploy to production.  If any test
     // fails, we won't get here.  Note that we aren't really doing anything - this
