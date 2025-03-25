@@ -13,15 +13,18 @@ import java.util.Set;
 
 public class CartesianProductStepDefs {
 
-    // We'll store the list of sets for which we want to compute the cartesian product.
     private List<Set<String>> listOfSets;
     private String result;
 
     @Given("lists as follows:")
     public void listsAsFollows(DataTable dataTable) {
-        List<String> rows = dataTable.asList();
+        // Get the table as a list of lists of strings
+        List<List<String>> rows = dataTable.asLists(String.class);
         listOfSets = new ArrayList<>();
-        for (String row : rows) {
+
+        // Skip the header row (index 0) and process the rest
+        for (int i = 1; i < rows.size(); i++) {
+            String row = rows.get(i).get(0);
             // Split the row on commas and trim spaces
             String[] tokens = row.split(",");
             Set<String> set = new LinkedHashSet<>();
@@ -39,7 +42,7 @@ public class CartesianProductStepDefs {
 
     @Then("the resulting combinations should be as follows:")
     public void theResultingCombinationsShouldBeAsFollows(String expectedResults) {
-        // Remove extra whitespace and line breaks for comparison if needed
+        // Normalize whitespace if needed
         String expected = expectedResults.replaceAll("\\s+", " ").trim();
         String actual = result.replaceAll("\\s+", " ").trim();
         Assert.assertEquals("The calculated cartesian product does not match the expected result.",
