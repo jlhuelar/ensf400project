@@ -28,7 +28,7 @@ public class AlcoholStepDefs {
     @When("I calculate the alcohol-related portion")
     public void iCalculateTheAlcoholRelatedPortion() {
         alcoholResult = AlcoholCalculator.calculate(dinnerPrices);
-        throw new PendingException();
+        //throw new PendingException();
     }
 
     @Then("I get the following results:")
