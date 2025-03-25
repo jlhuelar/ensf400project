@@ -14,6 +14,7 @@ public class AlcoholResult {
         this.foodRatio = foodRatio;
     }
 
+    // Getter methods
     public double getTotalFoodPrice() {
         return totalFoodPrice;
     }
@@ -24,6 +25,11 @@ public class AlcoholResult {
 
     public double getFoodRatio() {
         return foodRatio;
+    }
+
+    // Static factory method to return an "empty" AlcoholResult
+    public static AlcoholResult returnEmpty() {
+        return new AlcoholResult(0.0, 0.0, 0.0);
     }
 
     @Override
