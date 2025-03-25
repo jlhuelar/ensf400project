@@ -615,10 +615,12 @@ public class PersistenceLayer implements IPersistenceLayer {
     }
 
     private Flyway configureFlyway() {
-        return Flyway.configure()
-                .schemas("ADMINISTRATIVE", "LIBRARY", "AUTH")
-                .dataSource(this.dataSource)
-                .load();
-    }
+    return Flyway.configure()
+        .schemas("ADMINISTRATIVE", "LIBRARY", "AUTH")
+        .dataSource(this.dataSource)
+        .cleanDisabled(false)   // <--- Add this line
+        .load();
+}
+
 
 }
