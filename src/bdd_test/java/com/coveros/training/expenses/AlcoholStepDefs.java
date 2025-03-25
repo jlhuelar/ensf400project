@@ -46,33 +46,4 @@ public class AlcoholStepDefs {
     }
 }
 
-// Dummy stub class for DinnerPrices
-class DinnerPrices {
-    private double subtotal;
-    private double foodTotal;
-    private double tip;
-    private double tax;
 
-    public DinnerPrices(double subtotal, double foodTotal, double tip, double tax) {
-        this.subtotal = subtotal;
-        this.foodTotal = foodTotal;
-        this.tip = tip;
-        this.tax = tax;
-    }
-
-    public double getSubtotal() {
-        return subtotal;
-    }
-
-    public double getFoodTotal() {
-        return foodTotal;
-    }
-
-    public double getTip() {
-        return tip;
-    }
-
-    public double getTax() {
-        return tax;
-    }
-}
