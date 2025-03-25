@@ -248,7 +248,6 @@ jacocoTestReport {
 
 check.dependsOn(jacocoTestReport)
 
-
 sonarqube {
     properties {
         property "sonar.projectKey", project.findProperty("projectname") ?: "defaultKey"
@@ -260,10 +259,14 @@ sonarqube {
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
         property "sonar.host.url", project.findProperty("sonar.host.url") ?: "http://localhost:9000"
-        property "sonar.login", project.findProperty("sonar.login") ?: "admin"
-        property "sonar.password", project.findProperty("sonar.password") ?: "password"
+        // Remove or comment out these if present:
+        // property "sonar.login", project.findProperty("sonar.login") ?: "admin"
+        // property "sonar.password", project.findProperty("sonar.password") ?: "password"
+        // Instead, use:
+        property "sonar.token", project.findProperty("sonar.token") ?: ""
     }
 }
+
 
 
 // parallellize the tests, making them finish sooner.
