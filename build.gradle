@@ -251,18 +251,20 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "$projectname"
-        property "sonar.projectName", "$projectname"
+        property "sonar.projectKey", project.findProperty("projectname") ?: "defaultKey"
+        property "sonar.projectName", project.findProperty("projectname") ?: "Default Project Name"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"
         property "sonar.sources", "src/main/java"
         property "sonar.tests", "src/test/java,src/integration_test/java,src/bdd_test/java"
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.login", "admin"
-        property "sonar.password", "password"
+        property "sonar.host.url", project.findProperty("sonar.host.url") ?: "http://localhost:9000"
+        property "sonar.login", project.findProperty("sonar.login") ?: "admin"
+        property "sonar.password", project.findProperty("sonar.password") ?: "password"
     }
 }
+
 
 // parallellize the tests, making them finish sooner.
 tasks.withType(Test) {
