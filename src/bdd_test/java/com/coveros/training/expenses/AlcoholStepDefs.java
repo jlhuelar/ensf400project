@@ -1,43 +1,52 @@
 package com.coveros.training.expenses;
 
-import io.cucumber.datatable.DataTable;
-import io.cucumber.java.PendingException;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import org.junit.Assert;
+import java.util.Objects;
 
-import java.util.Map;
+public class AlcoholResult {
 
-public class AlcoholStepDefs {
+    private double totalFoodPrice;
+    private double totalAlcoholPrice;
+    private double foodRatio;
 
-    private AlcoholResult alcoholResult;
-    private DinnerPrices dinnerPrices;
-
-    @Given("a dinner with the following prices in dollars:")
-    public void aDinnerWithTheFollowingPricesInDollars(DataTable prices) {
-        final Map<String, String> data = prices.asMaps().get(0);
-        dinnerPrices = new DinnerPrices(
-                Double.parseDouble(data.get("subtotal")),
-                Double.parseDouble(data.get("food total")),
-                Double.parseDouble(data.get("tip")),
-                Double.parseDouble(data.get("tax")));
-
+    public AlcoholResult(double totalFoodPrice, double totalAlcoholPrice, double foodRatio) {
+        this.totalFoodPrice = totalFoodPrice;
+        this.totalAlcoholPrice = totalAlcoholPrice;
+        this.foodRatio = foodRatio;
     }
 
-    @When("I calculate the alcohol-related portion")
-    public void iCalculateTheAlcoholRelatedPortion() {
-        alcoholResult = AlcoholCalculator.calculate(dinnerPrices);
-        //throw new PendingException();
+    public double getTotalFoodPrice() {
+        return totalFoodPrice;
     }
 
-    @Then("I get the following results:")
-    public void iGetTheFollowingResults(DataTable expectedData) {
-        final Map<String, String> data = expectedData.asMaps().get(0);
-        AlcoholResult expectedResult = new AlcoholResult(
-                Double.parseDouble(data.get("total food price")),
-                Double.parseDouble(data.get("total alcohol price")),
-                Double.parseDouble(data.get("food ratio")));
-        Assert.assertEquals(alcoholResult, expectedResult);
+    public double getTotalAlcoholPrice() {
+        return totalAlcoholPrice;
+    }
+
+    public double getFoodRatio() {
+        return foodRatio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlcoholResult that = (AlcoholResult) o;
+        return Double.compare(that.totalFoodPrice, totalFoodPrice) == 0 &&
+                Double.compare(that.totalAlcoholPrice, totalAlcoholPrice) == 0 &&
+                Double.compare(that.foodRatio, foodRatio) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(totalFoodPrice, totalAlcoholPrice, foodRatio);
+    }
+
+    @Override
+    public String toString() {
+        return "AlcoholResult{" +
+                "totalFoodPrice=" + totalFoodPrice +
+                ", totalAlcoholPrice=" + totalAlcoholPrice +
+                ", foodRatio=" + foodRatio +
+                '}';
     }
 }
