@@ -23,15 +23,11 @@ public class AlcoholStepDefs {
         dinnerPrices = new DinnerPrices(subtotal, foodTotal, tip, tax);
     }
 
-    @When("I calculate the alcohol-related portion")
+   @When("I calculate the alcohol-related portion")
     public void i_calculate_the_alcohol_related_portion() {
-        // Dummy calculation: assume the alcohol-related portion is 10% of the food total,
-        // and the food ratio is calculated as foodTotal divided by subtotal.
-        double totalFoodPrice = dinnerPrices.getFoodTotal();
-        double totalAlcoholPrice = totalFoodPrice * 0.10; // 10% for alcohol
-        double foodRatio = dinnerPrices.getSubtotal() != 0 ? totalFoodPrice / dinnerPrices.getSubtotal() : 0.0;
-        alcoholResult = new AlcoholResult(totalFoodPrice, totalAlcoholPrice, foodRatio);
-    }
+        alcoholResult = AlcoholCalculator.calculate(dinnerPrices);
+}
+
 
     @Then("I get the following results:")
     public void i_get_the_following_results(DataTable dataTable) {
