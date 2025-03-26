@@ -1,14 +1,13 @@
 // This jenkinsfile is used to run CI/CD on my local (Windows) box, no VM's needed.
-
 pipeline {
 
   agent any
 
-   environment {
+  environment {
         // This is set so that the Python API tests will recognize it
         // and go through the Zap proxy waiting at 9888
         HTTP_PROXY = 'http://127.0.0.1:9888'
-   }
+  }
 
   stages {
 
@@ -73,24 +72,24 @@ pipeline {
       }
     }
 
-
     // Move the binary over to the test environment and
     // get it running, in preparation for tests that
     // require a whole system to be running.
     stage('Deploy to Test') {
       steps {
-      sh './gradlew deployToTestWindowsLocal'
-      // pipenv needs to be installed and on the path for this to work.
-      sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
+        sh './gradlew deployToTestWindowsLocal'
+        // Install pipenv if not already available
+        sh 'pip install pipenv'
+        // Now install project-specific Python dependencies with pipenv.
+        sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
 
-      // Wait here until the server tells us it's up and listening
-      sh './gradlew waitForHeartBeat'
+        // Wait here until the server tells us it's up and listening
+        sh './gradlew waitForHeartBeat'
 
-      // clear Zap's memory for the incoming tests
-      sh 'curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888'
+        // Clear Zap's memory for the incoming tests
+        sh 'curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888'
       }
     }
-
 
     // Run the tests which investigate the functioning of the API.
     stage('API Tests') {
@@ -123,7 +122,7 @@ pipeline {
     }
 
     // This set of tests investigates the functionality of the UI.
-    // Note that this is separate fom the UI BDD Tests, which
+    // Note that this is separate from the UI BDD Tests, which
     // only focuses on essential capability and therefore only
     // covers a small subset of the possibilities of UI behavior.
     stage('UI Tests') {
@@ -209,7 +208,6 @@ pipeline {
           }
       }
     }
-
 
     // This is the stage where we deploy to production.  If any test
     // fails, we won't get here.  Note that we aren't really doing anything - this
