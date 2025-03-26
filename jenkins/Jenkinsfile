@@ -1,4 +1,5 @@
 // This jenkinsfile is used to run CI/CD on my local (Windows) box, no VM's needed.
+
 pipeline {
 
   agent any
@@ -78,15 +79,15 @@ pipeline {
     stage('Deploy to Test') {
       steps {
         sh './gradlew deployToTestWindowsLocal'
-        // Install pipenv if not already available
-        sh 'pip install pipenv'
-        // Now install project-specific Python dependencies with pipenv.
+        // pipenv needs to be installed and on the path for this to work.
+        // Added installation step for pipenv so that dependencies are installed even if environment is fresh.
+        sh 'python3 -m pip install pipenv'
         sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
 
         // Wait here until the server tells us it's up and listening
         sh './gradlew waitForHeartBeat'
 
-        // Clear Zap's memory for the incoming tests
+        // clear Zap's memory for the incoming tests
         sh 'curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888'
       }
     }
@@ -122,7 +123,7 @@ pipeline {
     }
 
     // This set of tests investigates the functionality of the UI.
-    // Note that this is separate from the UI BDD Tests, which
+    // Note that this is separate fom the UI BDD Tests, which
     // only focuses on essential capability and therefore only
     // covers a small subset of the possibilities of UI behavior.
     stage('UI Tests') {
