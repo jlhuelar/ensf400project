@@ -9,7 +9,7 @@ public class AlcoholResultTest {
     public void testEqualsAndHashCode() {
         AlcoholResult result1 = new AlcoholResult(10.0, 5.0, 0.6666);
         AlcoholResult result2 = new AlcoholResult(10.0, 5.0, 0.6666);
-        assertEquals("Objects should be equal", result1.equals(result2));
+        assertTrue("Objects should be equal", result1.equals(result2));
         assertEquals("Hash codes should be equal", result1.hashCode(), result2.hashCode());
     }
     
