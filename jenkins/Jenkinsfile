@@ -80,8 +80,7 @@ pipeline {
       steps {
         sh './gradlew deployToTestWindowsLocal'
         // pipenv needs to be installed and on the path for this to work.
-        // Added installation step for pipenv so that dependencies are installed even if environment is fresh.
-        sh 'python3 -m pip install pipenv'
+        // Since pipenv is now installed system-wide, we just run:
         sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
 
         // Wait here until the server tells us it's up and listening
