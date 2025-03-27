@@ -14,6 +14,6 @@ WORKDIR /usr/local/tomcat/webapps
 RUN rm -rf ROOT
 
 # Copying the WAR file built in Stage 1 into the Tomcat webapps directory and named it ROOT.war
-COPY --from=builder /home/gradle/project/build/libs/*.war ./ROOT.war
+COPY --from=builder /home/gradle/project/build/libs/*.war ./demo.war
 # Exposing port 8080 so the application can be accessed
 EXPOSE 8080

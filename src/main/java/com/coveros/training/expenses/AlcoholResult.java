@@ -1,17 +1,58 @@
 package com.coveros.training.expenses;
 
-public class AlcoholResult {
-    private final Double foodPrice;
-    private final Double alcoholPrice;
-    private final Double foodRatio;
+import java.util.Objects;
 
-    public AlcoholResult(Double foodPrice, Double alcoholPrice, Double foodRatio) {
-        this.foodPrice = foodPrice;
-        this.alcoholPrice = alcoholPrice;
+public class AlcoholResult {
+
+    private double totalFoodPrice;
+    private double totalAlcoholPrice;
+    private double foodRatio;
+
+    public AlcoholResult(double totalFoodPrice, double totalAlcoholPrice, double foodRatio) {
+        this.totalFoodPrice = totalFoodPrice;
+        this.totalAlcoholPrice = totalAlcoholPrice;
         this.foodRatio = foodRatio;
     }
 
+    // Getter methods
+    public double getTotalFoodPrice() {
+        return totalFoodPrice;
+    }
+
+    public double getTotalAlcoholPrice() {
+        return totalAlcoholPrice;
+    }
+
+    public double getFoodRatio() {
+        return foodRatio;
+    }
+
+    // Static factory method to return an "empty" AlcoholResult
     public static AlcoholResult returnEmpty() {
-        return new AlcoholResult(0d,0d,0d);
+        return new AlcoholResult(0.0, 0.0, 0.0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlcoholResult that = (AlcoholResult) o;
+        return Double.compare(that.totalFoodPrice, totalFoodPrice) == 0 &&
+                Double.compare(that.totalAlcoholPrice, totalAlcoholPrice) == 0 &&
+                Double.compare(that.foodRatio, foodRatio) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(totalFoodPrice, totalAlcoholPrice, foodRatio);
+    }
+
+    @Override
+    public String toString() {
+        return "AlcoholResult{" +
+                "totalFoodPrice=" + totalFoodPrice +
+                ", totalAlcoholPrice=" + totalAlcoholPrice +
+                ", foodRatio=" + foodRatio +
+                '}';
     }
 }

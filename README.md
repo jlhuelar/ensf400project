@@ -8,7 +8,7 @@ Run the following to pull the image:
 docker pull charbel123456/ensf400-finalproject:v1.0
 ```
 
----
+---z`
 
 ## 2. ▶️ Run the Docker Container
 
