@@ -372,7 +372,7 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        URL url = new URL("http://localhost:8080/demo")
+        URL url = new URL("https://fantastic-waffle-pvx6w7r97w9267v5-8080.app.github.dev/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
