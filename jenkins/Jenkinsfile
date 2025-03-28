@@ -87,8 +87,7 @@ pipeline {
         sh './gradlew waitForHeartBeat'
 
         // clear Zap's memory for the incoming tests
-        sh 'curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888'
-      }
+        sh 'curl http://zap/JSON/core/action/newSession -s --proxy zap:8080'      }
     }
 
     // Run the tests which investigate the functioning of the API.
