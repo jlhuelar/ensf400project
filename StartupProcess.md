@@ -82,9 +82,7 @@ openssl rand -hex 16
 2. Run ZAP in daemon mode:
 
 ```bash
-docker run -d --name zap --network ci-network -p 9888:8080 \
-  ghcr.io/zaproxy/zaproxy:stable zap.sh -daemon -host 0.0.0.0 -port 8080 \
-  -config api.key=YOUR_GENERATED_API_KEY
+docker run -d --name zap --network ci-network -p 9888:8080 ghcr.io/zaproxy/zaproxy:stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=Your_Api_Key -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true 
 ```
 
 3. Replace `YOUR_GENERATED_API_KEY` with the key you generated in step 1
