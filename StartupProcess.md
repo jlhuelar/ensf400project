@@ -66,7 +66,7 @@ docker exec -u root -it jenkins bash -c "apt-get update && apt-get install -y pi
 
 ```bash
 docker run -d --name demo-app --network ci-network -p 8080:8080 \
-  charbel123456/ensf400-finalproject:head-4e7c91b
+  charbel123456/ensf400-finalproject:HEAD-ab00219
 ```
 
 2. Access the application at http://localhost:8080/demo
