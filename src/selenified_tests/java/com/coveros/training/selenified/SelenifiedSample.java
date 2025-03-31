@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 
 public class SelenifiedSample extends Selenified {
 
-    static final String BASE_URL =  "http://localhost:8080/demo/";
+    static final String BASE_URL =  "http://demo-app:8080/demo/";
     static final String LIBRARY_URL = BASE_URL + "library.html";
     static final String RESET_DATABASE_URL = BASE_URL + "flyway";
 
