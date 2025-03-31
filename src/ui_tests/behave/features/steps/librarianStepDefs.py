@@ -1,7 +1,7 @@
 from behave import given, when, then
 from hamcrest import *
 
-URL = 'http://localhost:8080/demo/library.html'
+URL = 'http://demo-app:8080/demo/library.html'
 
 
 @given('a borrower is registered')

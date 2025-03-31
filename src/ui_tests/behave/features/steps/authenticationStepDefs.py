@@ -3,7 +3,7 @@ from hamcrest import *
 
 empty_database = ''
 one_user_registered = 'alice password123'
-URL = 'http://localhost:8080/demo/library.html'
+URL = 'http://demo-app:8080/demo/library.html'
 DEFAULT_USERNAME = 'alice'
 DEFAULT_PASSWORD = 'asdfkljhasdfishdfksaljdfh'
 
