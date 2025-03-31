@@ -108,7 +108,9 @@ pipeline {
     // not that every little detail of UI functionality is correct.  For
     // that purpose, see the following stage, "UI Tests"
     stage('UI BDD Tests') {
-      HTTP_PROXY = ''
+      environment {
+        HTTP_PROXY = ''
+  }
       steps {
         sh './gradlew runBehaveTests'
         sh './gradlew generateCucumberReport'
