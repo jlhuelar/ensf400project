@@ -1,22 +1,31 @@
 import requests
 import tempfile
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 SERVER = "demo-app"
-URL = f"http://{SERVER}:8080/demo"
+URL = "http://%s:8080/demo" % SERVER
 
 def before_all(context):
-    # Create a unique temporary directory for the Chrome user data
-    user_data_dir = tempfile.mkdtemp()
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
-    
-    # Optionally, use a custom chromedriver path if provided in userdata
+    context.driver = __open_browser(context)
+
+def __open_browser(context):
+    # Get the chromedriver path from context userdata if provided
     chrm = context.config.userdata.get('chromedriver_path', None)
-    if chrm:
-        context.driver = webdriver.Chrome(executable_path=chrm, options=chrome_options)
-    else:
-        context.driver = webdriver.Chrome(options=chrome_options)
+    
+    # Set up Chrome options and create a unique temporary user data directory.
+    chrome_options = Options()
+    unique_profile = tempfile.mkdtemp()
+    chrome_options.add_argument(f'--user-data-dir={unique_profile}')
+    
+    try:
+        if chrm:
+            return webdriver.Chrome(options=chrome_options, executable_path=chrm)
+        else:
+            return webdriver.Chrome(options=chrome_options)
+    except Exception as e:
+        print(f"Error launching Chrome: {e}")
+        raise
 
 def before_scenario(context, scenario):
     __reset_database()
@@ -29,4 +38,4 @@ def __close_browser(context):
         context.driver.quit()
 
 def __reset_database():
-    requests.get(f"{URL}/flyway")
+    requests.get("%s/flyway" % URL)
