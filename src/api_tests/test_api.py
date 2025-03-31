@@ -1,7 +1,7 @@
 import requests
 
 SERVER = "demo-app"
-URL = "http://%s:8080/demo" % SERVER
+URL = "http://%s:8080" % SERVER
 
 
 # hitting this endpoint will reset the database.
