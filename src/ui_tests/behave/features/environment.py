@@ -1,5 +1,6 @@
 import requests
 import tempfile
+import uuid
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -10,13 +11,16 @@ def before_all(context):
     context.driver = __open_browser(context)
 
 def __open_browser(context):
-    # Get the chromedriver path from context userdata if provided
+    # Get the chromedriver path from context userdata if provided.
     chrm = context.config.userdata.get('chromedriver_path', None)
     
-    # Set up Chrome options and create a unique temporary user data directory.
     chrome_options = Options()
-    unique_profile = tempfile.mkdtemp()
+    # Create a unique temporary directory for Chrome's user data.
+    unique_profile = tempfile.mkdtemp() + "_" + str(uuid.uuid4())
     chrome_options.add_argument(f'--user-data-dir={unique_profile}')
+    # Additional options to improve stability in CI environments.
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
     
     try:
         if chrm:
@@ -38,4 +42,5 @@ def __close_browser(context):
         context.driver.quit()
 
 def __reset_database():
+    # Reset the database using the demo app URL.
     requests.get("%s/flyway" % URL)
