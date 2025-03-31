@@ -6,7 +6,7 @@ pipeline {
 
   environment {
     HTTP_PROXY = 'http://zap:8080'
-    NO_PROXY = 'http://demo-app:8080/demo'
+    NO_PROXY = 'demo-app'
   }
 
   stages {
