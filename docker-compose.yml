@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    networks:
+      - ci-network
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: jenkins
+    networks:
+      - ci-network
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    # Jenkins will start using its default entrypoint (jenkins.sh)
+    # pipenv, chromium, and chromium-driver are now pre-installed.
+
+  demo-app:
+    image: charbel123456/ensf400-finalproject:head-4e7c91b
+    container_name: demo-app
+    networks:
+      - ci-network
+    ports:
+      - "8080:8080"
+
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: zap
+    networks:
+      - ci-network
+    ports:
+      - "9888:8080"
+    command: >
+      zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=beb706184d5eebfafa66196db3e6d936 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true 
+
+
+networks:
+  ci-network:
+
+volumes:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
