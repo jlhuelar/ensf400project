@@ -1,6 +1,6 @@
 import requests
 
-SERVER = "localhost"
+SERVER = "app"
 URL = "http://%s:8080" % SERVER
 
 
