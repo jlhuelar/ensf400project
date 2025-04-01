@@ -93,8 +93,10 @@ pipeline {
     // Run the tests which investigate the functioning of the API.
     stage('API Tests') {
       steps {
-        sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv --rm || true'
-        sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
+        sh 'echo $PATH'
+        sh 'pipenv --version'
+        sh 'pipenv run pytest --version'
+        sh './gradlew runApiTests'
         sh './gradlew runApiTests'
       }
       post {
