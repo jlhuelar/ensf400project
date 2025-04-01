@@ -274,8 +274,7 @@ sonarqube {
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.login", "admin"
-        property "sonar.password", "Sunshine123!"
+        property "sonar.token", "sqp_97b33b2e8218b7510578318c813f8a93ebfebb90"
     }
 }
 
@@ -382,7 +381,7 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        URL url = new URL("https://silver-spoon-g9wjrwv6gp2975g-8080.app.github.dev/demo")
+        URL url = new URL("http://localhost:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
@@ -414,7 +413,7 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            URL url = new URL("https://silver-spoon-g9wjrwv6gp2975g-8080.app.github.dev/demo")
+            URL url = new URL("http://localhost:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
