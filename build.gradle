@@ -291,7 +291,7 @@ task runApiTests(type: Exec) {
         checkIfAlive()
     }
     workingDir 'src/api_tests'
-    commandLine 'python', '-m', 'pipenv', 'run', 'pytest', '--junitxml', '../../build/test-results/api_tests/TEST-api_test_results.xml'
+    commandLine 'pipenv', 'run', 'pytest', '--junitxml', '../../build/test-results/api_tests/TEST-api_test_results.xml'
 }
 
 static boolean SearchDirectoryForChromedriver(File dir) {

@@ -93,6 +93,7 @@ pipeline {
     // Run the tests which investigate the functioning of the API.
     stage('API Tests') {
       steps {
+        sh 'cd src/api_tests && python -m pipenv install pytest --dev'
         sh './gradlew runApiTests'
       }
       post {
