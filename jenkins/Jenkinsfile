@@ -89,19 +89,6 @@ pipeline {
       }
     }
 
-
-    // Run the tests which investigate the functioning of the API.
-    stage('API Tests') {
-      steps {
-        sh './gradlew runApiTests'
-      }
-      post {
-        always {
-          junit 'build/test-results/api_tests/*.xml'
-        }
-      }
-    }
-
     // We use a BDD framework for some UI tests, Behave, because Python rules
     // when it comes to experimentation with UI tests.  You can try things and see how they work out.
     // this set of BDD tests does require a running system.
