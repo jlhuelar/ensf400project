@@ -652,8 +652,12 @@ task deployToTestWindowsLocal(type: Copy) {
 task runPerfTests(type:Exec) {
     workingDir '.'
 
-    //on windows:
-    commandLine 'jmeter.bat', '-f', '-n', '-t', 'docs\\performance_testing\\50_users_at_once.jmx', '-l', 'build\\jmeter_perf_test.csv', '-e', '-o', 'build\\reports\\perf_report'
+    def osName = System.getProperty("os.name").toLowerCase()
+    if (osName.contains("windows")) {
+        commandLine 'jmeter.bat', '-n', '-t', 'path/to/test.jmx', '-l', 'build/jmeter/results.jtl'
+    } else {
+        commandLine 'jmeter', '-n', '-t', 'path/to/test.jmx', '-l', 'build/jmeter/results.jtl'
+    }
 
     //store the output instead of printing to the console:
     standardOutput = new ByteArrayOutputStream()
