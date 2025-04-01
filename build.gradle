@@ -275,7 +275,6 @@ sonarqube {
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
         property "sonar.token", "sqp_97b33b2e8218b7510578318c813f8a93ebfebb90"
-        property "sonar.host.url", "http://sonarqube:9000"
     }
 }
 
@@ -450,22 +449,23 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
+    String token = "sqp_97b33b2e8218b7510578318c813f8a93ebfebb90"
     URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
+    connection.setRequestProperty("Authorization", "Bearer " + token)
     connection.connect()
     int code = connection.getResponseCode()
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
     String strCurrentLine
     while ((strCurrentLine = br.readLine()) != null) {
-        // ha ha no need to parse JSON!
         print(strCurrentLine)
         if (strCurrentLine.startsWith("{\"projectStatus\":{\"status\":\"ERROR\"")) {
-            throw new GradleException("The quality gate for Demo on Sonarqube failed.  Check Sonarqube.")
+            throw new GradleException("The quality gate for Demo on SonarQube failed. Check SonarQube.")
         }
     }
     if (code != 200) {
-        throw new GradleException("response from Sonar was " + code)
+        throw new GradleException("Response from SonarQube was " + code)
     }
 }
 
