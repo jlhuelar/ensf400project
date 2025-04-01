@@ -149,7 +149,7 @@ dependencies {
     // for equals and hashcode are met.  It's very strict.  Because it's very
     // strict, it forces us to create very safe, very solid code.
     // https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier
-    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.1.13'
+    testImplementation group: 'nl.jqno.equalsverifier', name: 'equalsverifier', version: '3.14.1'
 
     testImplementation 'io.cucumber:cucumber-java:5.7.0'
     testImplementation 'io.cucumber:cucumber-junit:5.7.0'
