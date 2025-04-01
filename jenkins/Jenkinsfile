@@ -10,11 +10,6 @@ pipeline {
         HTTP_PROXY = 'http://127.0.0.1:9888'
    }
 
-   tools {
-        jdk 'JDK17'
-        gradle 'Gradle 7.3.3'
-  }
-
   stages {
 
     // build the war file (the binary).  This is the only
