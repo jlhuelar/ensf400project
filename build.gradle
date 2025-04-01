@@ -372,7 +372,7 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        URL url = new URL("https://fantastic-waffle-pvx6w7r97w9267v5-8080.app.github.dev/demo")
+        URL url = new URL("http://demo-app:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
@@ -404,7 +404,7 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            URL url = new URL("https://fantastic-waffle-pvx6w7r97w9267v5-8080.app.github.dev/demo")
+            URL url = new URL("http://demo-app:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
@@ -444,7 +444,7 @@ static void isQualityGateGood() {
     String sonarUrl = "http://sonarqube:9000/api/qualitygates/project_status?projectKey=ENSF400"
 
     // Your personal SonarQube token
-    String token = "squ_a996aea3a8aeba1469a1c70775ad5a7bcb04f9a8"  // Or retrieve from Gradle properties / env variable
+    String token = "squ_1ac3870402b8cf9ae40e9f4edd7e898f067501f5"  // Or retrieve from Gradle properties / env variable
 
     try {
         URL url = new URL(sonarUrl)

@@ -9,7 +9,7 @@ def step_impl(context, param_m_val, param_n_val):
 
 def __calculate_ackermann(context, param_m_val, param_n_val):
     driver = context.driver
-    driver.get("http://localhost:8080/demo")
+    driver.get("http://demo-app:8080/demo")
     param_m = driver.find_element_by_id("ack_param_m")
     param_m.clear()
     param_m.send_keys(param_m_val)

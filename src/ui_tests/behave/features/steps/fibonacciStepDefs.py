@@ -9,7 +9,7 @@ def step_impl(context, n):
 
 def __calculate_fibonacci(context, n):
     driver = context.driver
-    driver.get("http://localhost:8080/demo")
+    driver.get("http://demo-app:8080/demo")
     param_n = driver.find_element_by_id("fib_param_n")
     param_n.clear()
     param_n.send_keys(n)

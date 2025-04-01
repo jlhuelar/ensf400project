@@ -1,0 +1,12 @@
+FROM jenkins/jenkins:lts
+
+# Switch to root to install packages
+USER root
+
+# Update package lists and install pipenv, chromium, and chromium-driver
+RUN apt-get update && \
+    apt-get install -y pipenv chromium chromium-driver && \
+    apt-get clean
+
+# Switch back to jenkins user
+USER jenkins

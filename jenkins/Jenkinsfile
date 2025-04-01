@@ -6,6 +6,7 @@ pipeline {
 
   environment {
     HTTP_PROXY = 'http://zap:8080'
+    NO_PROXY = 'demo-app'
   }
 
   stages {
@@ -84,7 +85,7 @@ pipeline {
         sh './gradlew waitForHeartBeat'
 
         // clear Zap's memory for the incoming tests with API key authentication
-        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=29eb36cd607858015bfb6f11cfa8a8fd" -s --proxy zap:8080'
+        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=ec1d1dfb435d67bf109e954480d9f81e" -s --proxy zap:8080'
       }
     }
 
@@ -107,6 +108,9 @@ pipeline {
     // not that every little detail of UI functionality is correct.  For
     // that purpose, see the following stage, "UI Tests"
     stage('UI BDD Tests') {
+      environment {
+        HTTP_PROXY = ''
+  }
       steps {
         sh './gradlew runBehaveTests'
         sh './gradlew generateCucumberReport'
@@ -186,7 +190,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=29eb36cd607858015bfb6f11cfa8a8fd" --proxy zap:8080 > build/reports/zap/zap_report.html'
+        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=ec1d1dfb435d67bf109e954480d9f81e" --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 

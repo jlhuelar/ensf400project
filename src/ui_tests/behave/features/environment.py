@@ -1,68 +1,65 @@
+#Unique user worked
+
 import requests
+import tempfile
+import uuid
+import os
+import time
 from selenium import webdriver
-from selenium.webdriver.common.proxy import Proxy, ProxyType
+from selenium.webdriver.chrome.options import Options
 
-SERVER = "localhost"
-URL = "http://%s:8080" % SERVER
-
+SERVER = "demo-app"
+URL = "http://%s:8080/demo" % SERVER
 
 def before_all(context):
-    __open_browser(context)
-
+    context.driver = __open_browser(context)
 
 def __open_browser(context):
-    chrm = context.config.userdata['chromedriver_path']
+    # Get the chromedriver path from context userdata if provided.
+    chrm = context.config.userdata.get('chromedriver_path', None)
+    chrome_options = Options()
+    
+    # Create a unique temporary directory for Chrome's user data.
+    unique_id = f"{uuid.uuid4()}_{int(time.time())}"
+    unique_profile = os.path.join(tempfile.gettempdir(), f"chrome_profile_{unique_id}")
+    
+    # Store the profile directory in context for potential cleanup later
+    context.chrome_profile_dir = unique_profile
+    
+    chrome_options.add_argument(f'--user-data-dir={unique_profile}')
+    
+    # Additional options to improve stability in CI environments.
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--headless')  # Run in headless mode for CI environments
     
     try:
-        # if there is a proxy, we'll use it.  Otherwise, we won't.
-        requests.get("http://localhost:8888", timeout=0.01)
-
-        # if there was no exception, we continue here.
-        PROXY = "localhost:8888"
-
-        proxy = Proxy()
-        proxy.proxy_type = ProxyType.MANUAL
-        proxy.http_proxy = PROXY
-
-        capabilities = webdriver.DesiredCapabilities.CHROME
-        proxy.add_to_capabilities(capabilities)
-        
-        if (chrm):
-            context.driver = webdriver.Chrome(desired_capabilities=capabilities, executable_path=chrm)
+        if chrm:
+            return webdriver.Chrome(options=chrome_options, executable_path=chrm)
         else:
-            context.driver = webdriver.Chrome(desired_capabilities=capabilities)
-        return context.driver
-    except:
-        if (chrm):
-            context.driver = webdriver.Chrome(executable_path=chrm)
-        else:
-            # adding the service args as described below will cause Chromedriver
-            # to create a log of the communication between it and the Chrome
-            # browser.  It's eye-opening. 
-            #
-            # for instance:
-	        #   [1568045962.076][INFO]: [e18882b1f2abbda89f232f777f98f686] COMMAND TypeElement {
-	        #      "id": "0.47079920350295135-1",
-	        #      "sessionId": "e18882b1f2abbda89f232f777f98f686",
-	        #      "text": "Byron",
-	        #      "value": [ "B", "y", "r", "o", "n" ]
-	        #   }
-            #context.driver = webdriver.Chrome(service_args=["--verbose","--logepath=C:\\temp\\qc1.log"])
-            context.driver = webdriver.Chrome()
-        return context.driver
-
+            return webdriver.Chrome(options=chrome_options)
+    except Exception as e:
+        print(f"Error launching Chrome: {e}")
+        raise
 
 def before_scenario(context, scenario):
     __reset_database()
 
-
 def after_all(context):
     __close_browser(context)
 
-
 def __close_browser(context):
-    context.driver.close()
-
+    if hasattr(context, 'driver'):
+        context.driver.quit()
+    
+    # Clean up the temporary directory
+    if hasattr(context, 'chrome_profile_dir') and os.path.exists(context.chrome_profile_dir):
+        try:
+            import shutil
+            shutil.rmtree(context.chrome_profile_dir)
+        except Exception as e:
+            print(f"Warning: Could not clean up Chrome profile directory: {e}")
 
 def __reset_database():
-    requests.get("%s/demo/flyway" % URL)
+    # Reset the database using the demo app URL.
+    requests.get("%s/flyway" % URL)

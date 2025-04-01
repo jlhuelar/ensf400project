@@ -1,6 +1,8 @@
+#Completed API TEST
+
 import requests
 
-SERVER = "localhost"
+SERVER = "demo-app"
 URL = "http://%s:8080" % SERVER
 
 
