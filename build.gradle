@@ -414,7 +414,7 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            URL url = new URL("http://localhost:8080/demo")
+            URL url = new URL("https://silver-spoon-g9wjrwv6gp2975g-8080.app.github.dev/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
