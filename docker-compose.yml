@@ -28,7 +28,7 @@ services:
     # pipenv, chromium, and chromium-driver are now pre-installed.
 
   demo-app:
-    image: charbel123456/ensf400-finalproject:head-4e7c91b
+    image: charbel123456/ensf400-finalproject:HEAD-4e7c91b
     container_name: demo-app
     networks:
       - ci-network

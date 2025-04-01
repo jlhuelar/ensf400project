@@ -17,12 +17,13 @@ jobs:
       - name: Get Git info
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
       - name: Build Docker image
         run: docker build -t charbel123456/ensf400-finalproject:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} .
 
-     
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
