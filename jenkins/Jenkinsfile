@@ -5,7 +5,7 @@ pipeline {
   agent any
 
    environment {
-    HTTP_PROXY = 'http://zap:9888'
+    HTTP_PROXY = 'http://zap:8080'
   }
 
   stages {
@@ -94,6 +94,8 @@ pipeline {
     stage('API Tests') {
       steps {
         sh 'cd src/api_tests && python -m pipenv --python 3 install requests pytest --dev'
+        // Add ZAP check before running tests
+        sh 'curl -s --retry 3 --retry-delay 5 http://zap:8080/JSON/core/view/version || echo "Warning: ZAP not reachable"'
         sh './gradlew runApiTests'
       }
       post {
