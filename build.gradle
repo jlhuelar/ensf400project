@@ -275,7 +275,7 @@ sonarqube {
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.token", "sqp_3126f7493cffdf53f43f08c4f3d71c158e24a7a5"
+        property "sonar.token", "sqp_70335d8388e21e97b8844e67300915082dd7002e"
 
     }
 }
@@ -451,7 +451,7 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    String token = "sqp_3126f7493cffdf53f43f08c4f3d71c158e24a7a5"
+    String token = "sqp_70335d8388e21e97b8844e67300915082dd7002e"
     URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")

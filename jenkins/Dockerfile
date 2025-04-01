@@ -5,6 +5,14 @@ USER root
 # Install Docker and OpenRC
 RUN apk add --no-cache docker openrc
 
+RUN apk add --no-cache openjdk11-jre wget
+
+# Download and install Apache JMeter (version 5.6.2)
+RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O /tmp/jmeter.tgz && \
+    tar -xzf /tmp/jmeter.tgz -C /opt && \
+    ln -s /opt/apache-jmeter-5.6.2/bin/jmeter /usr/local/bin/jmeter && \
+    rm /tmp/jmeter.tgz
+
 # Install necessary plugins
 RUN jenkins-plugin-cli --plugins \
     git \
