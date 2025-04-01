@@ -92,11 +92,20 @@ pipeline {
 
     // Run the tests which investigate the functioning of the API.
     stage('API Tests') {
+      environment {
+        // Set environment variable for tests
+        TEST_SERVER = 'app'
+      }
       steps {
         sh 'cd src/api_tests && python -m pipenv --python 3 install requests pytest --dev'
         // Add ZAP check before running tests
         sh 'curl -s --retry 3 --retry-delay 5 http://zap:8080/JSON/core/view/version || echo "Warning: ZAP not reachable"'
-        sh './gradlew runApiTests'
+        
+        // Run tests with environment variable
+        sh '''
+          export SERVER=app
+          ./gradlew runApiTests
+        '''
       }
       post {
         always {
