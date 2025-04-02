@@ -5,6 +5,7 @@ USER root
 # Install Docker and OpenRC
 RUN apk add --no-cache docker openrc
 
+# Install OpenJDK 11 and wget
 RUN apk add --no-cache openjdk11-jre wget
 
 # Download and install Apache JMeter (version 5.6.2)
@@ -13,7 +14,13 @@ RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz
     ln -s /opt/apache-jmeter-5.6.2/bin/jmeter /usr/local/bin/jmeter && \
     rm /tmp/jmeter.tgz
 
-# Install necessary plugins
+# Install JMeter Plugins Manager
+RUN wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar && \
+    wget https://jmeter-plugins.org/files/cmdrunner/2.2/cmdrunner-2.2.jar -O /opt/apache-jmeter-5.6.2/lib/cmdrunner-2.2.jar && \
+    java -cp /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
+    /opt/apache-jmeter-5.6.2/bin/PluginsManagerCMD.sh install jmeter-plugins-corrected-results-collector
+
+# Install Jenkins plugins
 RUN jenkins-plugin-cli --plugins \
     git \
     gradle \
