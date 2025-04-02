@@ -76,6 +76,3 @@ node_modules/
 .classpath
 .project
 .settings/
-Pipfile
-*.lock
-Pipfile.lock
