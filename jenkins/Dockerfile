@@ -45,6 +45,9 @@ RUN mkdir -p /var/lib/jmeter/reports && \
     chmod -R 755 /var/lib/jmeter && \
     chmod -R 755 /opt/apache-jmeter-5.6.2/temp
 
+RUN mkdir -p /opt/junit5 && \
+    wget https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.2/junit-platform-console-standalone-1.9.2.jar -O /opt/junit5/junit-platform-console-standalone.jar
+
 # Create JMeter properties file with custom settings
 RUN echo "jmeter.reportgenerator.temp_dir=/var/lib/jmeter/temp" >> /opt/apache-jmeter-5.6.2/bin/user.properties
 

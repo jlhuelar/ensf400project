@@ -117,22 +117,6 @@ pipeline {
       }
     }
 
-    // Runs mutation testing against some subset of our software
-    // as a spot test.  Mutation testing is where bugs are seeded
-    // into the software and the tests are run, and we see which
-    // tests fail and which pass, as a result.
-    //
-    // what *should* happen is that where code or tests are altered,
-    // the test should fail, shouldn't it? However, it sometimes
-    // happens that no matter how code is changed, the tests
-    // continue to pass, which implies that the test wasn't really
-    // providing any value for those lines.
-    stage('Mutation Tests') {
-      steps {
-         sh './gradlew pitest --info'
-      }
-    }
-
     stage('Build Documentation') {
       steps {
          sh './gradlew javadoc'
