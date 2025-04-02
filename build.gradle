@@ -187,16 +187,25 @@ dependencies {
 }
 
 pitest {
-    targetClasses =
-            ['com.coveros.training.authentication.RegisterServlet',
-             'com.coveros.training.authentication.RegisterServletTests',
-             'com.coveros.training.library.LibraryUtils',
-             'com.coveros.training.library.LibraryUtilsTests']
+    targetClasses = [
+            'com.coveros.training.authentication.RegisterServlet',
+            'com.coveros.training.authentication.RegisterServletTests',
+            'com.coveros.training.library.LibraryUtils',
+            'com.coveros.training.library.LibraryUtilsTests'
+    ]
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
     junit5PluginVersion = '1.1.0'
     pitestVersion = '1.11.0'
+    
+    verbose = true
+    features = ['+USE_CLASSPATH_JARS']
+    jvmArgs = ['-XX:+UseG1GC', '-XX:+UseStringDeduplication']
+    targetTests = ['com.coveros.*']
+    excludedTestClasses = []
+    failWhenNoMutations = false
+    avoidCallsTo = ['java.util.logging', 'org.apache.log4j', 'org.slf4j']
 }
 
 tasks.getByName('pitest').finalizedBy 'printReportPathsPitest'
