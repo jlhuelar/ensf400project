@@ -200,12 +200,18 @@ pitest {
     pitestVersion = '1.11.0'
     
     verbose = true
-    features = ['+USE_CLASSPATH_JARS']
-    jvmArgs = ['-XX:+UseG1GC', '-XX:+UseStringDeduplication']
+    features = ['+EXPORT']
+    jvmArgs = [
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-Xmx512m'
+    ]
     targetTests = ['com.coveros.*']
     excludedTestClasses = []
     failWhenNoMutations = false
     avoidCallsTo = ['java.util.logging', 'org.apache.log4j', 'org.slf4j']
+    mutators = ['DEFAULTS']
+    includeLaunchClasspath = true
 }
 
 tasks.getByName('pitest').finalizedBy 'printReportPathsPitest'
