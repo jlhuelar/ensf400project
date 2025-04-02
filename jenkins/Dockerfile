@@ -24,6 +24,12 @@ RUN jenkins-plugin-cli --plugins \
 RUN apk add --no-cache python3 py3-pip && \
     pip3 install --no-cache-dir pipenv --break-system-packages
 
+# Create and set permissions for JMeter work directories
+RUN mkdir -p /var/lib/jmeter/reports && \
+    mkdir -p /var/lib/jmeter/results && \
+    chown -R jenkins:jenkins /var/lib/jmeter && \
+    chmod -R 755 /var/lib/jmeter
+
 # Switch back to Jenkins user
 USER jenkins
 
