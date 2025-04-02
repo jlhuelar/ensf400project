@@ -650,14 +650,41 @@ task deployToTestWindowsLocal(type: Copy) {
 }
 
 task runPerfTests(type: Exec) {
+    doFirst {
+        // Create required directories
+        file("$buildDir/reports/perf_report").mkdirs()
+        file("$buildDir/jmeter").mkdirs()
+    }
+
     workingDir '.'
     def osName = System.getProperty("os.name").toLowerCase()
     if (osName.contains("windows")) {
-        commandLine 'jmeter.bat', '-f', '-n', '-t', 'docs\\performance_testing\\50_users_at_once.jmx', '-l', 'build\\jmeter_perf_test.csv', '-e', '-o', 'build\\reports\\perf_report'
+        commandLine 'jmeter.bat', 
+                   '-j', "$buildDir/jmeter/jmeter.log",
+                   '-f', 
+                   '-n', 
+                   '-t', 'docs\\performance_testing\\50_users_at_once.jmx',
+                   '-l', 'build\\jmeter_perf_test.csv',
+                   '-e',
+                   '-o', 'build\\reports\\perf_report'
     } else {
-        commandLine 'jmeter', '-f', '-n', '-t', 'docs/performance_testing/50_users_at_once.jmx', '-l', 'build/jmeter_perf_test.csv', '-e', '-o', 'build/reports/perf_report'
+        commandLine 'jmeter',
+                   '-j', "$buildDir/jmeter/jmeter.log",
+                   '-f', 
+                   '-n', 
+                   '-t', 'docs/performance_testing/50_users_at_once.jmx',
+                   '-l', 'build/jmeter_perf_test.csv',
+                   '-e',
+                   '-o', 'build/reports/perf_report'
     }
-    standardOutput = new ByteArrayOutputStream()
-    ext.output = { standardOutput.toString() }
-}
 
+    // Log both standard and error output
+    standardOutput = new ByteArrayOutputStream()
+    errorOutput = new ByteArrayOutputStream()
+
+    doLast {
+        println "Standard Output: ${standardOutput.toString()}"
+        println "Error Output: ${errorOutput.toString()}"
+        println "Check JMeter log at: $buildDir/jmeter/jmeter.log"
+    }
+}
