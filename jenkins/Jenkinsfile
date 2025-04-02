@@ -126,7 +126,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl http://zap/OTHER/core/other/htmlreport --proxy zap:9888 > build/reports/zap/zap_report.html'
+        sh 'curl http://zap/OTHER/core/other/htmlreport --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 
