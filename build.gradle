@@ -211,7 +211,7 @@ pitest {
     failWhenNoMutations = false
     avoidCallsTo = ['java.util.logging', 'org.apache.log4j', 'org.slf4j']
     mutators = ['DEFAULTS']
-    includeLaunchClasspath = true
+    useClasspathFile = true
 }
 
 tasks.getByName('pitest').finalizedBy 'printReportPathsPitest'
