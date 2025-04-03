@@ -469,11 +469,15 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    String token = "sqp_984f68c08e15734d790bec5361f7145d41500e32"
+    String username = "admin" // Replace with your SonarQube username
+    String password = "Sunshine123!" // Replace with your SonarQube password
+    String auth = username + ":" + password
+    String encodedAuth = auth.bytes.encodeBase64().toString()
+
     URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
-    connection.setRequestProperty("Authorization", "Bearer " + token)
+    connection.setRequestProperty("Authorization", "Basic " + encodedAuth)
     connection.connect()
     int code = connection.getResponseCode()
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
