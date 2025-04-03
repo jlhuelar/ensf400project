@@ -472,19 +472,24 @@ static void isQualityGateGood() {
     URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
+    
+    // Add the Authorization header for basic authentication
+    String auth = "admin:Sunshine123!"
+    String encodedAuth = Base64.encoder.encodeToString(auth.bytes)
+    connection.setRequestProperty("Authorization", "Basic " + encodedAuth)
+    
     connection.connect()
     int code = connection.getResponseCode()
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
     String strCurrentLine
     while ((strCurrentLine = br.readLine()) != null) {
-        // ha ha no need to parse JSON!
-        print(strCurrentLine)
+        // Check for quality gate failure
         if (strCurrentLine.startsWith("{\"projectStatus\":{\"status\":\"ERROR\"")) {
-            throw new GradleException("The quality gate for Demo on Sonarqube failed.  Check Sonarqube.")
+            throw new GradleException("The quality gate for Demo on SonarQube failed. Check SonarQube.")
         }
     }
     if (code != 200) {
-        throw new GradleException("response from Sonar was " + code)
+        throw new GradleException("Response from SonarQube was " + code)
     }
 }
 
