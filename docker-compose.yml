@@ -26,7 +26,7 @@ services:
       - app-network
 
   sonarqube:
-    image: sonarqube:community
+    image: sonarqube:8.9-community # Replace with the desired SonarQube version
     ports:
       - "9000:9000" # SonarQube UI exposed on port 9000
     networks:
