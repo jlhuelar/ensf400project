@@ -601,6 +601,8 @@ dependencyCheck {
     // if we don't include the specific configurations to scan, it will scan everything,
     // which means getting into the dependencies of tomcat and jetty, which should
     // have no bearing on us.
+    dataDirectory = "$buildDir/dependency-check-data"
+    connectionString = "jdbc:h2:file:$buildDir/dependency-check;DB_CLOSE_ON_EXIT=FALSE"
     scanConfigurations = ['default']
     showSummary = false
     autoUpdate = true
