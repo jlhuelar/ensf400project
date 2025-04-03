@@ -36,7 +36,7 @@ plugins {
     // which code-under-test is actually "tested", rather than
     // simply being run during the test.  It does this by
     // changing the code and seeing if the test fails as a result.
-    id 'info.solidsoft.pitest' version '1.5.1'
+    id 'info.solidsoft.pitest' version '1.9.11'
 
     // Dependency Check analyzes the dependencies for 
     // potential security issues.
@@ -187,14 +187,31 @@ dependencies {
 }
 
 pitest {
-    targetClasses =
-            ['com.coveros.training.authentication.RegisterServlet',
-             'com.coveros.training.authentication.RegisterServletTests',
-             'com.coveros.training.library.LibraryUtils',
-             'com.coveros.training.library.LibraryUtilsTests']
+    targetClasses = [
+            'com.coveros.training.authentication.RegisterServlet',
+            'com.coveros.training.authentication.RegisterServletTests',
+            'com.coveros.training.library.LibraryUtils',
+            'com.coveros.training.library.LibraryUtilsTests'
+    ]
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
+    junit5PluginVersion = '1.1.0'
+    pitestVersion = '1.11.0'
+    
+    verbose = true
+    features = ['+EXPORT']
+    jvmArgs = [
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-Xmx512m'
+    ]
+    targetTests = ['com.coveros.*']
+    excludedTestClasses = []
+    failWhenNoMutations = false
+    avoidCallsTo = ['java.util.logging', 'org.apache.log4j', 'org.slf4j']
+    mutators = ['DEFAULTS']
+    useClasspathFile = true
 }
 
 tasks.getByName('pitest').finalizedBy 'printReportPathsPitest'
@@ -266,6 +283,7 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
+        property "sonar.host.url", "http://sonarqube:9000"
         property "sonar.projectKey", "$projectname"
         property "sonar.projectName", "$projectname"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"
@@ -274,8 +292,8 @@ sonarqube {
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.login", "admin"
-        property "sonar.password", "Sunshine123!"
+        property "sonar.token", "sqp_984f68c08e15734d790bec5361f7145d41500e32"
+
     }
 }
 
@@ -382,7 +400,7 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        URL url = new URL("https://silver-spoon-g9wjrwv6gp2975g-8080.app.github.dev/demo")
+        URL url = new URL("http://app:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
@@ -414,7 +432,7 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            URL url = new URL("https://silver-spoon-g9wjrwv6gp2975g-8080.app.github.dev/demo")
+            URL url = new URL("http://app:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
@@ -450,22 +468,23 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    URL url = new URL("http://localhost:9000/api/qualitygates/project_status?projectKey=Demo")
+    String token = "sqp_984f68c08e15734d790bec5361f7145d41500e32"
+    URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
+    connection.setRequestProperty("Authorization", "Bearer " + token)
     connection.connect()
     int code = connection.getResponseCode()
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
     String strCurrentLine
     while ((strCurrentLine = br.readLine()) != null) {
-        // ha ha no need to parse JSON!
         print(strCurrentLine)
         if (strCurrentLine.startsWith("{\"projectStatus\":{\"status\":\"ERROR\"")) {
-            throw new GradleException("The quality gate for Demo on Sonarqube failed.  Check Sonarqube.")
+            throw new GradleException("The quality gate for Demo on SonarQube failed. Check SonarQube.")
         }
     }
     if (code != 200) {
-        throw new GradleException("response from Sonar was " + code)
+        throw new GradleException("Response from SonarQube was " + code)
     }
 }
 
@@ -647,20 +666,26 @@ task deployToTestWindowsLocal(type: Copy) {
     }
 }
 
-task runPerfTests(type:Exec) {
-    workingDir '.'
+task runPerfTests(type: Exec) {
+    // Use project directory as working directory
+    workingDir project.projectDir
 
-    //on windows:
-    commandLine 'jmeter.bat', '-f', '-n', '-t', 'docs\\performance_testing\\50_users_at_once.jmx', '-l', 'build\\jmeter_perf_test.csv', '-e', '-o', 'build\\reports\\perf_report'
+    commandLine '/usr/local/bin/jmeter',
+            '-f',
+            '-n',
+            '-t', "${projectDir}/docs/performance_testing/50_users_at_once.jmx",
+            '-l', "${buildDir}/jmeter_perf_test.csv",
+            '-e',
+            '-o', "${buildDir}/reports/perf_report",
+            '-j', "${buildDir}/jmeter.log"
 
-    //store the output instead of printing to the console:
+    // Ensure output directories exist
+    doFirst {
+        file("${buildDir}/reports/perf_report").mkdirs()
+    }
+
     standardOutput = new ByteArrayOutputStream()
-
-    //extension method stopTomcat.output() can be used to obtain the output:
     ext.output = {
         return standardOutput.toString()
     }
 }
-
-
-

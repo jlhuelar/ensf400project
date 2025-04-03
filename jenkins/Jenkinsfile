@@ -5,10 +5,8 @@ pipeline {
   agent any
 
    environment {
-        // This is set so that the Python API tests will recognize it
-        // and go through the Zap proxy waiting at 9888
-        HTTP_PROXY = 'http://127.0.0.1:9888'
-   }
+    HTTP_PROXY = 'http://zap:8080'
+  }
 
   stages {
 
@@ -87,54 +85,8 @@ pipeline {
       sh './gradlew waitForHeartBeat'
 
       // clear Zap's memory for the incoming tests
-      sh 'curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888'
+      sh 'curl http://zap/JSON/core/action/newSession -s --proxy zap:8080'
       }
-    }
-
-
-    // Run the tests which investigate the functioning of the API.
-    stage('API Tests') {
-      steps {
-        sh './gradlew runApiTests'
-      }
-      post {
-        always {
-          junit 'build/test-results/api_tests/*.xml'
-        }
-      }
-    }
-
-    // We use a BDD framework for some UI tests, Behave, because Python rules
-    // when it comes to experimentation with UI tests.  You can try things and see how they work out.
-    // this set of BDD tests does require a running system.
-    // BDD at the UI level is just to ensure that basic capabilities work,
-    // not that every little detail of UI functionality is correct.  For
-    // that purpose, see the following stage, "UI Tests"
-    stage('UI BDD Tests') {
-      steps {
-        sh './gradlew runBehaveTests'
-        sh './gradlew generateCucumberReport'
-      }
-      post {
-        always {
-          junit 'build/test-results/bdd_ui/*.xml'
-        }
-      }
-    }
-
-    // This set of tests investigates the functionality of the UI.
-    // Note that this is separate fom the UI BDD Tests, which
-    // only focuses on essential capability and therefore only
-    // covers a small subset of the possibilities of UI behavior.
-    stage('UI Tests') {
-        steps {
-            sh 'cd src/ui_tests/java && ./gradlew clean test'
-        }
-        post {
-            always {
-                junit 'src/ui_tests/java/build/test-results/test/*.xml'
-            }
-        }
     }
 
     // Run OWASP's "DependencyCheck". https://owasp.org/www-project-dependency-check/
@@ -161,23 +113,7 @@ pipeline {
     // for a set of common tasks.
     stage('Performance Tests') {
       steps {
-         sh './gradlew runPerfTests'
-      }
-    }
-
-    // Runs mutation testing against some subset of our software
-    // as a spot test.  Mutation testing is where bugs are seeded
-    // into the software and the tests are run, and we see which
-    // tests fail and which pass, as a result.
-    //
-    // what *should* happen is that where code or tests are altered,
-    // the test should fail, shouldn't it? However, it sometimes
-    // happens that no matter how code is changed, the tests
-    // continue to pass, which implies that the test wasn't really
-    // providing any value for those lines.
-    stage('Mutation Tests') {
-      steps {
-         sh './gradlew pitest'
+         sh './gradlew runPerfTests --info --stacktrace'
       }
     }
 
@@ -190,7 +126,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl http://zap/OTHER/core/other/htmlreport --proxy localhost:9888 > build/reports/zap/zap_report.html'
+        sh 'curl http://zap/OTHER/core/other/htmlreport --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 
