@@ -292,7 +292,8 @@ sonarqube {
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.token", "sqp_984f68c08e15734d790bec5361f7145d41500e32"
+        property "sonar.login", "admin"
+        property "sonar.password", "Sunshine123!"
 
     }
 }
