@@ -30,6 +30,7 @@ public class SeleniumTests {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
+        options.addArguments("--disable-features=VizDisplayCompositor"); // NEW: helps prevent tab crashes
         // This option is deprecated; remove it if not needed.
         options.setExperimentalOption("useAutomationExtension", false);
         
