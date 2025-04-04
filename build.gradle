@@ -583,15 +583,15 @@ test {
 }
 
 dependencyCheck {
-    data {
-        url = "jdbc:h2:file:${project.buildDir}/dependency-check-data;DB_CLOSE_ON_EXIT=FALSE"
-    }
+    // if we don't include the specific configurations to scan, it will scan everything,
+    // which means getting into the dependencies of tomcat and jetty, which should
+    // have no bearing on us.
     scanConfigurations = ['default']
     showSummary = false
     autoUpdate = true
     cveValidForHours = 24 * 30 * 12 // about a year.
-    format = 'HTML'
-    failBuildOnCVSS = 8
+    format = 'HTML' // options are  (HTML, XML, CSV, JSON, VULN, ALL).
+    failBuildOnCVSS = 8 // see https://www.first.org/cvss/specification-document#5-Qualitative-Severity-Rating-Scale
 }
 
 task('printReportPathsCheck') {
