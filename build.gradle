@@ -434,7 +434,7 @@ void waitForHeartbeat() {
     while (code != 200){
         try {
             String appHost = "app"
-            URL url = new URL("http://${appHost}:8080/demo")
+            URL url = new URL("http://localhost:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
