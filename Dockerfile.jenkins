@@ -8,5 +8,15 @@ RUN apt-get update && \
     apt-get install -y pipenv chromium chromium-driver && \
     apt-get clean
 
+# Install dependencies needed for JMeter
+RUN apt-get update && apt-get install -y wget unzip openjdk-11-jre
+
+# Download and install Apache JMeter
+RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O /tmp/apache-jmeter.tgz && \
+    tar -xzf /tmp/apache-jmeter.tgz -C /opt && \
+    rm /tmp/apache-jmeter.tgz && \
+    ln -s /opt/apache-jmeter-5.4.3/bin/jmeter /usr/local/bin/jmeter
+
+
 # Switch back to jenkins user
 USER jenkins

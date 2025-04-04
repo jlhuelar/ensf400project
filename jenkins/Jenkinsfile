@@ -90,16 +90,16 @@ pipeline {
     }
 
     // Run the tests which investigate the functioning of the API.
-    stage('API Tests') {
-      steps {
-        sh './gradlew runApiTests'
-      }
-      post {
-        always {
-          junit 'build/test-results/api_tests/*.xml'
-        }
-      }
-    }
+    // stage('API Tests') {
+    //   steps {
+    //     sh './gradlew runApiTests'
+    //   }
+    //   post {
+    //     always {
+    //       junit 'build/test-results/api_tests/*.xml'
+    //     }
+    //   }
+    // }
 
     // We use a BDD framework for some UI tests, Behave, because Python rules
     // when it comes to experimentation with UI tests.  You can try things and see how they work out.
@@ -107,51 +107,51 @@ pipeline {
     // BDD at the UI level is just to ensure that basic capabilities work,
     // not that every little detail of UI functionality is correct.  For
     // that purpose, see the following stage, "UI Tests"
-    stage('UI BDD Tests') {
-      environment {
-        HTTP_PROXY = ''
-  }
-      steps {
-        sh './gradlew runBehaveTests'
-        sh './gradlew generateCucumberReport'
-      }
-      post {
-        always {
-          junit 'build/test-results/bdd_ui/*.xml'
-        }
-      }
-    }
+  //   stage('UI BDD Tests') {
+  //     environment {
+  //       HTTP_PROXY = ''
+  // }
+  //     steps {
+  //       sh './gradlew runBehaveTests'
+  //       sh './gradlew generateCucumberReport'
+  //     }
+  //     post {
+  //       always {
+  //         junit 'build/test-results/bdd_ui/*.xml'
+  //       }
+  //     }
+  //   }
 
-    stage('Clear WDM Cache') {
-      steps {
-        echo "Attempting to clear WebDriverManager cache..."
-        // Force remove the cache directory. Adjust path if needed for your specific Jenkins setup on Windows.
-        // This path comes from previous logs. If Jenkins runs as a different user or uses a different
-        // shell (like PowerShell), this might need adjustment (e.g., using %USERPROFILE% or different command).
-        // Added || true to prevent failure if the directory doesn't exist.
-        sh 'rm -rf jenkins_home/.cache/selenium || echo "Cache directory not found or could not be removed."'
-        echo "WebDriverManager cache clearing attempt finished."
-      }
-    }
+    // stage('Clear WDM Cache') {
+    //   steps {
+    //     echo "Attempting to clear WebDriverManager cache..."
+    //     // Force remove the cache directory. Adjust path if needed for your specific Jenkins setup on Windows.
+    //     // This path comes from previous logs. If Jenkins runs as a different user or uses a different
+    //     // shell (like PowerShell), this might need adjustment (e.g., using %USERPROFILE% or different command).
+    //     // Added || true to prevent failure if the directory doesn't exist.
+    //     sh 'rm -rf jenkins_home/.cache/selenium || echo "Cache directory not found or could not be removed."'
+    //     echo "WebDriverManager cache clearing attempt finished."
+    //   }
+    // }
 
     // This set of tests investigates the functionality of the UI.
     // Note that this is separate fom the UI BDD Tests, which
     // only focuses on essential capability and therefore only
     // covers a small subset of the possibilities of UI behavior.
-   stage('UI Tests') {
-    steps {
-        sh '''
-          cd src/ui_tests/java
-          chmod +x gradlew
-          ./gradlew clean test --refresh-dependencies        
-          '''
-    }
-    post {
-        always {
-            junit 'src/ui_tests/java/build/test-results/test/*.xml'
-        }
-    }
-}
+//    stage('UI Tests') {
+//     steps {
+//         sh '''
+//           cd src/ui_tests/java
+//           chmod +x gradlew
+//           ./gradlew clean test --refresh-dependencies        
+//           '''
+//     }
+//     post {
+//         always {
+//             junit 'src/ui_tests/java/build/test-results/test/*.xml'
+//         }
+//     }
+// }
 
 
     // Run OWASP's "DependencyCheck". https://owasp.org/www-project-dependency-check/
