@@ -12,11 +12,11 @@ jobs:
 
     services:
       app:
-        build:
-          context: .
-          dockerfile: Dockerfile
+        image: boumster/ensf400:latest
         ports:
           - 8080:8080
+        env:
+          GITHUB_ACTIONS: "true"
 
     steps:
       - uses: actions/checkout@v3
