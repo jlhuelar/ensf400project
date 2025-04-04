@@ -11,7 +11,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -20,18 +19,18 @@ public class SeleniumTests {
 
     @BeforeClass
     public static void setUp() {
-        // Force WebDriverManager to download the driver matching browser major version 134.
+        // Force WebDriverManager to download the driver matching Chrome version 134.
         WebDriverManager.chromedriver()
-            .browserVersion("134")
-            .forceDownload()
-            .setup();
+                .browserVersion("134")
+                .forceDownload()
+                .setup();
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
-        // The following option is deprecated; remove it if not needed.
+        // Remove or ignore this deprecated option if it causes warnings.
         options.setExperimentalOption("useAutomationExtension", false);
         
         driver = new ChromeDriver(options);
@@ -61,16 +60,14 @@ public class SeleniumTests {
         driver.findElement(By.id("lend_borrower")).sendKeys("some borrower");
         driver.findElement(By.id("lend_book_submit")).click();
 
-        // Wait for the result element to appear
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 10); // 10 seconds timeout
         WebElement resultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String result = resultElement.getText();
         assertEquals("SUCCESS", result);
     }
 
     /**
-     * In this case, we're adding no books so the input should be locked,
-     * resulting in an ElementNotInteractableException.
+     * Expects an exception when interacting with a locked input.
      */
     @Test(expected = org.openqa.selenium.ElementNotInteractableException.class)
     public void test_shouldShowLockedInput() {
@@ -97,7 +94,7 @@ public class SeleniumTests {
               .click();
         driver.findElement(By.id("lend_book_submit")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement resultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String result = resultElement.getText();
         assertEquals("SUCCESS", result);
@@ -129,15 +126,14 @@ public class SeleniumTests {
               .click();
         driver.findElement(By.id("lend_book_submit")).click();
 
-        // Wait for the result element to appear
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement resultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String result = resultElement.getText();
         assertEquals("SUCCESS", result);
     }
 
     /**
-     * Tests that quotes in book or borrower names are handled correctly.
+     * Tests that quotes in a book or borrower name are handled correctly.
      */
     @Test
     public void test_ShouldHandleQuotesInBookOrBorrowerValue() {
@@ -154,7 +150,7 @@ public class SeleniumTests {
               .click();
         driver.findElement(By.id("lend_book_submit")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement resultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String result = resultElement.getText();
         assertEquals("SUCCESS", result);
@@ -171,7 +167,7 @@ public class SeleniumTests {
         driver.findElement(By.id("register_password")).sendKeys("lasdfj;alsdkfjasdf");
         driver.findElement(By.id("register_submit")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         WebElement registerResultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String registerResult = registerResultElement.getText();
         assertTrue("result was " + registerResult,
