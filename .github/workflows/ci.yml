@@ -23,8 +23,8 @@ jobs:
       - name: Build and Start Containers
         run: |
           echo "Building and starting containers with docker-compose"
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml up -d
 
       - name: Wait for Services to Start
         run: |
