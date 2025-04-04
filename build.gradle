@@ -656,20 +656,26 @@ task deployToTestWindowsLocal(type: Copy) {
     }
 }
 
-task runPerfTests(type:Exec) {
+task runPerfTests(type: Exec) {
     workingDir '.'
-
-    //on windows:
-    commandLine 'jmeter.bat', '-f', '-n', '-t', 'docs\\performance_testing\\50_users_at_once.jmx', '-l', 'build\\jmeter_perf_test.csv', '-e', '-o', 'build\\reports\\perf_report'
-
-    //store the output instead of printing to the console:
+    
+    // Determine the command based on the operating system.
+    def isWindows = System.properties['os.name'].toLowerCase().contains('windows')
+    def jmeterCommand = isWindows ? 'jmeter.bat' : 'jmeter'
+    
+    // Define the file paths using Gradle's file() method.
+    def jmxFile = file('docs/performance_testing/50_users_at_once.jmx')
+    def resultFile = file('build/jmeter_perf_test.csv')
+    def reportDir = file('build/reports/perf_report')
+    
+    // Set up the command line.
+    commandLine jmeterCommand, '-f', '-n', '-t', jmxFile.absolutePath, '-l', resultFile.absolutePath, '-e', '-o', reportDir.absolutePath
+    
+    // Capture the output if needed.
     standardOutput = new ByteArrayOutputStream()
-
-    //extension method stopTomcat.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
+    ext.output = { standardOutput.toString() }
 }
+
 
 
 

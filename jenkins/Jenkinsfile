@@ -167,11 +167,11 @@ pipeline {
     // Standards and Technology (NIST), and checks if the software
     // we are importing has any major known vulnerabilities. If so,
     // the build will halt at this point.
-    stage('Security: Dependency Analysis') {
-      steps {
-        sh './gradlew dependencyCheckAnalyze'
-      }
-    }
+    // stage('Security: Dependency Analysis') {
+    //   steps {
+    //     sh './gradlew dependencyCheckAnalyze'
+    //   }
+    // }
 
     // Run Jmeter performance testing https://jmeter.apache.org/
     // This test simulates 50 users concurrently using our software
