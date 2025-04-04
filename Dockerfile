@@ -20,7 +20,5 @@ EXPOSE 8080
 # Make the Gradle wrapper executable
 RUN chmod +x gradlew
 
-ENV GITHUB_ACTIONS=false
-
 # Run the application using the Gradle wrapper
 CMD ["./gradlew", "apprun"]

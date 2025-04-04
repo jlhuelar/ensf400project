@@ -283,7 +283,7 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
-                property "sonar.host.url", System.getenv("GITHUB_ACTIONS") ? "http://localhost:9000" : "http://sonarqube:9000"
+                property "sonar.host.url","http://sonarqube:9000"
         property "sonar.projectKey", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
         property "sonar.projectName", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"
@@ -400,7 +400,7 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        String appHost = System.getenv("GITHUB_ACTIONS") ? "localhost" : "app"
+        String appHost = "app"
         URL url = new URL("http://${appHost}:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
@@ -433,7 +433,7 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            String appHost = System.getenv("GITHUB_ACTIONS") ? "localhost" : "app"
+            String appHost = "app"
             URL url = new URL("http://${appHost}:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
@@ -470,7 +470,7 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    String sonarHost = System.getenv("GITHUB_ACTIONS") ? "localhost" : "sonarqube"
+    String sonarHost = "sonarqube"
     URL url = new URL("http://${sonarHost}:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")

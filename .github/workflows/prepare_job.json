@@ -1,0 +1,70 @@
+{
+  "jobContainer": {
+    "image": "boumster/ensf400:latest",
+    "workingDirectory": "/app",
+    "createOptions": "--cpus 2",
+    "environmentVariables": {
+      "GITHUB_ACTIONS": "true",
+      "NODE_ENV": "development"
+    },
+    "userMountVolumes": [
+      {
+        "sourceVolumePath": "my_docker_volume",
+        "targetVolumePath": "/volume_mount",
+        "readOnly": false
+      }
+    ],
+    "systemMountVolumes": [
+      {
+        "sourceVolumePath": "/home/runner/_work",
+        "targetVolumePath": "/__w",
+        "readOnly": false
+      },
+      {
+        "sourceVolumePath": "/home/runner/_work/_temp",
+        "targetVolumePath": "/__w/_temp",
+        "readOnly": false
+      },
+      {
+        "sourceVolumePath": "/home/runner/_work/_actions",
+        "targetVolumePath": "/__w/_actions",
+        "readOnly": false
+      }
+    ],
+    "registry": {
+      "username": "your-docker-username",
+      "password": "your-docker-password",
+      "serverUrl": "https://index.docker.io/v1"
+    },
+    "portMappings": {
+      "8080": "8080"
+    }
+  },
+  "services": [
+    {
+      "contextName": "sonarqube",
+      "image": "sonarqube:8.9-community",
+      "createOptions": "--cpus 1",
+      "environmentVariables": {},
+      "userMountVolumes": [],
+      "portMappings": {
+        "9000": "9000"
+      },
+      "registry": {
+        "username": "your-docker-username",
+        "password": "your-docker-password",
+        "serverUrl": "https://index.docker.io/v1"
+      }
+    },
+    {
+      "contextName": "zap",
+      "image": "ghcr.io/zaproxy/zaproxy:stable",
+      "createOptions": "--cpus 1",
+      "environmentVariables": {},
+      "userMountVolumes": [],
+      "portMappings": {
+        "9888": "8080"
+      }
+    }
+  ]
+}
