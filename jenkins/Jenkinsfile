@@ -126,17 +126,21 @@ pipeline {
     // Note that this is separate fom the UI BDD Tests, which
     // only focuses on essential capability and therefore only
     // covers a small subset of the possibilities of UI behavior.
-    stage('UI Tests') {
-      steps {
-        sh 'chmod +x gradlew'
-        sh 'cd src/ui_tests/java && ./gradlew clean test'
-      }
-      post {
-        always {
-          junit 'src/ui_tests/java/build/test-results/test/*.xml'
-        }
-      }
+   stage('UI Tests') {
+    steps {
+        sh '''
+          cd src/ui_tests/java
+          chmod +x gradlew
+          ./gradlew clean test
+        '''
     }
+    post {
+        always {
+            junit 'src/ui_tests/java/build/test-results/test/*.xml'
+        }
+    }
+}
+
 
     // Run OWASP's "DependencyCheck". https://owasp.org/www-project-dependency-check/
     // You are what you eat - and so it is with software.  This
