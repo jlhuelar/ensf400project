@@ -104,36 +104,41 @@ jobs:
       
       - name: Test Application Connectivity
         run: |
-              echo "Waiting for the application to start..."
-              sleep 30
-      
-              echo "Testing connectivity to the application using localhost..."
-              curl -s -o /dev/null -w "Localhost HTTP Status: %{http_code}\n" http://localhost:8080/demo || echo "Failed to connect to localhost"
-      
-              echo "Testing connectivity to the application using service name..."
-              docker run --rm --network ensf400-final-project_app-network curlimages/curl:latest curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
+            echo "Testing connectivity to the application using localhost..."
+            curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
 
       - name: Deploy to Test
         run: |
-          echo "Running Deploy to Test inside the Docker Compose network..."
-          docker compose exec app sh -c "
+          echo "Running Deploy to Test inside the Jenkins container..."
+          docker compose exec jenkins sh -c "
+            python -m pip install --upgrade pip &&
+            pip install pipenv &&
             ./gradlew deployToTestWindowsLocal &&
             PIPENV_IGNORE_VIRTUALENVS=1 pipenv install &&
             ./gradlew waitForHeartBeat &&
             curl http://zap:8080/JSON/core/action/newSession -s --proxy zap:8080
           "
-
+    
       - name: Security Dependency Analysis
-        run: ./gradlew dependencyCheckAnalyze
+        run: |
+          echo "Running Security Dependency Analysis inside the Jenkins container..."
+          docker compose exec jenkins sh -c "./gradlew dependencyCheckAnalyze"
 
       - name: Performance Tests
-        run: ./gradlew runPerfTests --info --stacktrace
+        run: |
+          echo "Running Performance Tests inside the Jenkins container..."
+          docker compose exec jenkins sh -c "./gradlew runPerfTests --info --stacktrace"
 
       - name: Build Documentation
-        run: ./gradlew javadoc
+        run: |
+          echo "Building Documentation inside the Jenkins container..."
+          docker compose exec jenkins sh -c "./gradlew javadoc"
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          echo "Simulating production deployment"
-          sleep 5
+          echo "Deploying to Production inside the Jenkins container..."
+          docker compose exec jenkins sh -c "
+            echo 'Simulating production deployment' &&
+            sleep 5
+          "
