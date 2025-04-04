@@ -80,6 +80,14 @@ jobs:
         with:
           name: BDD Test Results
           path: build/test-results/bdd/*.xml
+      
+      - name: Test Application Connectivity
+        run: |
+            echo "Testing connectivity to the application using localhost..."
+            curl -s -o /dev/null -w "Localhost HTTP Status: %{http_code}\n" http://localhost:8080/demo || echo "Failed to connect to localhost"
+  
+            echo "Testing connectivity to the application using service name..."
+            curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
 
       - name: Deploy to Test
         run: |
