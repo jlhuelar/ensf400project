@@ -20,9 +20,9 @@ RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz
 
 # Install JMeter Plugins Manager, Standard Set, and Corrected Plugin
 RUN wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.4.3/lib/ext/jmeter-plugins-manager.jar && \
-    wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar -O /opt/apache-jmeter-5.4.3/lib/cmdrunner-2.2.jar && \
+    wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.3/cmdrunner-2.3.jar -O /opt/apache-jmeter-5.4.3/lib/cmdrunner-2.3.jar && \
     java -cp /opt/apache-jmeter-5.4.3/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
     /opt/apache-jmeter-5.4.3/bin/PluginsManagerCMD.sh install jpgc-standard jpgc-corrected
 
-# Switch back to the Jenkins user
+# Switch back to the jenkins user
 USER jenkins
