@@ -9,12 +9,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.BeforeClass;  // For @BeforeClass
 
 public class SeleniumTests {
     private static WebDriver driver;
 
     @BeforeClass
-    public void setUp() {
+    public static void setUp() {
         WebDriverManager.chromedriver().setup();
         
         ChromeOptions options = new ChromeOptions();
