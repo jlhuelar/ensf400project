@@ -16,7 +16,7 @@ public class ApiCalls {
      */
     public static String registerUser(String username, String password) {
         try {
-            final Content content = Request.Post("http://localhost:8080/demo/register")
+            final Content content = Request.Post("http://demo-app:8080/demo/register")
                     .bodyForm(Form.form().add("username", username).add("password", password).build())
                     .execute().returnContent();
             return content.asString();
@@ -29,7 +29,7 @@ public class ApiCalls {
 
     public static String registerBook(String title) {
         try {
-            final Content content = Request.Post("http://localhost:8080/demo/registerbook")
+            final Content content = Request.Post("http://demo-app:8080/demo/registerbook")
                     .bodyForm(Form.form().add("book", title).build())
                     .execute().returnContent();
             return content.asString();
@@ -41,7 +41,7 @@ public class ApiCalls {
 
     public static String registerBorrowers(String name) {
         try {
-            final Content content = Request.Post("http://localhost:8080/demo/registerborrower")
+            final Content content = Request.Post("http://demo-app:8080/demo/registerborrower")
                     .bodyForm(Form.form().add("borrower", name).build())
                     .execute().returnContent();
             return content.asString();

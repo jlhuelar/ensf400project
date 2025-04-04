@@ -656,20 +656,22 @@ task deployToTestWindowsLocal(type: Copy) {
     }
 }
 
-task runPerfTests(type:Exec) {
+task runPerfTests(type: Exec) {
     workingDir '.'
-
-    //on windows:
-    commandLine 'jmeter.bat', '-f', '-n', '-t', 'docs\\performance_testing\\50_users_at_once.jmx', '-l', 'build\\jmeter_perf_test.csv', '-e', '-o', 'build\\reports\\perf_report'
-
-    //store the output instead of printing to the console:
+    
+    def isWindows = System.properties['os.name'].toLowerCase().contains('windows')
+    def jmeterCommand = isWindows ? 'jmeter.bat' : 'jmeter'
+    
+    def jmxFile = file('docs/performance_testing/50_users_at_once.jmx')
+    def resultFile = file('build/jmeter_perf_test.csv')
+    
+    // Remove dashboard generation flags
+    commandLine jmeterCommand, '-f', '-n', '-t', jmxFile.absolutePath, '-l', resultFile.absolutePath
+    
     standardOutput = new ByteArrayOutputStream()
-
-    //extension method stopTomcat.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
+    ext.output = { standardOutput.toString() }
 }
+
 
 
 
