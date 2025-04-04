@@ -28,7 +28,7 @@ services:
     # pipenv, chromium, and chromium-driver are now pre-installed.
 
   demo-app:
-    image: charbel123456/ensf400-finalproject:HEAD-4e7c91b
+    image: charbel123456/ensf400-finalproject:head-4e7c91b
     container_name: demo-app
     networks:
       - ci-network
@@ -43,7 +43,7 @@ services:
     ports:
       - "9888:8080"
     command: >
-      zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=ec1d1dfb435d67bf109e954480d9f81e -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true 
+      zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.key=276bd087d1044ed8e9fd47b21ee2d330 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true 
 
 
 networks:
