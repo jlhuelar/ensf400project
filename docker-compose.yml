@@ -20,7 +20,6 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./ENSF400:/var/jenkins_home/workspace/ensf400
 
   sonarqube:
     image: sonarqube:8.9-community # Replace with the desired SonarQube version

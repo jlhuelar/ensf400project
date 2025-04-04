@@ -293,7 +293,7 @@ sonarqube {
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
         property "sonar.login", "admin"
-        property "sonar.password", "admin"
+        property "sonar.password", "password"
     }
 }
 
@@ -476,7 +476,7 @@ static void isQualityGateGood() {
     connection.setRequestMethod("GET")
     
     // Add the Authorization header for basic authentication
-    String auth = "admin:Sunshine123!"
+    String auth = "admin:password"
     String encodedAuth = Base64.encoder.encodeToString(auth.bytes)
     connection.setRequestProperty("Authorization", "Basic " + encodedAuth)
     

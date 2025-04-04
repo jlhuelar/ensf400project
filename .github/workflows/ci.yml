@@ -82,6 +82,14 @@ jobs:
             -d "name=Demo" \
             -d "project=Demo"
 
+      - name: Change SonarQube Admin Password
+        run: |
+          echo "Changing SonarQube admin password..."
+          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" \
+            -d "login=admin" \
+            -d "password=password" \
+            -d "previousPassword=admin"
+
       - name: Unit Tests
         run: ./gradlew test
 
@@ -113,16 +121,13 @@ jobs:
         with:
           name: BDD Test Results
           path: build/test-results/bdd/*.xml
-      
-      - name: Test Application Connectivity
+        
+      - name: Static Analysis
         run: |
-            echo "Testing connectivity to the application using localhost..."
-            curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
-
-            echo "Testing connectivity to the application from within the Jenkins container..."
-            docker compose exec jenkins sh -c "
-              curl -v http://app:8080/demo || echo 'Failed to connect to app from Jenkins container'
-            "
+          echo "Running SonarQube analysis..."
+          ./gradlew sonarqube
+          sleep 5
+          ./gradlew checkQualityGate
 
       - name: Deploy to Test
         run: |
