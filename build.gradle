@@ -283,17 +283,17 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
-        property "sonar.host.url", "http://sonarqube:9000"
-        property "sonar.projectKey", "$projectname"
-        property "sonar.projectName", "$projectname"
+        property "sonar.host.url","http://localhost:9000"
+        property "sonar.projectKey", "Demo"
+        property "sonar.projectName", "Demo"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"
         property "sonar.sources", "src/main/java"
         property "sonar.tests", "src/test/java,src/integration_test/java,src/bdd_test/java"
         property "sonar.java.binaries", "build/classes/java/main"
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
-        property "sonar.token", "sqp_984f68c08e15734d790bec5361f7145d41500e32"
-
+        property "sonar.login", "admin"
+        property "sonar.password", "password"
     }
 }
 
@@ -400,7 +400,8 @@ compileJava.finalizedBy writeGitCommitToFile
 static void checkIfAlive() {
     int code
     try {
-        URL url = new URL("http://app:8080/demo")
+        String appHost = "app"
+        URL url = new URL("http://localhost:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
@@ -432,7 +433,8 @@ void waitForHeartbeat() {
     int code = 0
     while (code != 200){
         try {
-            URL url = new URL("http://app:8080/demo")
+            String appHost = "app"
+            URL url = new URL("http://localhost:8080/demo")
             HttpURLConnection connection = (HttpURLConnection) url.openConnection()
             connection.setRequestMethod("GET")
             connection.connect()
@@ -468,17 +470,22 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    String token = "sqp_984f68c08e15734d790bec5361f7145d41500e32"
-    URL url = new URL("http://sonarqube:9000/api/qualitygates/project_status?projectKey=Demo")
+    String sonarHost = "localhost"
+    URL url = new URL("http://${sonarHost}:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
-    connection.setRequestProperty("Authorization", "Bearer " + token)
+    
+    // Add the Authorization header for basic authentication
+    String auth = "admin:password"
+    String encodedAuth = Base64.encoder.encodeToString(auth.bytes)
+    connection.setRequestProperty("Authorization", "Basic " + encodedAuth)
+    
     connection.connect()
     int code = connection.getResponseCode()
     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))
     String strCurrentLine
     while ((strCurrentLine = br.readLine()) != null) {
-        print(strCurrentLine)
+        // Check for quality gate failure
         if (strCurrentLine.startsWith("{\"projectStatus\":{\"status\":\"ERROR\"")) {
             throw new GradleException("The quality gate for Demo on SonarQube failed. Check SonarQube.")
         }

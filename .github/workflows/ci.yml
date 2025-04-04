@@ -1,0 +1,159 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker
+        run: |
+          echo "Setting up Docker environment"
+          docker --version
+          docker compose --version
+
+      - name: Build and Start Containers
+        run: |
+          echo "Building and starting containers with docker-compose"
+          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml up -d
+
+      - name: Wait for Services to Start
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+      - name: Build
+        run: ./gradlew clean assemble
+
+      - name: Install Apache JMeter
+        run: |
+          echo "Installing Apache JMeter..."
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O /tmp/jmeter.tgz
+          tar -xzf /tmp/jmeter.tgz -C /opt
+          ln -s /opt/apache-jmeter-5.6.2/bin/jmeter /usr/local/bin/jmeter
+          rm /tmp/jmeter.tgz
+
+      - name: Install JMeter Plugins
+        run: |
+          echo "Installing JMeter Plugins..."
+          wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar
+          wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.3/cmdrunner-2.3.jar -O /opt/apache-jmeter-5.6.2/lib/cmdrunner-2.3.jar
+          java -cp /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
+          chmod +x /opt/apache-jmeter-5.6.2/bin/PluginsManagerCMD.sh
+          /opt/apache-jmeter-5.6.2/bin/PluginsManagerCMD.sh install jpgc-graphs-basic jpgc-functions jpgc-casutg
+
+      - name: Create JMeter Work Directories
+        run: |
+            echo "Creating JMeter work directories..."
+            mkdir -p $GITHUB_WORKSPACE/jmeter/reports
+            mkdir -p $GITHUB_WORKSPACE/jmeter/results
+            mkdir -p $GITHUB_WORKSPACE/jmeter/temp
+            mkdir -p $GITHUB_WORKSPACE/jmeter/temp
+            chmod -R 755 $GITHUB_WORKSPACE/jmeter
+
+      - name: Create SonarQube Project
+        run: |
+          echo "Creating SonarQube project..."
+          curl -u admin:admin -X POST "http://localhost:9000/api/projects/create" \
+            -d "name=Demo" \
+            -d "project=Demo"
+
+      - name: Change SonarQube Admin Password
+        run: |
+          echo "Changing SonarQube admin password..."
+          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" \
+            -d "login=admin" \
+            -d "password=password" \
+            -d "previousPassword=admin"
+
+      - name: Unit Tests
+        run: ./gradlew test
+
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unit Test Results
+          path: build/test-results/test/*.xml
+
+      - name: Database Tests
+        run: ./gradlew integrate
+
+      - name: Upload Integration Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Integration Test Results
+          path: build/test-results/integrate/*.xml
+
+      - name: BDD Tests and Coverage
+        run: |
+          ./gradlew generateCucumberReports
+          ./gradlew jacocoTestReport
+
+      - name: Upload BDD Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BDD Test Results
+          path: build/test-results/bdd/*.xml
+        
+      - name: Static Analysis
+        run: |
+          echo "Running SonarQube analysis..."
+          ./gradlew sonarqube
+          sleep 5
+          ./gradlew checkQualityGate
+
+      - name: Deploy to Test
+        run: |
+          curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
+          ./gradlew deployToTestWindowsLocal
+          PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
+          ./gradlew waitForHeartBeat
+          curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888
+    
+      - name: Security Dependency Analysis
+        run: |
+          echo "Running Security Dependency Analysis"
+          ./gradlew dependencyCheckAnalyze
+
+      - name: Performance Tests
+        run: |
+          echo "Running Performance Tests"
+          ./gradlew runPerfTests --info --stacktrace
+
+      - name: Build Documentation
+        run: |
+          echo "Building Documentation inside the Jenkins container..."
+          ./gradlew javadoc
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+            echo 'Simulating production deployment' &&
+            sleep 5
