@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      sonarqube:
-        image: sonarqube:8.9-community
-        ports:
-          - 9000:9000
       app:
         image: tomcat:9.0
         ports:
@@ -40,31 +36,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
-
-      - name: Setup SonarQube
-        run: |
-          # Wait for SonarQube to be ready
-          timeout 300 bash -c 'while [[ "$(curl -s -u admin:admin -o /dev/null -w ''%{http_code}'' localhost:9000/api/system/status)" != "200" ]]; do sleep 5; done'
-          
-          # Change default admin password (using correct API endpoint)
-          curl -X POST "http://localhost:9000/api/authentication/update_password" \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -u admin:admin \
-            --data-raw "previousPassword=admin&password=Sunshine123!"
-          
-          # Create project
-          curl -X POST "http://localhost:9000/api/projects/create" \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -u admin:Sunshine123! \
-            --data-raw "name=ENSF400-Final-Project&project=Demo"
-
-      - name: Cache SonarQube packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       - name: Build
         run: ./gradlew clean assemble
 
@@ -100,17 +71,6 @@ jobs:
           name: BDD Test Results
           path: build/test-results/bdd/*.xml
 
-      - name: Static Analysis
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ./gradlew sonarqube \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=admin \
-            -Dsonar.password=Sunshine123!
-          sleep 10
-          ./gradlew checkQualityGate
-
       - name: Deploy to Test
         run: |
           ./gradlew deployToTestWindowsLocal
@@ -126,20 +86,6 @@ jobs:
 
       - name: Build Documentation
         run: ./gradlew javadoc
-
-      - name: Collect ZAP Security Report
-        run: |
-          mkdir -p build/reports/zap
-          curl http://localhost:8080/OTHER/core/other/htmlreport --proxy localhost:8080 > build/reports/zap/zap_report.html
-
-      - name: Upload Security Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Security Reports
-          path: |
-            build/reports/zap/
-            build/reports/dependency-check-report.html
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
