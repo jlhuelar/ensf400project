@@ -14,10 +14,18 @@ public class SeleniumTests {
     private static WebDriver driver;
 
     @BeforeClass
-    public static void setUp() {
+    public void setUp() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-    }
+        
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.setExperimentalOption("useAutomationExtension", false);
+        
+        driver = new ChromeDriver(options);
+}
 
     @AfterClass
     public static void tearDown() {
