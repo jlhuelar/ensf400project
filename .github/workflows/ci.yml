@@ -25,12 +25,18 @@ jobs:
           --health-timeout=5s
           --health-retries=5
           --entrypoint=/zap/zap.sh
+          --
           -daemon
-          -port 8080
-          -host 0.0.0.0
-          -config api.addrs.addr.name=.*
-          -config api.addrs.addr.regex=true
-          -config api.disablekey=true
+          -port
+          8080
+          -host
+          0.0.0.0
+          -config
+          api.addrs.addr.name=.*
+          -config
+          api.addrs.addr.regex=true
+          -config
+          api.disablekey=true
         env:
           JAVA_OPTS: "-Xmx512m"
       app:
