@@ -30,7 +30,7 @@ public class SeleniumTests {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
-        // Remove or ignore this deprecated option if it causes warnings.
+        // This option is deprecated; remove it if not needed.
         options.setExperimentalOption("useAutomationExtension", false);
         
         driver = new ChromeDriver(options);
@@ -50,17 +50,25 @@ public class SeleniumTests {
     public void test_shouldLendBook() {
         driver.get("http://demo-app:8080/demo/flyway");
         driver.get("http://demo-app:8080/demo/library.html");
+        
+        // Register a book.
         driver.findElement(By.id("register_book")).sendKeys("some book");
         driver.findElement(By.id("register_book_submit")).click();
-        driver.findElement(By.linkText("Return")).click();
+        // Wait for and click the "Return" link.
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Return"))).click();
+        
+        // Register a borrower.
         driver.findElement(By.id("register_borrower")).sendKeys("some borrower");
         driver.findElement(By.id("register_borrower_submit")).click();
-        driver.findElement(By.linkText("Return")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Return"))).click();
+        
+        // Lend the book.
         driver.findElement(By.id("lend_book")).sendKeys("some book");
         driver.findElement(By.id("lend_borrower")).sendKeys("some borrower");
         driver.findElement(By.id("lend_book_submit")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 10); // 10 seconds timeout
+        // Wait for the result element to appear and verify its text.
         WebElement resultElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("result")));
         final String result = resultElement.getText();
         assertEquals("SUCCESS", result);
@@ -173,7 +181,7 @@ public class SeleniumTests {
         assertTrue("result was " + registerResult,
                    registerResult.contains("status: SUCCESSFULLY_REGISTERED"));
 
-        driver.findElement(By.linkText("Return")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Return"))).click();
         driver.findElement(By.id("login_username")).sendKeys("some user");
         driver.findElement(By.id("login_password")).sendKeys("lasdfj;alsdkfjasdf");
         driver.findElement(By.id("login_submit")).click();
