@@ -129,12 +129,19 @@ jobs:
           sleep 5
           ./gradlew checkQualityGate
 
-      - name: Upload SonarQube Report
+      - name: Fetch SonarQube Metrics
+        run: |
+          echo "Fetching SonarQube metrics..."
+          CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S%z" | sed 's/+0000/%2B0000/')
+          curl -u admin:password "http://localhost:9000/api/measures/search_history?from=$CURRENT_TIME&component=Demo&metrics=bugs,vulnerabilities,sqale_index,duplicated_lines_density,ncloc,coverage,code_smells,reliability_rating,security_rating,sqale_rating" \
+            -o sonar-metrics.json
+        
+      - name: Upload SonarQube Metrics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: SonarQube Report
-          path: build/reports/sonar/*
+          name: SonarQube Metrics
+          path: sonar-metrics.json
 
       - name: Deploy to Test
         run: |
