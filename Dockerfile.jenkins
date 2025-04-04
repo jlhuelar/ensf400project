@@ -9,14 +9,16 @@ RUN apt-get update && \
     apt-get clean
 
 # Install dependencies needed for JMeter
-RUN apt-get update && apt-get install -y wget unzip openjdk-11-jre
+# Install dependencies for JMeter using openjdk-17-jre
+RUN apt-get update && \
+    apt-get install -y wget unzip openjdk-17-jre && \
+    apt-get clean
 
 # Download and install Apache JMeter
 RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O /tmp/apache-jmeter.tgz && \
     tar -xzf /tmp/apache-jmeter.tgz -C /opt && \
     rm /tmp/apache-jmeter.tgz && \
     ln -s /opt/apache-jmeter-5.4.3/bin/jmeter /usr/local/bin/jmeter
-
 
 # Switch back to jenkins user
 USER jenkins
