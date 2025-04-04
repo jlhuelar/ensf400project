@@ -1,26 +1,58 @@
+# Use an official Jenkins LTS image as the base
 FROM jenkins/jenkins:lts
-# Switch to root to install packages
+
+# Switch to root user to install system packages
 USER root
-# Update package lists and install pipenv, chromium, and chromium-driver
+
+# Update package lists and install necessary dependencies including Java for JMeter
+# Also install pipenv, chromium, chromium-driver which were in your original file
 RUN apt-get update && \
- apt-get install -y pipenv chromium chromium-driver && \
- apt-get clean
-# Install dependencies needed for JMeter
-# Install dependencies for JMeter using openjdk-17-jre
-RUN apt-get update && \
- apt-get install -y wget unzip openjdk-17-jre && \
- apt-get clean
+    apt-get install -y --no-install-recommends \
+        openjdk-17-jre \
+        wget \
+        unzip \
+        ca-certificates \
+        pipenv \
+        chromium \
+        chromium-driver && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Define JMeter Version and Home for easier updates and clarity
+ARG JMETER_VERSION=5.4.3
+ENV JMETER_HOME=/opt/apache-jmeter-${JMETER_VERSION}
+ENV PATH=$JMETER_HOME/bin:$PATH
+
 # Download and install Apache JMeter
-RUN wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.3.tgz -O /tmp/apache-jmeter.tgz && \
- tar -xzf /tmp/apache-jmeter.tgz -C /opt && \
- rm /tmp/apache-jmeter.tgz && \
- ln -s /opt/apache-jmeter-5.4.3/bin/jmeter /usr/local/bin/jmeter
+RUN mkdir -p /opt && \
+    wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz -O /tmp/apache-jmeter.tgz && \
+    tar -xzf /tmp/apache-jmeter.tgz -C /opt && \
+    rm /tmp/apache-jmeter.tgz && \
+    ln -s $JMETER_HOME/bin/jmeter /usr/local/bin/jmeter
 
-# Install JMeter Plugins Manager and Standard Set
-RUN wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.4.3/lib/ext/jmeter-plugins-manager.jar && \
- wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2/cmdrunner-2.2.jar -O /opt/apache-jmeter-5.4.3/lib/cmdrunner-2.2.jar && \
- java -cp /opt/apache-jmeter-5.4.3/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
- /opt/apache-jmeter-5.4.3/bin/PluginsManagerCMD.sh install jpgc-standard
+# Install JMeter Plugins Manager command line tool and its dependencies
+# Define Plugin Manager Version - check for latest compatible version if needed
+ENV JMETER_PLUGINS_MANAGER_VERSION=1.10
+ENV CMDRUNNER_VERSION=2.3
 
-# Switch back to jenkins user
+# Ensure necessary directories exist
+RUN mkdir -p $JMETER_HOME/lib $JMETER_HOME/lib/ext $JMETER_HOME/bin
+
+# Download Plugins Manager command line script to JMETER_HOME/bin
+RUN wget -q https://jmeter-plugins.org/get/ -O $JMETER_HOME/bin/PluginsManagerCMD.sh && \
+    chmod +x $JMETER_HOME/bin/PluginsManagerCMD.sh
+
+# Download Plugin Manager JAR itself into JMETER_HOME/lib/ext
+RUN wget -q https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-manager/${JMETER_PLUGINS_MANAGER_VERSION}/jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar -P $JMETER_HOME/lib/ext/
+
+# Download cmdrunner JAR into JMETER_HOME/lib (needed by PluginsManagerCMD)
+RUN wget -q https://repo1.maven.org/maven2/kg/apc/cmdrunner/${CMDRUNNER_VERSION}/cmdrunner-${CMDRUNNER_VERSION}.jar -P $JMETER_HOME/lib/
+
+# Use Plugins Manager Command Line Tool to install the 'jpgc-standard' plugin set
+# This command will automatically download the plugin JARs and their dependencies into lib/ext
+RUN $JMETER_HOME/bin/PluginsManagerCMD.sh install jpgc-standard
+# If you need other plugins later, add them here separated by commas or run the command again:
+# e.g., RUN $JMETER_HOME/bin/PluginsManagerCMD.sh install jpgc-standard,jpgc-extras
+
+# Switch back to the default jenkins user
 USER jenkins
