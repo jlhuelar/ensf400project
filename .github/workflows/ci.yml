@@ -111,8 +111,6 @@ jobs:
         run: |
           echo "Running Deploy to Test inside the Jenkins container..."
           docker compose exec jenkins sh -c "
-            python -m pip install --upgrade pip &&
-            pip install pipenv &&
             ./gradlew deployToTestWindowsLocal &&
             PIPENV_IGNORE_VIRTUALENVS=1 pipenv install &&
             ./gradlew waitForHeartBeat &&
