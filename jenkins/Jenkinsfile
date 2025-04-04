@@ -122,6 +122,18 @@ pipeline {
       }
     }
 
+    stage('Clear WDM Cache') {
+      steps {
+        echo "Attempting to clear WebDriverManager cache..."
+        // Force remove the cache directory. Adjust path if needed for your specific Jenkins setup on Windows.
+        // This path comes from previous logs. If Jenkins runs as a different user or uses a different
+        // shell (like PowerShell), this might need adjustment (e.g., using %USERPROFILE% or different command).
+        // Added || true to prevent failure if the directory doesn't exist.
+        sh 'rm -rf jenkins_home/.cache/selenium || echo "Cache directory not found or could not be removed."'
+        echo "WebDriverManager cache clearing attempt finished."
+      }
+    }
+
     // This set of tests investigates the functionality of the UI.
     // Note that this is separate fom the UI BDD Tests, which
     // only focuses on essential capability and therefore only
