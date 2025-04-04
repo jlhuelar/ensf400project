@@ -14,7 +14,7 @@ jobs:
       app:
         image: tomcat:9.0
         ports:
-          - 8081:8080
+          - 8080:8080
 
     steps:
       - uses: actions/checkout@v3
