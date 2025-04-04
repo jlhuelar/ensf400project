@@ -16,7 +16,7 @@ jobs:
         ports:
           - 9000:9000
       zap:
-        image: owasp/zap2docker-stable
+        image: ghcr.io/zaproxy/zaproxy:stable
         ports:
           - 8080:8080
       app:
