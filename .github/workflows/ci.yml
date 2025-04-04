@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "Setting up Docker environment"
           docker --version
-          docker-compose --version
+          docker compose --version
 
       - name: Build and Start Containers
         run: |
