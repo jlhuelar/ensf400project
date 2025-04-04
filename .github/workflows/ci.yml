@@ -129,6 +129,13 @@ jobs:
           sleep 5
           ./gradlew checkQualityGate
 
+      - name: Upload SonarQube Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SonarQube Report
+          path: build/reports/sonar/*
+
       - name: Deploy to Test
         run: |
           curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
