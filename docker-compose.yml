@@ -9,8 +9,6 @@ services:
       - "8080:8080" # Application exposed on port 8080
     stdin_open: true
     tty: true
-    networks:
-      - app-network
 
   jenkins:
     build:
@@ -23,15 +21,11 @@ services:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - ./ENSF400:/var/jenkins_home/workspace/ensf400
-    networks:
-      - app-network
 
   sonarqube:
     image: sonarqube:8.9-community # Replace with the desired SonarQube version
     ports:
       - "9000:9000" # SonarQube UI exposed on port 9000
-    networks:
-      - app-network
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
       - SONAR_WEB_PORT=9000
@@ -40,8 +34,6 @@ services:
     image: ghcr.io/zaproxy/zaproxy:stable
     ports:
       - "9888:8080" # ZAP proxy exposed on port 9888
-    networks:
-      - app-network
     command:
     - zap.sh
     - -daemon
@@ -55,10 +47,6 @@ services:
     - "api.addrs.addr.regex=true"
     - -config
     - "api.disablekey=true"
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   jenkins_home:

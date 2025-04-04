@@ -283,9 +283,9 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
-        property "sonar.host.url","http://sonarqube:9000"
-        property "sonar.projectKey", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
-        property "sonar.projectName", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
+        property "sonar.host.url","http://localhost:9000"
+        property "sonar.projectKey", "Demo"
+        property "sonar.projectName", "Demo"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"
         property "sonar.sources", "src/main/java"
         property "sonar.tests", "src/test/java,src/integration_test/java,src/bdd_test/java"
@@ -293,7 +293,7 @@ sonarqube {
         property "sonar.junit.reportPaths", "build/test-results/test/,build/test-results/integrate"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml"
         property "sonar.login", "admin"
-        property "sonar.password", "Sunshine123!"
+        property "sonar.password", "admin"
     }
 }
 
@@ -401,7 +401,7 @@ static void checkIfAlive() {
     int code
     try {
         String appHost = "app"
-        URL url = new URL("http://${appHost}:8080/demo")
+        URL url = new URL("http://localhost:8080/demo")
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestMethod("GET")
         connection.connect()
@@ -470,7 +470,7 @@ task checkQualityGate() {
 
 // throws an exception if the quality gate fails.
 static void isQualityGateGood() {
-    String sonarHost = "sonarqube"
+    String sonarHost = "localhost"
     URL url = new URL("http://${sonarHost}:9000/api/qualitygates/project_status?projectKey=Demo")
     HttpURLConnection connection = (HttpURLConnection) url.openConnection()
     connection.setRequestMethod("GET")
