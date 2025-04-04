@@ -80,6 +80,13 @@ jobs:
         with:
           name: BDD Test Results
           path: build/test-results/bdd/*.xml
+
+      - name: List Running Containers
+        run: |
+            echo "Listing all running containers..."
+            docker ps -a
+            echo "Listing all Docker networks..."
+            docker network ls
       
       - name: Test Application Connectivity
         run: |
