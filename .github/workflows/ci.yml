@@ -120,23 +120,20 @@ jobs:
       - name: Security Dependency Analysis
         run: |
           echo "Running Security Dependency Analysis inside the Jenkins container..."
-          docker compose exec jenkins sh -c "./gradlew dependencyCheckAnalyze"
+          ./gradlew dependencyCheckAnalyze
 
       - name: Performance Tests
         run: |
           echo "Running Performance Tests inside the Jenkins container..."
-          docker compose exec jenkins sh -c "./gradlew runPerfTests --info --stacktrace"
+          ./gradlew runPerfTests --info --stacktrace
 
       - name: Build Documentation
         run: |
           echo "Building Documentation inside the Jenkins container..."
-          docker compose exec jenkins sh -c "./gradlew javadoc"
+          ./gradlew javadoc
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          echo "Deploying to Production inside the Jenkins container..."
-          docker compose exec jenkins sh -c "
             echo 'Simulating production deployment' &&
             sleep 5
-          "
