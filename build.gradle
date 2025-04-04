@@ -659,37 +659,21 @@ task deployToTestWindowsLocal(type: Copy) {
 task runPerfTests(type: Exec) {
     workingDir '.'
     
-    // Create necessary directories if they don't exist.
-    def buildDir = file('build')
-    if (!buildDir.exists()) {
-        buildDir.mkdirs()
-    }
-    def reportsDir = file('build/reports/perf_report')
-    if (!reportsDir.exists()) {
-        reportsDir.mkdirs()
-    }
+    // Determine the command based on the operating system.
+    def isWindows = System.properties['os.name'].toLowerCase().contains('windows')
+    def jmeterCommand = isWindows ? 'jmeter.bat' : 'jmeter'
     
+    // Define the file paths using Gradle's file() method.
     def jmxFile = file('docs/performance_testing/50_users_at_once.jmx')
     def resultFile = file('build/jmeter_perf_test.csv')
+    def reportDir = file('build/reports/perf_report')
     
-    // Optionally, specify a location for the jmeter.log to ensure it goes into a writable directory.
-    def jmeterLog = file('build/jmeter.log')
+    // Set up the command line.
+    commandLine jmeterCommand, '-f', '-n', '-t', jmxFile.absolutePath, '-l', resultFile.absolutePath, '-e', '-o', reportDir.absolutePath
     
-    commandLine 'jmeter',
-                '-j', jmeterLog.absolutePath,  // set log file path
-                '-f',
-                '-n',
-                '-t', jmxFile.absolutePath,
-                '-l', resultFile.absolutePath,
-                '-e',
-                '-o', reportsDir.absolutePath
-    
-    // Capture output if needed:
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
-    standardOutput = outputStream
-    doLast {
-        println "JMeter Output:\n${outputStream.toString()}"
-    }
+    // Capture the output if needed.
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = { standardOutput.toString() }
 }
 
 

@@ -24,6 +24,7 @@ services:
       - "8090:8080"
     volumes:
       - ./jenkins_home:/var/jenkins_home
+      - ./:/var/jenkins_project
     # Jenkins will start using its default entrypoint (jenkins.sh)
     # pipenv, chromium, and chromium-driver are now pre-installed.
 
