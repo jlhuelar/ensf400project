@@ -16,15 +16,18 @@ public class SeleniumTests {
 
    @BeforeClass
     public static void setUp() {
-        // Clear any cached resolution so it auto-detects the installed browser version.
-        WebDriverManager.chromedriver().clearResolutionCache().setup();
+        // Tell WebDriverManager that the browser is version 134 and force a fresh download.
+        WebDriverManager.chromedriver()
+            .browserVersion("134")
+            .forceDownload()
+            .setup();
         
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
-        // You can remove the following if it’s causing warnings (it's deprecated)
+        // Remove this if it causes warnings, since it's deprecated:
         options.setExperimentalOption("useAutomationExtension", false);
         
         driver = new ChromeDriver(options);
