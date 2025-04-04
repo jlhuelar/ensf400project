@@ -49,6 +49,33 @@ jobs:
       - name: Build
         run: ./gradlew clean assemble
 
+      - name: Install Apache JMeter
+        run: |
+          echo "Installing Apache JMeter..."
+          wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.2.tgz -O /tmp/jmeter.tgz
+          tar -xzf /tmp/jmeter.tgz -C /opt
+          ln -s /opt/apache-jmeter-5.6.2/bin/jmeter /usr/local/bin/jmeter
+          rm /tmp/jmeter.tgz
+
+      - name: Install JMeter Plugins
+        run: |
+          echo "Installing JMeter Plugins..."
+          wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar
+          wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.3/cmdrunner-2.3.jar -O /opt/apache-jmeter-5.6.2/lib/cmdrunner-2.3.jar
+          java -cp /opt/apache-jmeter-5.6.2/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller
+          chmod +x /opt/apache-jmeter-5.6.2/bin/PluginsManagerCMD.sh
+          /opt/apache-jmeter-5.6.2/bin/PluginsManagerCMD.sh install jpgc-graphs-basic jpgc-functions jpgc-casutg
+
+      - name: Create JMeter Work Directories
+        run: |
+          echo "Creating JMeter work directories..."
+          mkdir -p /var/lib/jmeter/reports
+          mkdir -p /var/lib/jmeter/results
+          mkdir -p /var/lib/jmeter/temp
+          mkdir -p /opt/apache-jmeter-5.6.2/temp
+          chmod -R 755 /var/lib/jmeter
+          chmod -R 755 /opt/apache-jmeter-5.6.2/temp
+
       - name: Unit Tests
         run: ./gradlew test
 
@@ -115,16 +142,19 @@ jobs:
       - name: Deploy to Test
         run: |
           curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
+          ./gradlew deployToTestWindowsLocal
+          PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
           ./gradlew waitForHeartBeat
+          curl http://zap/JSON/core/action/newSession -s --proxy localhost:9888
     
       - name: Security Dependency Analysis
         run: |
-          echo "Running Security Dependency Analysis inside the Jenkins container..."
+          echo "Running Security Dependency Analysis"
           ./gradlew dependencyCheckAnalyze
 
       - name: Performance Tests
         run: |
-          echo "Running Performance Tests inside the Jenkins container..."
+          echo "Running Performance Tests"
           ./gradlew runPerfTests --info --stacktrace
 
       - name: Build Documentation
