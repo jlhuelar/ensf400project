@@ -83,10 +83,10 @@ jobs:
 
       - name: Deploy to Test
         run: |
-          ./gradlew deployToTestWindowsLocal
-          PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
-          ./gradlew waitForHeartBeat
-          curl http://localhost:8080/JSON/core/action/newSession -s --proxy localhost:8080
+            ./gradlew deployToTestWindowsLocal
+            PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
+            ./gradlew waitForHeartBeat
+            curl http://zap:8080/JSON/core/action/newSession -s --proxy zap:8080
 
       - name: Security Dependency Analysis
         run: ./gradlew dependencyCheckAnalyze
