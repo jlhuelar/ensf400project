@@ -131,8 +131,8 @@ pipeline {
         sh '''
           cd src/ui_tests/java
           chmod +x gradlew
-          ./gradlew clean test
-        '''
+          ./gradlew clean test --refresh-dependencies        
+          '''
     }
     post {
         always {
