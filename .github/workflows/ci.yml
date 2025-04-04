@@ -87,17 +87,31 @@ jobs:
             docker ps -a
             echo "Listing all Docker networks..."
             docker network ls
+
+      - name: Inspect Container Logs
+        run: |
+              echo "Fetching logs for the app container..."
+              docker logs ensf400-final-project-app-1 || echo "Failed to fetch logs for app container"
+    
+              echo "Fetching logs for the zap container..."
+              docker logs ensf400-final-project-zap-1 || echo "Failed to fetch logs for zap container"
+    
+              echo "Fetching logs for the jenkins container..."
+              docker logs ensf400-final-project-jenkins-1 || echo "Failed to fetch logs for jenkins container"
+    
+              echo "Fetching logs for the sonarqube container..."
+              docker logs ensf400-final-project-sonarqube-1 || echo "Failed to fetch logs for sonarqube container"
       
       - name: Test Application Connectivity
         run: |
-            echo "Waiting for the application to start..."
-            sleep 30
-  
-            echo "Testing connectivity to the application using localhost..."
-            curl -s -o /dev/null -w "Localhost HTTP Status: %{http_code}\n" http://localhost:8080/demo || echo "Failed to connect to localhost"
-  
-            echo "Testing connectivity to the application using service name..."
-            docker run --rm --network app-network curlimages/curl:latest curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
+              echo "Waiting for the application to start..."
+              sleep 30
+      
+              echo "Testing connectivity to the application using localhost..."
+              curl -s -o /dev/null -w "Localhost HTTP Status: %{http_code}\n" http://localhost:8080/demo || echo "Failed to connect to localhost"
+      
+              echo "Testing connectivity to the application using service name..."
+              docker run --rm --network ensf400-final-project_app-network curlimages/curl:latest curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
 
       - name: Deploy to Test
         run: |
