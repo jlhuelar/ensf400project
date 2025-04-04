@@ -25,7 +25,7 @@ public class HtmlUnitTests {
         ProxyConfig proxyConfig = new ProxyConfig("localhost", 10888);
         driver.getOptions().setProxyConfig(proxyConfig);
         try {
-            getPage("http://localhost:8080");
+            getPage("http://demo-app:8080/demo");
         } catch (Exception ex) {
             // if we get here, the proxy isn't listening at that location.  Switch to non-proxy mode
             driver.getOptions().setProxyConfig(new ProxyConfig());
@@ -79,8 +79,8 @@ public class HtmlUnitTests {
      */
     @Test
     public void test_shouldLendBook() {
-        getPage("http://localhost:8080/demo/flyway");
-        HtmlPage page = getPage("http://localhost:8080/demo/library.html");
+        getPage("http://demo-app:8080/demo/flyway");
+        HtmlPage page = getPage("http://demo-app:8080/demo/library.html");
         type(page.getElementById("register_book"), "some book");
         page = click(page.getElementById("register_book_submit"));
         page = click(page.getAnchorByText("Return"));
@@ -100,12 +100,12 @@ public class HtmlUnitTests {
      */
     @Test
     public void test_shouldRegisterAndLoginUser() {
-        getPage("http://localhost:8080/demo/flyway");
+        getPage("http://demo-app:8080/demo/flyway");
         String username = "some user";
         String password = "asdflkajsdfl;aksjdfal;sdfkj";
         ApiCalls.registerUser(username, password);
 
-        HtmlPage page = getPage("http://localhost:8080/demo/library.html");
+        HtmlPage page = getPage("http://demo-app:8080/demo/library.html");
         type(page.getElementById("login_username"), username);
         type(page.getElementById("login_password"), password);
         page = click(page.getElementById("login_submit"));

@@ -32,8 +32,8 @@ public class SeleniumTests {
      */
     @Test
     public void test_shouldLendBook() {
-        driver.get("http://localhost:8080/demo/flyway");
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/library.html");
         driver.findElement(By.id("register_book")).sendKeys("some book");
         driver.findElement(By.id("register_book_submit")).click();
         driver.findElement(By.linkText("Return")).click();
@@ -60,9 +60,9 @@ public class SeleniumTests {
     @Test(expected = org.openqa.selenium.ElementNotInteractableException.class)
     public void test_shouldShowLockedInput() {
         // clear the database...
-        driver.get("http://localhost:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/flyway");
 
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/library.html");
         driver.findElement(By.id("lend_book")).sendKeys("some book");
     }
 
@@ -79,11 +79,11 @@ public class SeleniumTests {
     @Test
     public void test_shouldShowDropdowns() {
         // clear the database...
-        driver.get("http://localhost:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/flyway");
         ApiCalls.registerBook("some book");
         ApiCalls.registerBorrowers("some borrower");
 
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/library.html");
 
         // using the arrow keys to select an element is a very "dropdown" kind of behavior.
         driver.findElement(By.id("lend_book")).findElement(By.xpath("//option[contains(.,\'some book\')]")).click();
@@ -106,7 +106,7 @@ public class SeleniumTests {
     @Test
     public void test_shouldShowAutocomplete() {
         // clear the database...
-        driver.get("http://localhost:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/flyway");
         ApiCalls.registerBook("a");
         ApiCalls.registerBook("b");
         ApiCalls.registerBook("c");
@@ -119,7 +119,7 @@ public class SeleniumTests {
         ApiCalls.registerBook("j");
         ApiCalls.registerBorrowers("some borrower");
 
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/library.html");
 
         // using the arrow keys to select an element is a very "dropdown" kind of behavior.
         driver.findElement(By.id("lend_book")).sendKeys("f");
@@ -137,11 +137,11 @@ public class SeleniumTests {
     @Test
     public void test_ShouldHandleQuotesInBookOrBorrowerValue() {
         // clear the database...
-        driver.get("http://localhost:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/flyway");
         ApiCalls.registerBook("some \"book");
         ApiCalls.registerBorrowers("some \"borrower");
 
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/library.html");
 
         // using the arrow keys to select an element is a very "dropdown" kind of behavior.
         driver.findElement(By.id("lend_book")).findElement(By.xpath("//option[contains(.,\'some \"book\')]")).click();
@@ -153,8 +153,8 @@ public class SeleniumTests {
 
     @Test
     public void test_ShouldRegisterAndLoginUser() {
-        driver.get("http://localhost:8080/demo/flyway");
-        driver.get("http://localhost:8080/demo/library.html");
+        driver.get("http://demo-app:8080/demo/flyway");
+        driver.get("http://demo-app:8080/demo/library.html");
         driver.findElement(By.id("register_username")).sendKeys("some user");
         driver.findElement(By.id("register_password")).sendKeys("lasdfj;alsdkfjasdf");
         driver.findElement(By.id("register_submit")).click();
