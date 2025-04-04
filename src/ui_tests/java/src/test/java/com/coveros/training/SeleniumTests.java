@@ -19,8 +19,9 @@ public class SeleniumTests {
         // Let WebDriverManager automatically detect the installed Chrome version
         // and download the appropriate ChromeDriver.
         // forceDownload() can still be useful to ensure no stale cache is used.
-        WebDriverManager.chromedriver()
-            .forceDownload() // Keep this if you suspect cache issues
+       WebDriverManager.chromedriver()
+            .browserVersion("134")    // force the major version to 134
+            .forceDownload()          // ensure a fresh download is performed
             .setup();
 
         ChromeOptions options = new ChromeOptions();
