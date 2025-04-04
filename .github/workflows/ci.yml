@@ -92,16 +92,15 @@ jobs:
             echo "Testing connectivity to the application using service name..."
             docker run --rm --network app-network curlimages/curl:latest curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
 
-      - name: Test Application Connectivity
+      - name: Deploy to Test
         run: |
-          echo "Waiting for the application to start..."
-          sleep 30
-
-          echo "Testing connectivity to the application using localhost..."
-          curl -s -o /dev/null -w "Localhost HTTP Status: %{http_code}\n" http://localhost:8080/demo || echo "Failed to connect to localhost"
-
-          echo "Testing connectivity to the application using service name..."
-          docker run --rm --network app-network curlimages/curl:latest curl -s -o /dev/null -w "Service Name HTTP Status: %{http_code}\n" http://app:8080/demo || echo "Failed to connect to service name"
+          echo "Running Deploy to Test inside the Docker Compose network..."
+          docker compose exec app sh -c "
+            ./gradlew deployToTestWindowsLocal &&
+            PIPENV_IGNORE_VIRTUALENVS=1 pipenv install &&
+            ./gradlew waitForHeartBeat &&
+            curl http://zap:8080/JSON/core/action/newSession -s --proxy zap:8080
+          "
 
       - name: Security Dependency Analysis
         run: ./gradlew dependencyCheckAnalyze
