@@ -88,6 +88,15 @@ jobs:
             echo "Listing all Docker networks..."
             docker network ls
 
+      - name: Clone Repository in Jenkins Container
+        run: |
+          echo "Cloning repository into Jenkins container..."
+          docker compose exec jenkins sh -c "
+            cd /var/jenkins_home/workspace/ensf400 &&
+            git clone https://github.com/your-username/your-repo.git . &&
+            git pull origin main
+          "
+
       - name: Inspect Container Logs
         run: |
               echo "Fetching logs for the app container..."
@@ -107,10 +116,17 @@ jobs:
             echo "Testing connectivity to the application using localhost..."
             curl -v http://localhost:8080/demo || echo "Failed to connect to localhost"
 
+            echo "Testing connectivity to the application from within the Jenkins container..."
+            docker compose exec jenkins sh -c "
+              curl -v http://app:8080/demo || echo 'Failed to connect to app from Jenkins container'
+            "
+
       - name: Deploy to Test
         run: |
           echo "Running Deploy to Test inside the Jenkins container..."
           docker compose exec jenkins sh -c "
+            cd /var/jenkins_home/workspace/ensf400 &&
+            chmod +x ./gradlew &&
             ./gradlew deployToTestWindowsLocal &&
             PIPENV_IGNORE_VIRTUALENVS=1 pipenv install &&
             ./gradlew waitForHeartBeat &&
