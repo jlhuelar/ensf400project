@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test:
@@ -25,18 +25,12 @@ jobs:
           --health-timeout=5s
           --health-retries=5
           --entrypoint=/zap/zap.sh
-        args:
-          - -daemon
-          - -port
-          - "8080"
-          - -host
-          - "0.0.0.0"
-          - -config
-          - "api.addrs.addr.name=.*"
-          - -config
-          - "api.addrs.addr.regex=true"
-          - -config
-          - "api.disablekey=true"
+          -daemon
+          -port 8080
+          -host 0.0.0.0
+          -config api.addrs.addr.name=.*
+          -config api.addrs.addr.regex=true
+          -config api.disablekey=true
         env:
           JAVA_OPTS: "-Xmx512m"
       app:
@@ -45,118 +39,118 @@ jobs:
           - 8081:8080
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
 
-    - name: Install pipenv
-      run: |
-        python -m pip install --upgrade pip
-        pip install pipenv
-      
-    - name: Setup SonarQube
-      run: |
-        # Wait for SonarQube to be ready
-        timeout 300 bash -c 'while [[ "$(curl -s -u admin:admin -o /dev/null -w ''%{http_code}'' localhost:9000/api/system/status)" != "200" ]]; do sleep 5; done'
-        # Change default admin password to match your configuration
-        curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" -d "login=admin&previousPassword=admin&password=Sunshine123!"
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
 
-    - name: Cache SonarQube packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
+      - name: Setup SonarQube
+        run: |
+          # Wait for SonarQube to be ready
+          timeout 300 bash -c 'while [[ "$(curl -s -u admin:admin -o /dev/null -w ''%{http_code}'' localhost:9000/api/system/status)" != "200" ]]; do sleep 5; done'
+          # Change default admin password to match your configuration
+          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" -d "login=admin&previousPassword=admin&password=Sunshine123!"
 
-    - name: Build
-      run: ./gradlew clean assemble
+      - name: Cache SonarQube packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
-    - name: Unit Tests
-      run: ./gradlew test
-      
-    - name: Upload Unit Test Results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: Unit Test Results
-        path: build/test-results/test/*.xml
+      - name: Build
+        run: ./gradlew clean assemble
 
-    - name: Database Tests
-      run: ./gradlew integrate
+      - name: Unit Tests
+        run: ./gradlew test
 
-    - name: Upload Integration Test Results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: Integration Test Results
-        path: build/test-results/integrate/*.xml
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unit Test Results
+          path: build/test-results/test/*.xml
 
-    - name: BDD Tests and Coverage
-      run: |
-        ./gradlew generateCucumberReports
-        ./gradlew jacocoTestReport
+      - name: Database Tests
+        run: ./gradlew integrate
 
-    - name: Upload BDD Test Results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: BDD Test Results
-        path: build/test-results/bdd/*.xml
+      - name: Upload Integration Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Integration Test Results
+          path: build/test-results/integrate/*.xml
 
-    - name: Static Analysis
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        ./gradlew sonarqube \
-          -Dsonar.host.url=http://localhost:9000 \
-          -Dsonar.login=admin \
-          -Dsonar.password=Sunshine123!
-        sleep 10
-        ./gradlew checkQualityGate
+      - name: BDD Tests and Coverage
+        run: |
+          ./gradlew generateCucumberReports
+          ./gradlew jacocoTestReport
 
-    - name: Deploy to Test
-      run: |
-        ./gradlew deployToTestWindowsLocal
-        PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
-        ./gradlew waitForHeartBeat
-        curl http://localhost:8080/JSON/core/action/newSession -s --proxy localhost:8080
+      - name: Upload BDD Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BDD Test Results
+          path: build/test-results/bdd/*.xml
 
-    - name: Security Dependency Analysis
-      run: ./gradlew dependencyCheckAnalyze
+      - name: Static Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./gradlew sonarqube \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=admin \
+            -Dsonar.password=Sunshine123!
+          sleep 10
+          ./gradlew checkQualityGate
 
-    - name: Performance Tests
-      run: ./gradlew runPerfTests --info --stacktrace
+      - name: Deploy to Test
+        run: |
+          ./gradlew deployToTestWindowsLocal
+          PIPENV_IGNORE_VIRTUALENVS=1 pipenv install
+          ./gradlew waitForHeartBeat
+          curl http://localhost:8080/JSON/core/action/newSession -s --proxy localhost:8080
 
-    - name: Build Documentation
-      run: ./gradlew javadoc
+      - name: Security Dependency Analysis
+        run: ./gradlew dependencyCheckAnalyze
 
-    - name: Collect ZAP Security Report
-      run: |
-        mkdir -p build/reports/zap
-        curl http://localhost:8080/OTHER/core/other/htmlreport --proxy localhost:8080 > build/reports/zap/zap_report.html
+      - name: Performance Tests
+        run: ./gradlew runPerfTests --info --stacktrace
 
-    - name: Upload Security Reports
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: Security Reports
-        path: |
-          build/reports/zap/
-          build/reports/dependency-check-report.html
+      - name: Build Documentation
+        run: ./gradlew javadoc
 
-    - name: Deploy to Production
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        echo "Simulating production deployment"
-        sleep 5
+      - name: Collect ZAP Security Report
+        run: |
+          mkdir -p build/reports/zap
+          curl http://localhost:8080/OTHER/core/other/htmlreport --proxy localhost:8080 > build/reports/zap/zap_report.html
+
+      - name: Upload Security Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Security Reports
+          path: |
+            build/reports/zap/
+            build/reports/dependency-check-report.html
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          echo "Simulating production deployment"
+          sleep 5
