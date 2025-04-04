@@ -68,13 +68,12 @@ jobs:
 
       - name: Create JMeter Work Directories
         run: |
-          echo "Creating JMeter work directories..."
-          mkdir -p /var/lib/jmeter/reports
-          mkdir -p /var/lib/jmeter/results
-          mkdir -p /var/lib/jmeter/temp
-          mkdir -p /opt/apache-jmeter-5.6.2/temp
-          chmod -R 755 /var/lib/jmeter
-          chmod -R 755 /opt/apache-jmeter-5.6.2/temp
+            echo "Creating JMeter work directories..."
+            mkdir -p $GITHUB_WORKSPACE/jmeter/reports
+            mkdir -p $GITHUB_WORKSPACE/jmeter/results
+            mkdir -p $GITHUB_WORKSPACE/jmeter/temp
+            mkdir -p $GITHUB_WORKSPACE/jmeter/temp
+            chmod -R 755 $GITHUB_WORKSPACE/jmeter
 
       - name: Unit Tests
         run: ./gradlew test
