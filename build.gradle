@@ -283,7 +283,7 @@ check.dependsOn(jacocoTestReport)
 
 sonarqube {
     properties {
-                property "sonar.host.url","http://sonarqube:9000"
+        property "sonar.host.url","http://sonarqube:9000"
         property "sonar.projectKey", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
         property "sonar.projectName", System.getenv("GITHUB_REPOSITORY")?.tokenize('/')?.last() ?: "Demo"
         property "sonar.projectDescription", "A demonstration of a web application with good test coverage and best practices"

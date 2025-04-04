@@ -75,6 +75,13 @@ jobs:
             mkdir -p $GITHUB_WORKSPACE/jmeter/temp
             chmod -R 755 $GITHUB_WORKSPACE/jmeter
 
+      - name: Create SonarQube Project
+        run: |
+          echo "Creating SonarQube project..."
+          curl -u admin:admin -X POST "http://localhost:9000/api/projects/create" \
+            -d "name=Demo" \
+            -d "project=Demo"
+
       - name: Unit Tests
         run: ./gradlew test
 
@@ -106,27 +113,6 @@ jobs:
         with:
           name: BDD Test Results
           path: build/test-results/bdd/*.xml
-
-      - name: List Running Containers
-        run: |
-            echo "Listing all running containers..."
-            docker ps -a
-            echo "Listing all Docker networks..."
-            docker network ls
-
-      - name: Inspect Container Logs
-        run: |
-              echo "Fetching logs for the app container..."
-              docker logs ensf400-final-project-app-1 || echo "Failed to fetch logs for app container"
-    
-              echo "Fetching logs for the zap container..."
-              docker logs ensf400-final-project-zap-1 || echo "Failed to fetch logs for zap container"
-    
-              echo "Fetching logs for the jenkins container..."
-              docker logs ensf400-final-project-jenkins-1 || echo "Failed to fetch logs for jenkins container"
-    
-              echo "Fetching logs for the sonarqube container..."
-              docker logs ensf400-final-project-sonarqube-1 || echo "Failed to fetch logs for sonarqube container"
       
       - name: Test Application Connectivity
         run: |
