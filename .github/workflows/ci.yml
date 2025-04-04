@@ -45,8 +45,18 @@ jobs:
         run: |
           # Wait for SonarQube to be ready
           timeout 300 bash -c 'while [[ "$(curl -s -u admin:admin -o /dev/null -w ''%{http_code}'' localhost:9000/api/system/status)" != "200" ]]; do sleep 5; done'
-          # Change default admin password to match your configuration
-          curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password" -d "login=admin&previousPassword=admin&password=Sunshine123!"
+          
+          # Change default admin password (using correct API endpoint)
+          curl -X POST "http://localhost:9000/api/authentication/update_password" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -u admin:admin \
+            --data-raw "previousPassword=admin&password=Sunshine123!"
+          
+          # Create project
+          curl -X POST "http://localhost:9000/api/projects/create" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -u admin:Sunshine123! \
+            --data-raw "name=ENSF400-Final-Project&project=Demo"
 
       - name: Cache SonarQube packages
         uses: actions/cache@v3
