@@ -14,18 +14,22 @@ import org.junit.BeforeClass;  // For @BeforeClass
 public class SeleniumTests {
     private static WebDriver driver;
 
-    @BeforeClass
+   @BeforeClass
     public static void setUp() {
-        WebDriverManager.chromedriver().driverVersion("134.0.0.0").setup();        
+        // Clear any cached resolution so it auto-detects the installed browser version.
+        WebDriverManager.chromedriver().clearResolutionCache().setup();
+        
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-gpu");
+        // You can remove the following if it’s causing warnings (it's deprecated)
         options.setExperimentalOption("useAutomationExtension", false);
         
         driver = new ChromeDriver(options);
-}
+    }
+
 
     @AfterClass
     public static void tearDown() {
