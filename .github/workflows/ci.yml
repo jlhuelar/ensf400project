@@ -16,7 +16,7 @@ jobs:
         ports:
           - 9000:9000
       zap:
-        image: ghcr.io/zaproxy/zaproxy:stable
+        image: owasp/zap2docker-stable:latest
         ports:
           - 9888:8080
         options: >-
@@ -24,22 +24,9 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+          --entrypoint "zap.sh -daemon -port 8080 -host 0.0.0.0 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true"
         env:
           JAVA_OPTS: "-Xmx512m"
-        credentials:
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-        volumes:
-          - /zap/wrk:/zap/wrk:rw
-        command: [
-          "zap.sh",
-          "-daemon",
-          "-port", "8080",
-          "-host", "0.0.0.0",
-          "-config", "api.addrs.addr.name=.*",
-          "-config", "api.addrs.addr.regex=true",
-          "-config", "api.disablekey=true"
-        ]
       app:
         image: tomcat:9.0
         ports:
