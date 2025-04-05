@@ -14,30 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Business logic for handling library needs.  For example, {@link #lendBook}
+ * Provides business logic for handling library operations such as lending books, 
+ * registering books or borrowers, searching for entities, and deleting records.
+ * <p>
+ * All operations delegate persistence-related tasks to the provided persistence layer.
+ * </p>
  */
 public class LibraryUtils {
 
     private final IPersistenceLayer persistence;
     private static final Logger logger = LoggerFactory.getLogger(LibraryUtils.class);
 
+    /**
+     * Constructs a LibraryUtils instance with the given persistence layer.
+     *
+     * @param persistence the persistence layer for database operations
+     */
     public LibraryUtils(IPersistenceLayer persistence) {
         this.persistence = persistence;
     }
 
+    /**
+     * Constructs a LibraryUtils instance with a default persistence layer.
+     */
     public LibraryUtils() {
         this(new PersistenceLayer());
     }
 
     /**
-     * Lend a book to a borrower.
-     * @param bookTitle The title of a registered book, e.g. see {@link #registerBook(String)}
-     * @param borrowerName the name of a registered borrower, e.g. see {@link #registerBorrower(String)}
-     * @param borrowDate the date the book is being lent out.
-     * @return an enum {@link LibraryActionResults} indicating the resultant status
+     * Lends a book to a borrower given the book title, borrower name, and the borrow date.
+     *
+     * @param bookTitle    the title of a registered book (see {@link #registerBook(String)})
+     * @param borrowerName the name of a registered borrower (see {@link #registerBorrower(String)})
+     * @param borrowDate   the date the book is being lent out
+     * @return a {@link LibraryActionResults} enum indicating the status of the lending operation
      */
     public LibraryActionResults lendBook(String bookTitle, String borrowerName, Date borrowDate) {
-        logger.info("starting process to lend a book: {} to borrower: {}", bookTitle, borrowerName);
+        logger.info("Starting process to lend a book: {} to borrower: {}", bookTitle, borrowerName);
         final Book book = searchForBookByTitle(bookTitle);
         final Book foundBook = new Book(book.id, bookTitle);
         final Borrower borrower = searchForBorrowerByName(borrowerName);
@@ -45,203 +58,286 @@ public class LibraryUtils {
         return lendBook(foundBook, foundBorrower, borrowDate);
     }
 
+    /**
+     * Lends a book to a borrower using the provided Book and Borrower objects.
+     *
+     * @param book       the book to lend
+     * @param borrower   the borrower to whom the book is lent
+     * @param borrowDate the date the book is being lent out
+     * @return a {@link LibraryActionResults} enum indicating the status of the lending operation
+     */
     public LibraryActionResults lendBook(Book book, Borrower borrower, Date borrowDate) {
         if (book.id == 0) {
-            logger.info("book: {} was not registered.  Lending failed", book.title);
+            logger.info("Book: {} was not registered. Lending failed.", book.title);
             return LibraryActionResults.BOOK_NOT_REGISTERED;
         }
-
         if (borrower.id == 0) {
-            logger.info("borrower: {} was not registered.  Lending failed", borrower.name);
+            logger.info("Borrower: {} was not registered. Lending failed.", borrower.name);
             return LibraryActionResults.BORROWER_NOT_REGISTERED;
         }
-
         final Loan loan = searchForLoanByBook(book);
         if (!loan.isEmpty()) {
-            logger.info("book: {} was already checked out on {}.  Lending failed", book.title, loan.checkoutDate);
+            logger.info("Book: {} was already checked out on {}. Lending failed.", book.title, loan.checkoutDate);
             return LibraryActionResults.BOOK_CHECKED_OUT;
         }
-
-        logger.info("book: {} is available for borrowing by valid borrower: {}", book.title, borrower.name);
+        logger.info("Book: {} is available for borrowing by valid borrower: {}", book.title, borrower.name);
         createLoan(book, borrower, borrowDate);
         return LibraryActionResults.SUCCESS;
     }
 
     /**
-     * This is here so we can extract out the portion of code
-     * that calls to the persistence layer, making it easier to test.
+     * Creates a new loan for a book and borrower.
+     * <p>
+     * This method delegates the loan creation to the persistence layer.
+     * </p>
+     *
+     * @param book       the book to be loaned
+     * @param borrower   the borrower who will receive the book
+     * @param borrowDate the date the book is loaned out
      */
     void createLoan(Book book, Borrower borrower, Date borrowDate) {
-        logger.info("creating loan for book: {} by borrower: {}", book.title, borrower.name);
+        logger.info("Creating loan for book: {} by borrower: {}", book.title, borrower.name);
         persistence.createLoan(book, borrower, borrowDate);
     }
 
     /**
-     * Register a borrower with the library
-     * @param borrower the name of a borrower
-     * @return an enum, {@link LibraryActionResults} indicating the resultant status
+     * Registers a new borrower in the library.
+     *
+     * @param borrower the name of the borrower to register
+     * @return a {@link LibraryActionResults} enum indicating the status of the registration operation
      */
     public LibraryActionResults registerBorrower(String borrower) {
-        logger.info("trying to register a borrower with name: {}", borrower);
+        logger.info("Attempting to register a borrower with name: {}", borrower);
         final Borrower borrowerDetails = searchForBorrowerByName(borrower);
         final boolean borrowerWasFound = !borrowerDetails.equals(Borrower.createEmpty());
         if (borrowerWasFound) {
-            logger.info("borrower: {} was already registered", borrower);
+            logger.info("Borrower: {} was already registered.", borrower);
             return LibraryActionResults.ALREADY_REGISTERED_BORROWER;
         }
-        logger.info("borrower: {} was not found.  Registering new borrower...", borrower);
+        logger.info("Borrower: {} was not found. Registering new borrower...", borrower);
         saveNewBorrower(borrower);
         return LibraryActionResults.SUCCESS;
     }
 
     /**
-     * This is here so we can extract out the portion of code
-     * that calls to the persistence layer, making it easier to test.
+     * Saves a new borrower to the persistence layer.
+     *
+     * @param borrower the name of the new borrower
      */
     void saveNewBorrower(String borrower) {
-        logger.info("saving new borrower: {}", borrower);
+        logger.info("Saving new borrower: {}", borrower);
         persistence.saveNewBorrower(borrower);
     }
 
     /**
-     * Register a new book with the library
-     * @param bookTitle the title of a book
-     * @return an enum {@link LibraryActionResults} indicating the resultant status
+     * Registers a new book in the library.
+     *
+     * @param bookTitle the title of the book to register
+     * @return a {@link LibraryActionResults} enum indicating the status of the registration operation
+     * @throws IllegalArgumentException if the book title is empty
      */
     public LibraryActionResults registerBook(String bookTitle) {
         if (bookTitle.isEmpty()) {
-            throw new IllegalArgumentException("bookTitle was an empty string - disallowed when registering books");
+            throw new IllegalArgumentException("Book title must be non-empty when registering books.");
         }
-        logger.info("trying to register a book with title: {}", bookTitle);
+        logger.info("Attempting to register a book with title: {}", bookTitle);
         final Book book = searchForBookByTitle(bookTitle);
         if (!book.isEmpty()) {
-            logger.info("book: {} was already registered", bookTitle);
+            logger.info("Book: {} was already registered.", bookTitle);
             return LibraryActionResults.ALREADY_REGISTERED_BOOK;
         }
-        logger.info("book: {} was not found.  Registering new book...", bookTitle);
+        logger.info("Book: {} was not found. Registering new book...", bookTitle);
         saveNewBook(bookTitle);
         return LibraryActionResults.SUCCESS;
     }
 
     /**
-     * This is here so we can extract out the portion of code
-     * that calls to the persistence layer, making it easier to test.
+     * Saves a new book to the persistence layer.
+     *
+     * @param bookTitle the title of the new book
      */
     void saveNewBook(String bookTitle) {
-        logger.info("saving a new book: {}", bookTitle);
+        logger.info("Saving new book: {}", bookTitle);
         persistence.saveNewBook(bookTitle);
     }
 
+    /**
+     * Searches for a loan associated with the specified book.
+     *
+     * @param book the book for which to search the loan
+     * @return the corresponding {@link Loan} if found; otherwise, an empty loan instance
+     */
     public Loan searchForLoanByBook(Book book) {
-        logger.info("searching for loan by book with title: {}", book.title);
+        logger.info("Searching for loan by book with title: {}", book.title);
         return persistence.searchForLoanByBook(book).orElse(Loan.createEmpty());
     }
 
-
+    /**
+     * Searches for loans associated with the specified borrower.
+     *
+     * @param borrower the borrower for which to search loans
+     * @return a list of {@link Loan} objects, or an empty list if none are found
+     */
     public List<Loan> searchForLoanByBorrower(Borrower borrower) {
-        logger.info("searching for loan by borrower with name: {}", borrower.name);
+        logger.info("Searching for loans by borrower with name: {}", borrower.name);
         return persistence.searchForLoanByBorrower(borrower).orElse(new ArrayList<>());
     }
 
+    /**
+     * Searches for a borrower by name.
+     *
+     * @param borrowerName the name of the borrower to search for
+     * @return the corresponding {@link Borrower} if found; otherwise, an empty borrower instance
+     */
     public Borrower searchForBorrowerByName(String borrowerName) {
-        logger.info("searching for borrower by name: {}", borrowerName);
+        logger.info("Searching for borrower by name: {}", borrowerName);
         return persistence.searchBorrowerDataByName(borrowerName).orElse(Borrower.createEmpty());
     }
 
+    /**
+     * Searches for a book by title.
+     *
+     * @param title the title of the book to search for; must be non-empty
+     * @return the corresponding {@link Book} if found; otherwise, an empty book instance
+     * @throws IllegalArgumentException if the title is empty
+     */
     public Book searchForBookByTitle(String title) {
         if (title.isEmpty()) {
-            throw new IllegalArgumentException("when searching for a book, must include a non-empty string for title");
+            throw new IllegalArgumentException("A non-empty title must be provided when searching for a book.");
         }
-        logger.info("search for book with title: {}", title);
+        logger.info("Searching for book with title: {}", title);
         final Book book = persistence.searchBooksByTitle(title).orElse(Book.createEmpty());
         if (book.isEmpty()) {
-            logger.info("No book found with title of {}", title);
+            logger.info("No book found with title: {}", title);
         } else {
-            logger.info("book found with title of {}", title);
+            logger.info("Book found with title: {}", title);
         }
         return book;
     }
 
     /**
-     * The id has to be positive.  Exception will be thrown otherwise.
+     * Searches for a book by its identifier.
+     *
+     * @param id the positive identifier of the book
+     * @return the corresponding {@link Book} if found; otherwise, an empty book instance
+     * @throws IllegalArgumentException if the id is less than 1
      */
     public Book searchForBookById(long id) {
         if (id < 1) {
-            throw new IllegalArgumentException("when searching for a book, must include an id of one or greater");
+            throw new IllegalArgumentException("When searching for a book, the id must be 1 or greater.");
         }
-        logger.info("search for book with id: {}", id);
+        logger.info("Searching for book with id: {}", id);
         final Book book = persistence.searchBooksById(id).orElse(Book.createEmpty());
         if (book.isEmpty()) {
-            logger.info("No book found with id of {}", id);
+            logger.info("No book found with id: {}", id);
         } else {
-            logger.info("Book found with id of {}", id);
+            logger.info("Book found with id: {}", id);
         }
         return book;
     }
 
     /**
-     * The id has to be positive.  Exception will be thrown otherwise.
+     * Searches for a borrower by its identifier.
+     *
+     * @param id the positive identifier of the borrower
+     * @return the corresponding {@link Borrower} if found; otherwise, an empty borrower instance
+     * @throws IllegalArgumentException if the id is less than 1
      */
     public Borrower searchForBorrowerById(long id) {
         if (id < 1) {
-            throw new IllegalArgumentException("when searching for a borrower, must include an id of one or greater");
+            throw new IllegalArgumentException("When searching for a borrower, the id must be 1 or greater.");
         }
-        logger.info("search for borrower with id: {}", id);
+        logger.info("Searching for borrower with id: {}", id);
         final Borrower borrower = persistence.searchBorrowersById(id).orElse(Borrower.createEmpty());
         if (borrower.isEmpty()) {
-            logger.info("No borrower found with id of {}", id);
+            logger.info("No borrower found with id: {}", id);
         } else {
-            logger.info("borrower found with id of {}", id);
+            logger.info("Borrower found with id: {}", id);
         }
         return borrower;
     }
 
+    /**
+     * Creates an empty LibraryUtils instance using an empty persistence layer.
+     *
+     * @return a LibraryUtils instance with an empty persistence layer
+     */
     public static LibraryUtils createEmpty() {
         return new LibraryUtils(PersistenceLayer.createEmpty());
     }
 
+    /**
+     * Checks whether the underlying persistence layer is empty.
+     *
+     * @return {@code true} if the persistence layer is empty; {@code false} otherwise
+     */
     public boolean isEmpty() {
         return persistence.isEmpty();
     }
 
+    /**
+     * Deletes a book from the library.
+     *
+     * @param book the book to delete
+     * @return a {@link LibraryActionResults} enum indicating the status of the delete operation
+     */
     public LibraryActionResults deleteBook(Book book) {
-        logger.info("deleting a book.  id: {}, title: {}", book.id, book.title);
+        logger.info("Deleting book with id: {}, title: {}", book.id, book.title);
         final Book bookInDatabase = searchForBookByTitle(book.title);
         if (bookInDatabase.isEmpty()) {
-            logger.info("book not found in database.  Therefore, obviously, cannot be deleted");
+            logger.info("Book not found in the database; cannot be deleted.");
             return LibraryActionResults.NON_REGISTERED_BOOK_CANNOT_BE_DELETED;
         }
         persistence.deleteBook(book.id);
-        logger.info("book with title: {} and id: {} was deleted", bookInDatabase.title, bookInDatabase.id);
+        logger.info("Book with title: {} and id: {} was deleted", bookInDatabase.title, bookInDatabase.id);
         return LibraryActionResults.SUCCESS;
     }
 
+    /**
+     * Deletes a borrower from the library.
+     *
+     * @param borrower the borrower to delete
+     * @return a {@link LibraryActionResults} enum indicating the status of the delete operation
+     */
     public LibraryActionResults deleteBorrower(Borrower borrower) {
-        logger.info("deleting a borrower.  id: {}, name: {}", borrower.id, borrower.name);
+        logger.info("Deleting borrower with id: {}, name: {}", borrower.id, borrower.name);
         final Borrower borrowerInDatabase = searchForBorrowerByName(borrower.name);
         if (borrowerInDatabase.isEmpty()) {
-            logger.info("borrower not found in database.  Therefore, obviously, cannot be deleted");
+            logger.info("Borrower not found in the database; cannot be deleted.");
             return LibraryActionResults.NON_REGISTERED_BORROWER_CANNOT_BE_DELETED;
         }
         persistence.deleteBorrower(borrower.id);
-        logger.info("borrower with name: {} and id: {} was deleted", borrowerInDatabase.name, borrowerInDatabase.id);
+        logger.info("Borrower with name: {} and id: {} was deleted", borrowerInDatabase.name, borrowerInDatabase.id);
         return LibraryActionResults.SUCCESS;
     }
 
+    /**
+     * Lists all registered books in the library.
+     *
+     * @return a list of all registered books, or an empty list if none are found
+     */
     public List<Book> listAllBooks() {
-        logger.info("received request to list all books");
+        logger.info("Received request to list all books");
         return persistence.listAllBooks().orElse(new ArrayList<>());
     }
 
-
+    /**
+     * Lists all registered borrowers in the library.
+     *
+     * @return a list of all registered borrowers, or an empty list if none are found
+     */
     public List<Borrower> listAllBorrowers() {
-        logger.info("received request to list all borrowers");
+        logger.info("Received request to list all borrowers");
         return persistence.listAllBorrowers().orElse(new ArrayList<>());
     }
 
-
+    /**
+     * Lists all available (not currently loaned) books in the library.
+     *
+     * @return a list of available books, or an empty list if none are available
+     */
     public List<Book> listAvailableBooks() {
-        logger.info("received request to list available books");
+        logger.info("Received request to list available books");
         return persistence.listAvailableBooks().orElse(new ArrayList<>());
     }
 }
