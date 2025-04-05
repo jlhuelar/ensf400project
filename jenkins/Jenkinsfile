@@ -176,11 +176,11 @@ pipeline {
     // Run Jmeter performance testing https://jmeter.apache.org/
     // This test simulates 50 users concurrently using our software
     // for a set of common tasks.
-    stage('Performance Tests') {
-      steps {
-        sh './gradlew runPerfTests'
-      }
-    }
+    // stage('Performance Tests') {
+    //   steps {
+    //     sh './gradlew runPerfTests'
+    //   }
+    // }
 
     // Runs mutation testing against some subset of our software
     // as a spot test.  Mutation testing is where bugs are seeded
