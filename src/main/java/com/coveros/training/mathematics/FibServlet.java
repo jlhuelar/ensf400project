@@ -27,7 +27,10 @@ import java.math.BigInteger;
 public class FibServlet extends HttpServlet {
 
     private static final long serialVersionUID = 5290010004362186530L;
+    /** The request attribute key for storing the Fibonacci calculation result. */
     public static final String RESULT = "result";
+
+    /** The log message pattern for displaying the Fibonacci value. */
     public static final String FIBONACCI_VALUE_IS = "Fibonacci value is {}";
     private static final Logger logger = LoggerFactory.getLogger(FibServlet.class);
 
