@@ -138,7 +138,7 @@ public class LibraryUtils {
      */
     public LibraryActionResults registerBook(String bookTitle) {
         if (bookTitle.isEmpty()) {
-            throw new IllegalArgumentException("Book title must be non-empty when registering books.");
+            throw new IllegalArgumentException("bookTitle was an empty string - disallowed when registering books");
         }
         logger.info("Attempting to register a book with title: {}", bookTitle);
         final Book book = searchForBookByTitle(bookTitle);
@@ -203,7 +203,7 @@ public class LibraryUtils {
      */
     public Book searchForBookByTitle(String title) {
         if (title.isEmpty()) {
-            throw new IllegalArgumentException("A non-empty title must be provided when searching for a book.");
+            throw new IllegalArgumentException("when searching for a book, must include a non-empty string for title");
         }
         logger.info("Searching for book with title: {}", title);
         final Book book = persistence.searchBooksByTitle(title).orElse(Book.createEmpty());
@@ -224,7 +224,7 @@ public class LibraryUtils {
      */
     public Book searchForBookById(long id) {
         if (id < 1) {
-            throw new IllegalArgumentException("When searching for a book, the id must be 1 or greater.");
+            throw new IllegalArgumentException("when searching for a book, must include an id of one or greater");
         }
         logger.info("Searching for book with id: {}", id);
         final Book book = persistence.searchBooksById(id).orElse(Book.createEmpty());
