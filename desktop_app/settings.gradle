@@ -8,3 +8,12 @@
  */
 
 rootProject.name = 'autoinsurance'
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()  // This line is important
+        mavenCentral()
+        jcenter() // Optional
+    }
+}
+
