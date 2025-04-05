@@ -13,7 +13,7 @@
 
 buildscript {
     repositories {
-        gradlePluginPortal() // Add this here too
+        gradlePluginPortal()  // ✅ Required for PITEST resolution
         mavenCentral()
     }
     dependencies {
@@ -21,6 +21,7 @@ buildscript {
     }
 }
 
+apply plugin: "info.solidsoft.pitest"
 
 plugins {
     id 'war'
@@ -48,7 +49,7 @@ plugins {
     // which code-under-test is actually "tested", rather than
     // simply being run during the test.  It does this by
     // changing the code and seeing if the test fails as a result.
-    id 'info.solidsoft.pitest' version '1.9.5'
+    // id 'info.solidsoft.pitest' version '1.9.5'
 
     // Dependency Check analyzes the dependencies for 
     // potential security issues.
