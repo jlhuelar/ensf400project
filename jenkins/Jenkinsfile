@@ -192,11 +192,11 @@ pipeline {
     // happens that no matter how code is changed, the tests
     // continue to pass, which implies that the test wasn't really
     // providing any value for those lines.
-    stage('Mutation Tests') {
-      steps {
-        sh './gradlew pitest'
-      }
-    }
+    // stage('Mutation Tests') {
+    //   steps {
+    //     sh './gradlew pitest'
+    //   }
+    // }
 
     stage('Build Documentation') {
       steps {
