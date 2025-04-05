@@ -1,0 +1,7 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()  // This line is important
+        mavenCentral()
+        jcenter() // Optional
+    }
+}
