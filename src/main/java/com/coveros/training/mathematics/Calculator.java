@@ -3,38 +3,57 @@ package com.coveros.training.mathematics;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * A simple class to do simple things.
+ * A simple calculator class for performing basic arithmetic operations and
+ * demonstrating various programming concepts.
  */
 public class Calculator {
 
     private final Baz baz;
 
+    /**
+     * Constructs a Calculator with a default Baz dependency.
+     */
     public Calculator() {
         this.baz = new Baz();
     }
 
+    /**
+     * Constructs a Calculator with the provided Baz dependency.
+     *
+     * @param baz the Baz instance to use for third-party operations
+     */
     public Calculator(Baz baz) {
         this.baz = baz;
     }
 
-
     /**
-     * Simply add two integers
+     * Adds two integers.
+     *
+     * @param a the first integer operand
+     * @param b the second integer operand
+     * @return the sum of {@code a} and {@code b}
      */
     public static int add(int a, int b) {
         return a + b;
     }
 
     /**
-     * Simply add two doubles.
+     * Adds two doubles.
+     *
+     * @param a the first double operand
+     * @param b the second double operand
+     * @return the sum of {@code a} and {@code b}
      */
     public static double add(double a, double b) {
         return a + b;
     }
 
     /**
-     * This method converts integers 0 to 10 into their
-     * ordinals.  For example: 0 returns "zero"
+     * Converts an integer in the range 0 to 10 into its corresponding ordinal string.
+     * For example: {@code 0} returns "zero".
+     *
+     * @param i the integer value to convert
+     * @return the ordinal string representation of the number, or "dunno" if out of range
      */
     public static String toStringZeroToTen(int i) {
         switch (i) {
@@ -54,7 +73,11 @@ public class Calculator {
     }
 
     /**
-     * Add two pairs.
+     * Adds two pairs of integers.
+     *
+     * @param pair1 the first pair containing two integer values
+     * @param pair2 the second pair containing two integer values
+     * @return a new {@link Pair} containing the sums of the corresponding elements
      */
     public static Pair<Integer, Integer> add(Pair<Integer, Integer> pair1, Pair<Integer, Integer> pair2) {
         int newLeftValue = pair1.getLeft() + pair2.getLeft();
@@ -63,8 +86,16 @@ public class Calculator {
     }
 
     /**
-     * Used for teaching
-     * testing stubs.
+     * Calculates a combined result using additional operations defined by {@link iFoo} and {@link iBar}.
+     * <p>
+     * This method is used for teaching purposes and testing stubs.
+     * </p>
+     *
+     * @param a   the first integer operand
+     * @param b   the second integer operand
+     * @param foo an implementation of {@link iFoo} for performing a complex operation on {@code a}
+     * @param bar an implementation of {@link iBar} for performing another complex operation on the result of {@code foo}
+     * @return the sum of {@code a}, {@code b}, and the results from {@code foo} and {@code bar}
      */
     public static int calculateAndMore(int a, int b, iFoo foo, iBar bar) {
         int c = foo.doComplexThing(a);
@@ -73,8 +104,13 @@ public class Calculator {
     }
 
     /**
-     * Used for teaching
-     * testing stubs.
+     * Calculates a result by using the third-party operation provided by the {@link Baz} dependency.
+     * <p>
+     * This method is used for teaching purposes and testing stubs.
+     * </p>
+     *
+     * @param a the integer input value
+     * @return the sum of {@code a} and the result of the third-party operation
      */
     public int calculateAndMorePart2(int a) {
         int b = baz.doThirdPartyThing(a);
@@ -82,45 +118,83 @@ public class Calculator {
     }
 
     /**
-     * Used for teaching
-     * testing mocks.
+     * Executes a third-party operation provided by the {@link Baz} dependency.
+     * <p>
+     * This method is used for teaching purposes and testing mocks.
+     * </p>
+     *
+     * @param a the integer input value for the third-party operation
      */
     public void calculateAndMorePart3(int a) {
         baz.doThirdPartyThing(a);
     }
 
+    /**
+     * Functional interface representing a complex operation on an integer.
+     */
     public interface iFoo {
+        /**
+         * Performs a complex operation on the given integer.
+         *
+         * @param a the input integer
+         * @return the result of the complex operation
+         */
         int doComplexThing(int a);
     }
 
     /**
-     * An artificial class needed as a dependency
+     * A simple implementation of {@link iFoo} for demonstration purposes.
      */
     public static class Foo {
+        /**
+         * Performs a complex operation by simply incrementing the input.
+         *
+         * @param a the input integer
+         * @return the incremented value of {@code a}
+         */
         public int doComplexThing(int a) {
             return a + 1;
         }
     }
 
-
+    /**
+     * Functional interface representing another complex operation.
+     */
     public interface iBar {
+        /**
+         * Performs another complex operation on the given integer.
+         *
+         * @param c the input integer
+         * @return the result of the operation
+         */
         int doOtherComplexThing(int c);
     }
 
     /**
-     * An artificial class needed as a dependency
+     * A simple implementation of {@link iBar} for demonstration purposes.
      */
     public static class Bar {
+        /**
+         * Performs another complex operation by simply decrementing the input.
+         *
+         * @param c the input integer
+         * @return the decremented value of {@code c}
+         */
         public int doOtherComplexThing(int c) {
             return c - 1;
         }
     }
 
     /**
-     * An artificial class needed as a dependency
+     * A dependency class representing a third-party component.
      */
     public class Baz {
-
+        /**
+         * Simulates a third-party operation by always returning a fixed value.
+         *
+         * @param a the input integer (not used in the operation)
+         * @return the fixed integer value 42
+         */
         public int doThirdPartyThing(int a) {
             return 42;
         }
