@@ -207,7 +207,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=f237dcdeec1e9c3fb58afdc68f7c4829" --proxy zap:8080 > build/reports/zap/zap_report.html'
+        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=0669e1beb0ec6da4010a1d89496cc400" --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 
