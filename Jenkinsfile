@@ -1,117 +1,48 @@
 pipeline {
-    agent any
-
-    environment {
-        IMAGE_NAME = 'alvinlong2311/demo-app'
-        COMMIT_HASH = "${env.GIT_COMMIT}"
-        SONARQUBE_ENV = 'alvinlong2311' // Name configured in Jenkins global config
-    }
-
-    tools {
-        jdk 'JDK-17'           // Name as configured in Jenkins
-        maven 'Maven-3.8.6'    // Or Gradle if that's your build tool
-    }
-
+    agent none
     options {
-        skipDefaultCheckout(true)
-        timestamps()
+        skipStagesAfterUnstable()
     }
-
     stages {
-
-        stage('Checkout') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:2-alpine'
+                }
+            }
             steps {
-                checkout scm
+                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
-
-        stage('Build and Test') {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'qnib/pytest'
+                }
+            }
             steps {
-                sh 'mvn clean install'
+                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
+            }
+        }
+        stage('Deliver') { //1
+            agent {
+                docker {
+                    image 'cdrx/pyinstaller-linux:python2' //2
+                }
+            }
+            steps {
+                sh '/root/.pyenv/shims/pyinstaller --onefile sources/add2vals.py' //3
             }
             post {
                 success {
-                    junit '**/target/surefire-reports/*.xml'
+                    archiveArtifacts 'dist/add2vals' //4
                 }
             }
-        }
-
-        stage('Code Quality - SonarQube') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
-
-        stage('Security Analysis - OWASP DependencyCheck') {
-            steps {
-                sh '''
-                mkdir -p dependency-check
-                dependency-check/bin/dependency-check.sh --project demo-app --scan . --format ALL --out dependency-check
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'dependency-check/**'
-                }
-            }
-        }
-
-        stage('Performance Testing - JMeter') {
-            steps {
-                sh '''
-                jmeter -n -t jmeter/test-plan.jmx -l jmeter/results.jtl
-                '''
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'jmeter/results.jtl'
-                }
-            }
-        }
-
-        stage('Generate Javadoc') {
-            steps {
-                sh 'mvn javadoc:javadoc'
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: '**/target/site/apidocs/**/*'
-                }
-            }
-        }
-
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    def tag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}".replaceAll('/', '-')
-                    sh "docker build -t ${IMAGE_NAME}:${tag} ."
-                    sh "docker tag ${IMAGE_NAME}:${tag} ${IMAGE_NAME}:latest"
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push ${IMAGE_NAME}:${tag}
-                        docker push ${IMAGE_NAME}:latest
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Codespace Environment') {
-            steps {
-                sh './scripts/deploy.sh' // You need to create this if not already present
-            }
-        }
-
-    }
-
-    post {
-        failure {
-            mail to: 'team@example.com',
-                 subject: "Pipeline failed: ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                 body: "Check Jenkins for details: ${env.BUILD_URL}"
         }
     }
 }
