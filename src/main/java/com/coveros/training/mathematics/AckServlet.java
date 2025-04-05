@@ -34,7 +34,7 @@ public class AckServlet extends HttpServlet {
     /** The request attribute key for storing the Ackermann function result. */
     public static final String RESULT = "result";
 
-    static final Logger logger = LoggerFactory.getLogger(AckServlet.class);
+    public static  Logger logger = LoggerFactory.getLogger(AckServlet.class);
 
     /**
      * Retrieves an integer parameter from the request, sets it as an attribute, and returns its value.

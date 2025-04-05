@@ -32,7 +32,7 @@ public class FibServlet extends HttpServlet {
 
     /** The log message pattern for displaying the Fibonacci value. */
     public static final String FIBONACCI_VALUE_IS = "Fibonacci value is {}";
-    static final Logger logger = LoggerFactory.getLogger(FibServlet.class);
+    public static  Logger logger = LoggerFactory.getLogger(FibServlet.class);
 
     /**
      * Retrieves an integer parameter from the request, sets it as an attribute, and returns its value.
