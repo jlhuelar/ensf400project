@@ -1,15 +1,15 @@
-buildscript {
-  repositories {
-    gradlePluginPortal()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    // https://plugins.gradle.org/plugin/com.github.spacialcircumstances.gradle-cucumber-reporting
-    classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.23"
-  }
-}
+// buildscript {
+//   repositories {
+//     gradlePluginPortal()
+//     maven {
+//       url "https://plugins.gradle.org/m2/"
+//     }
+//   }
+//   dependencies {
+//     // https://plugins.gradle.org/plugin/com.github.spacialcircumstances.gradle-cucumber-reporting
+//     classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.23"
+//   }
+// }
 
 
 
