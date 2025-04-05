@@ -104,4 +104,14 @@ public class FibServlet extends HttpServlet {
     }
 
     /**
-     * Calculates the Fibonacci number using the default recursive*
+     * Calculates the Fibonacci number using the default recursive approach.
+     *
+     * @param request the HttpServletRequest object
+     * @param itemA   the nth Fibonacci number to calculate
+     */
+    void defaultRecursiveCalculation(HttpServletRequest request, int itemA) {
+        final long result = Fibonacci.calculate(itemA);
+        logger.info(FIBONACCI_VALUE_IS, result);
+        request.setAttribute(RESULT, result);
+    }
+}
