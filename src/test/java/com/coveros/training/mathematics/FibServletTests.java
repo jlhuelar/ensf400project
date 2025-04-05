@@ -18,7 +18,7 @@ public class FibServletTests {
     private final FibServlet fibServlet = Mockito.spy(new FibServlet());
     private final HttpServletRequest request = Mockito.mock(HttpServletRequest.class, RETURNS_DEEP_STUBS);
     private final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-    private final Logger mockLogger = Mockito.mock(Logger.class);
+    private final Logger logger = Mockito.mock(Logger.class);
 
     /**
      * Testing a happy path, mocking the request, response, and forward.
@@ -67,12 +67,12 @@ public class FibServletTests {
      */
     @Test
     public void testPostService_Forward() {
-        FibServlet.setLogger(mockLogger);
+        FibServlet.logger = logger;
 
         fibServlet.doPost(request, response);
 
         verify(request).getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP);
-        verify(mockLogger, times(0)).error(Mockito.anyString());
+        verify(FibServlet.logger, times(0)).error(Mockito.anyString());
     }
 
     /**
@@ -81,7 +81,7 @@ public class FibServletTests {
      */
     @Test
     public void testPostService_realForward_withException() throws ServletException, IOException {
-        FibServlet.setLogger(mockLogger);
+        FibServlet.logger = logger;
         final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(request.getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP)).thenReturn(requestDispatcher);
         doThrow(new RuntimeException("hi there, exception here."))
@@ -90,6 +90,7 @@ public class FibServletTests {
         fibServlet.doPost(request, response);
 
         verify(request).getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP);
-        verify(mockLogger).error(Mockito.anyString());
+        verify(FibServlet.logger).error(Mockito.anyString());
     }
+
 }
