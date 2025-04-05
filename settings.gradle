@@ -1,17 +1,9 @@
-// settings.gradle
 pluginManagement {
     repositories {
-        gradlePluginPortal() // Essential for resolving plugins by ID from the official portal
-        mavenCentral()     // Good practice to include as well
-        // Remove jcenter() if it exists here!
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter() // Optional
     }
 }
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral() // For project dependencies
-        // Remove jcenter() if it exists here!
-        // Add any other necessary repositories like Google's Maven repo if needed
-    }
-}
+rootProject.name = 'ENSF400-FinalProject' 

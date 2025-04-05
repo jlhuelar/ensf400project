@@ -1,27 +1,17 @@
-// buildscript {
-//   repositories {
-//     gradlePluginPortal()
-//     maven {
-//       url "https://plugins.gradle.org/m2/"
-//     }
-//   }
-//   dependencies {
-//     // https://plugins.gradle.org/plugin/com.github.spacialcircumstances.gradle-cucumber-reporting
-//     classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.23"
-//   }
-// }
-
 buildscript {
-    repositories {
-        gradlePluginPortal()  // ✅ Required for PITEST resolution
-        mavenCentral()
+  repositories {
+    gradlePluginPortal()
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
-    dependencies {
-        classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.5"
-    }
+  }
+  dependencies {
+    // https://plugins.gradle.org/plugin/com.github.spacialcircumstances.gradle-cucumber-reporting
+    classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.23"
+  }
 }
 
-apply plugin: "info.solidsoft.pitest"
+
 
 plugins {
     id 'war'
@@ -49,7 +39,7 @@ plugins {
     // which code-under-test is actually "tested", rather than
     // simply being run during the test.  It does this by
     // changing the code and seeing if the test fails as a result.
-    // id 'info.solidsoft.pitest' version '1.9.5'
+    id 'info.solidsoft.pitest' version '1.9.5'
 
     // Dependency Check analyzes the dependencies for 
     // potential security issues.
