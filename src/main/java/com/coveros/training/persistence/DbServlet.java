@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
  *   <li>default: cleans and then migrates the database to reset it</li>
  * </ul>
  * The result of the operation is forwarded to a result page.
- * </p>
  */
 @WebServlet(name = "DbServlet", urlPatterns = {"/flyway"}, loadOnStartup = 1)
 public class DbServlet extends HttpServlet {
