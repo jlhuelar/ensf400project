@@ -18,7 +18,7 @@ public class AckServletTests {
     private final AckServlet ackServlet = Mockito.spy(new AckServlet());
     private final HttpServletRequest request = Mockito.mock(HttpServletRequest.class, RETURNS_DEEP_STUBS);
     private final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-    private final Logger logger = Mockito.mock(Logger.class);
+    private final Logger mockLogger = Mockito.mock(Logger.class);
 
     /**
      * Testing a happy path, mocking the request, response, and forward.
@@ -36,7 +36,7 @@ public class AckServletTests {
     }
 
     /**
-     * Testing the tail recursive algorithm
+     * Testing the tail recursive algorithm.
      */
     @Test
     public void testPostService_TailRecursive() {
@@ -55,21 +55,21 @@ public class AckServletTests {
      */
     @Test
     public void testPostService_Forward() {
-        AckServlet.logger = logger;
+        AckServlet.setLogger(mockLogger);
 
         ackServlet.doPost(request, response);
 
         verify(request).getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP);
-        verify(AckServlet.logger, times(0)).error(Mockito.anyString());
+        verify(mockLogger, times(0)).error(Mockito.anyString());
     }
 
     /**
      * Here we allow a call into the actual forwardToResult method,
-     * and we force an exception
+     * and we force an exception.
      */
     @Test
     public void testPostService_realForward_withException() throws ServletException, IOException {
-        AckServlet.logger = logger;
+        AckServlet.setLogger(mockLogger);
         final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(request.getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP)).thenReturn(requestDispatcher);
         doThrow(new RuntimeException("hi there, exception here."))
@@ -78,7 +78,6 @@ public class AckServletTests {
         ackServlet.doPost(request, response);
 
         verify(request).getRequestDispatcher(ServletUtils.RESTFUL_RESULT_JSP);
-        verify(AckServlet.logger).error(Mockito.anyString());
+        verify(mockLogger).error(Mockito.anyString());
     }
-
 }

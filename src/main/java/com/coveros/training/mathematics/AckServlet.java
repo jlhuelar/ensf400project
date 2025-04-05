@@ -30,11 +30,29 @@ import java.math.BigInteger;
 public class AckServlet extends HttpServlet {
 
     private static final long serialVersionUID = 5669410483481180165L;
-
     /** The request attribute key for storing the Ackermann function result. */
     public static final String RESULT = "result";
 
-    public static final Logger logger = LoggerFactory.getLogger(AckServlet.class);
+    // Logger is now private and mutable (not final) so tests can inject a mock logger.
+    private static Logger logger = LoggerFactory.getLogger(AckServlet.class);
+
+    /**
+     * Public accessor for the logger.
+     *
+     * @return the logger instance for this class
+     */
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    /**
+     * Package-private setter for the logger. Use this in tests to inject a mock logger.
+     *
+     * @param newLogger the new logger instance
+     */
+    static void setLogger(Logger newLogger) {
+        logger = newLogger;
+    }
 
     /**
      * Retrieves an integer parameter from the request, sets it as an attribute, and returns its value.
@@ -66,7 +84,8 @@ public class AckServlet extends HttpServlet {
             int ackParamN = putNumberInRequest("ack_param_n", request);
             String algorithm = request.getParameter("ack_algorithm_choice");
 
-            logger.info("Received request to calculate Ackermann's function with parameters {} and {} using the {} algorithm", ackParamM, ackParamN, algorithm);
+            logger.info("Received request to calculate Ackermann's function with parameters {} and {} using the {} algorithm", 
+                    ackParamM, ackParamN, algorithm);
 
             if ("tail_recursive".equals(algorithm)) {
                 tailRecursive(request, ackParamM, ackParamN);
