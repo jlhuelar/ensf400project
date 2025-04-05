@@ -1,42 +1,59 @@
 package com.coveros.training.library.domainobjects;
 
 /**
- * These are the possible results of business functions
- * related to the library.  For example, you might
- * get ALREADY_REGISTERED_BOOK if you are trying to register
- * a book and it's already in the library.
+ * Represents the possible outcomes of library-related business functions.
+ * <p>
+ * For example, if you attempt to register a book that is already registered,
+ * the operation may return {@code ALREADY_REGISTERED_BOOK}.
+ * </p>
  */
 public enum LibraryActionResults {
 
+    /** The book is already registered in the library. */
     ALREADY_REGISTERED_BOOK,
 
     /**
-     * if a book isn't registered, then of course we cannot delete it.
+     * The book is not registered in the library,
+     * so it cannot be deleted.
      */
     NON_REGISTERED_BOOK_CANNOT_BE_DELETED,
 
     /**
-     * if a borrower isn't registered, then of course we cannot delete it.
+     * The borrower is not registered in the library,
+     * so they cannot be deleted.
      */
     NON_REGISTERED_BORROWER_CANNOT_BE_DELETED,
+
+    /** The borrower is already registered in the library. */
     ALREADY_REGISTERED_BORROWER,
+
+    /** The book is not registered in the library. */
     BOOK_NOT_REGISTERED,
+
+    /** The borrower is not registered in the library. */
     BORROWER_NOT_REGISTERED,
+
     /**
-     * someone already has this book checked out.
+     * The book is currently checked out by someone,
+     * so it cannot be lent again.
      */
     BOOK_CHECKED_OUT,
+
+    /** The operation was successful. */
     SUCCESS,
+
     /**
-     * if a method needs a book and none is provided
+     * No book title was provided where one was required.
      */
     NO_BOOK_TITLE_PROVIDED,
+
     /**
-     * if a method needs a borrower and none is provided
+     * No borrower information was provided where it was required.
      */
     NO_BORROWER_PROVIDED,
+
     /**
-     * may be used when initializing a variable of this type
+     * A null value is used when initializing a variable of this type.
      */
     NULL
 }

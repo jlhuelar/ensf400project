@@ -15,7 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Web API to list all borrowers or search borrowers by id / name
+ * A web API servlet to list all borrowers or search for borrowers by id or name.
+ * <p>
+ * This servlet processes HTTP GET requests. If no search criteria are provided,
+ * it returns all borrowers. If either an id or a name is provided, it performs
+ * the respective search. If both are provided, an error message is returned.
+ * </p>
  */
 @MultipartConfig
 @WebServlet(name = "LibraryBorrowerListSearch", urlPatterns = {"/borrower"}, loadOnStartup = 1)
@@ -26,6 +31,21 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
     public static final String RESULT = "result";
     static LibraryUtils libraryUtils = new LibraryUtils();
 
+    /**
+     * Processes HTTP GET requests to search for borrowers.
+     * <p>
+     * The search criteria are determined by the request parameters "id" and "name".
+     * <ul>
+     *   <li>If both are empty, all borrowers are listed.</li>
+     *   <li>If only "id" is provided, a search by id is performed.</li>
+     *   <li>If only "name" is provided, a search by name is performed.</li>
+     *   <li>If both are provided, an error message is returned.</li>
+     * </ul>
+     * </p>
+     *
+     * @param request  the HttpServletRequest containing the search parameters
+     * @param response the HttpServletResponse used to send the result
+     */
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
         final String idString = StringUtils.makeNotNullable(request.getParameter("id"));
@@ -34,12 +54,12 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
         String result;
         if (idString.isEmpty() && name.isEmpty()) {
             result = listAllBorrowers();
-        } else if (! idString.isEmpty() && name.isEmpty()) {
+        } else if (!idString.isEmpty() && name.isEmpty()) {
             result = searchById(idString);
-        } else if (idString.isEmpty() ) {
+        } else if (idString.isEmpty()) {
             result = searchByName(name);
-        } else  {  // both id and name have an input
-            logger.info("Received request for borrowers, by name and id - id {} and name {}", idString, name);
+        } else {  // both id and name have an input
+            logger.info("Received request for borrowers by both id and name - id {} and name {}", idString, name);
             result = "Error: please search by either name or id, not both";
         }
         request.setAttribute(RESULT, result);
@@ -47,17 +67,29 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
         ServletUtils.forwardToRestfulResult(request, response, logger);
     }
 
+    /**
+     * Searches for a borrower by name.
+     *
+     * @param name the name of the borrower to search for
+     * @return a JSON-like string representation of the borrower if found, or an error message if not found
+     */
     private String searchByName(final String name) {
-        logger.info("Received request for borrowers, name requested - searching for borrower by name {}", name);
+        logger.info("Received request to search for borrower by name: {}", name);
         final Borrower borrower = libraryUtils.searchForBorrowerByName(name);
         if (borrower.isEmpty()) {
             return "No borrowers found with a name of " + name;
         }
-        return "["+borrower.toOutputString()+"]";
+        return "[" + borrower.toOutputString() + "]";
     }
 
+    /**
+     * Searches for a borrower by id.
+     *
+     * @param idString the id of the borrower to search for as a String
+     * @return a JSON-like string representation of the borrower if found, or an error message if not found
+     */
     private String searchById(final String idString) {
-        logger.info("Received request for borrowers, id requested - searching for borrower by id {}", idString);
+        logger.info("Received request to search for borrower by id: {}", idString);
         int id;
         try {
             id = Integer.parseInt(idString);
@@ -68,18 +100,23 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
         if (borrower.isEmpty()) {
             return "No borrowers found with an id of " + idString;
         }
-        return "["+borrower.toOutputString()+"]";
+        return "[" + borrower.toOutputString() + "]";
     }
 
+    /**
+     * Lists all borrowers registered in the library.
+     *
+     * @return a JSON-like string representation of all borrowers, or a message if none exist
+     */
     private String listAllBorrowers() {
-        logger.info("Received request for borrowers, no name or id requested - listing all borrowers");
+        logger.info("Received request to list all borrowers");
         final List<Borrower> borrowers = libraryUtils.listAllBorrowers();
-        final String allBorrowers = borrowers.stream().map(Borrower::toOutputString).collect(Collectors.joining(","));
+        final String allBorrowers = borrowers.stream()
+                                             .map(Borrower::toOutputString)
+                                             .collect(Collectors.joining(","));
         if (allBorrowers.isEmpty()) {
             return "No borrowers exist in the database";
         }
-        return "["+allBorrowers+"]";
+        return "[" + allBorrowers + "]";
     }
-
-
 }
