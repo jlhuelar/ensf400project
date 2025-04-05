@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
  * This servlet processes HTTP GET requests. If no search criteria are provided,
  * it returns all borrowers. If either an id or a name is provided, it performs
  * the respective search. If both are provided, an error message is returned.
- * </p>
  */
 @MultipartConfig
 @WebServlet(name = "LibraryBorrowerListSearch", urlPatterns = {"/borrower"}, loadOnStartup = 1)
@@ -28,7 +27,12 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
 
     private static final long serialVersionUID = -7374339112812653844L;
     private static final Logger logger = LoggerFactory.getLogger(LibraryBorrowerListSearchServlet.class);
+
+    /**
+     * The request attribute key for storing the result of the borrower search.
+     */
     public static final String RESULT = "result";
+
     static LibraryUtils libraryUtils = new LibraryUtils();
 
     /**
@@ -41,7 +45,6 @@ public class LibraryBorrowerListSearchServlet extends HttpServlet {
      *   <li>If only "name" is provided, a search by name is performed.</li>
      *   <li>If both are provided, an error message is returned.</li>
      * </ul>
-     * </p>
      *
      * @param request  the HttpServletRequest containing the search parameters
      * @param response the HttpServletResponse used to send the result

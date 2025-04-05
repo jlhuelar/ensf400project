@@ -55,7 +55,6 @@ public class DbServlet extends HttpServlet {
      *   <li>default: cleans and then migrates the database</li>
      * </ul>
      * After the operation, a result message is set as a request attribute and the request is forwarded.
-     * </p>
      *
      * @param request  the HttpServletRequest object containing client request data
      * @param response the HttpServletResponse object used to send a response

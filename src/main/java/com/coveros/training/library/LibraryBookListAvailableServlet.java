@@ -26,7 +26,12 @@ public class LibraryBookListAvailableServlet extends HttpServlet {
 
     private static final long serialVersionUID = 3219972716578253134L;
     private static final Logger logger = LoggerFactory.getLogger(LibraryBookListAvailableServlet.class);
+
+    /**
+     * The request attribute key for storing the result of the available books query.
+     */
     public static final String RESULT = "result";
+
     static LibraryUtils libraryUtils = new LibraryUtils();
 
     /**

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Web API to list all books or search books by id / title
+ * Web API to list all books or search books by id / title.
  */
 @MultipartConfig
 @WebServlet(name = "LibraryBookListSearch", urlPatterns = {"/book"}, loadOnStartup = 1)
@@ -23,7 +23,12 @@ public class LibraryBookListSearchServlet extends HttpServlet {
 
     private static final long serialVersionUID = -56598540573518235L;
     private static final Logger logger = LoggerFactory.getLogger(LibraryBookListSearchServlet.class);
+
+    /**
+     * The request attribute key for storing the result of the book search.
+     */
     public static final String RESULT = "result";
+
     static LibraryUtils libraryUtils = new LibraryUtils();
 
     @Override
@@ -34,16 +39,15 @@ public class LibraryBookListSearchServlet extends HttpServlet {
         String result;
         if (idString.isEmpty() && title.isEmpty()) {
             result = listAllBooks();
-        } else if (! idString.isEmpty() && title.isEmpty()) {
+        } else if (!idString.isEmpty() && title.isEmpty()) {
             result = searchById(idString);
-        } else if (idString.isEmpty() ) {
+        } else if (idString.isEmpty()) {
             result = searchByTitle(title);
-        } else  {  // both id and title have an input
+        } else {  // both id and title have an input
             logger.info("Received request for books, by title and id - id {} and title {}", idString, title);
             result = "Error: please search by either title or id, not both";
         }
         request.setAttribute(RESULT, result);
-
         ServletUtils.forwardToRestfulResult(request, response, logger);
     }
 
@@ -74,11 +78,12 @@ public class LibraryBookListSearchServlet extends HttpServlet {
     private String listAllBooks() {
         logger.info("Received request for books, no title or id requested - listing all books");
         final List<Book> books = libraryUtils.listAllBooks();
-        final String allBooks = books.stream().map(Book::toOutputString).collect(Collectors.joining(","));
+        final String allBooks = books.stream()
+                                     .map(Book::toOutputString)
+                                     .collect(Collectors.joining(","));
         if (allBooks.isEmpty()) {
             return "No books exist in the database";
         }
         return "[" + allBooks + "]";
     }
-
 }

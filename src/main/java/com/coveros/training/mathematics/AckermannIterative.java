@@ -60,6 +60,9 @@ public interface AckermannIterative {
      * The enum that encapsulates the tail-recursive implementation of the Ackermann function.
      */
     enum AckTailRecursion {
+        /**
+         * Marker constant used to indicate the end of the tail-recursive definition.
+         */
         END;
 
         // Predefined constants for arithmetic operations.
@@ -156,7 +159,7 @@ public interface AckermannIterative {
                                                 true
                                         );
                                     } else {
-                                        // Save state and decrement number2
+                                        // Save state and decrement number2.
                                         stack.push(number1.subtract(ONE));
                                         return tail(
                                                 number1,

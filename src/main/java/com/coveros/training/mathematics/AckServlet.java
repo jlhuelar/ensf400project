@@ -30,7 +30,10 @@ import java.math.BigInteger;
 public class AckServlet extends HttpServlet {
 
     private static final long serialVersionUID = 5669410483481180165L;
+
+    /** The request attribute key for storing the Ackermann function result. */
     public static final String RESULT = "result";
+
     private static final Logger logger = LoggerFactory.getLogger(AckServlet.class);
 
     /**
