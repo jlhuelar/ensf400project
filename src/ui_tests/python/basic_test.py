@@ -9,6 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
 import requests
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from hamcrest import *
@@ -23,7 +24,23 @@ DEFAULT_BORROWER = "alice"
 class TestBasic():
 
   def setup_class(self):
-    self.driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-software-rasterizer")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-background-networking")
+    chrome_options.add_argument("--disable-background-timer-throttling")
+    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+    chrome_options.add_argument("--disable-breakpad")
+    chrome_options.add_argument("--disable-component-extensions-with-background-pages")
+    chrome_options.add_argument("--disable-features=TranslateUI,BlinkGenPropertyTrees")
+    chrome_options.add_argument("--disable-ipc-flooding-protection")
+    chrome_options.add_argument("--disable-renderer-backgrounding")
+    self.driver = webdriver.Chrome(options=chrome_options)
     self.vars = {}
   
   def teardown_class(self):
@@ -86,15 +103,15 @@ class Login:
         self.driver = driver
 
     def enter_username(self, text):
-        login_username_field = self.driver.find_element_by_id("login_username")
+        login_username_field = self.driver.find_element(By.ID,"login_username")
         login_username_field.send_keys(text)
 
     def enter_password(self, text):
-        login_password_field = self.driver.find_element_by_id("login_password")
+        login_password_field = self.driver.find_element(By.ID,"login_password")
         login_password_field.send_keys(text)
 
     def enter(self):
-        login_button = self.driver.find_element_by_id("login_submit")
+        login_button = self.driver.find_element(By.ID,"login_submit")
         login_button.click()
 
 
@@ -104,15 +121,15 @@ class Registration:
         self.driver = driver
 
     def enter_username(self, text):
-        register_username_field = self.driver.find_element_by_id("register_username")
+        register_username_field = self.driver.find_element(By.ID,"register_username")
         register_username_field.send_keys(text)
 
     def enter_password(self, text):
-        register_password_field = self.driver.find_element_by_id("register_password")
+        register_password_field = self.driver.find_element(By.ID,"register_password")
         register_password_field.send_keys(text)
 
     def enter(self):
-        register_button = self.driver.find_element_by_id("register_submit")
+        register_button = self.driver.find_element(By.ID,"register_submit")
         register_button.click()
 
 
@@ -122,11 +139,11 @@ class BookRegister:
         self.driver = driver
 
     def register_book(self, text):
-        register_book_field = self.driver.find_element_by_id("register_book")
+        register_book_field = self.driver.find_element(By.ID,"register_book")
         register_book_field.send_keys(text)
 
     def enter(self):
-        register_button = self.driver.find_element_by_id("register_book_submit")
+        register_button = self.driver.find_element(By.ID,"register_book_submit")
         register_button.click()
 
 
@@ -136,11 +153,11 @@ class BorrowerRegister:
         self.driver = driver
 
     def register_borrower(self, text):
-        register_borrower_field = self.driver.find_element_by_id("register_borrower")
+        register_borrower_field = self.driver.find_element(By.ID,"register_borrower")
         register_borrower_field.send_keys(text)
 
     def enter(self):
-        register_button = self.driver.find_element_by_id("register_borrower_submit")
+        register_button = self.driver.find_element(By.ID,"register_borrower_submit")
         register_button.click()
 
 
@@ -150,15 +167,15 @@ class BookLend:
         self.driver = driver
 
     def enter_book(self, text):
-        book_field = self.driver.find_element_by_id("lend_book")
+        book_field = self.driver.find_element(By.ID,"lend_book")
         book_field.send_keys(text)
 
     def enter_borrower(self, text):
-        borrower_field = self.driver.find_element_by_id("lend_borrower")
+        borrower_field = self.driver.find_element(By.ID,"lend_borrower")
         borrower_field.send_keys(text)
 
     def enter(self):
-        lend_button = self.driver.find_element_by_id("lend_book_submit")
+        lend_button = self.driver.find_element(By.ID,"lend_book_submit")
         lend_button.click()
 
 
@@ -168,15 +185,15 @@ class Summation:
         self.driver = driver
 
     def enter_addend_a(self, text):
-        addend_a = self.driver.find_element_by_id("addend_a")
+        addend_a = self.driver.find_element(By.ID,"addend_a")
         addend_a.send_keys(text)
 
     def enter_addend_b(self, text):
-        addend_b = self.driver.find_element_by_id("addend_b")
+        addend_b = self.driver.find_element(By.ID,"addend_b")
         addend_b.send_keys(text)
 
     def enter(self):
-        lend_button = self.driver.find_element_by_id("math_submit")
+        lend_button = self.driver.find_element(By.ID,"math_submit")
         lend_button.click()
 
 # all the important capabilities for the Result page
@@ -185,7 +202,7 @@ class Result:
         self.driver = driver
 
     def get_result_text(self):
-        return self.driver.find_element_by_id("result").text
+        return self.driver.find_element(By.ID,"result").text
 
 class LibraryPageObjectModel:
 
