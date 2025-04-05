@@ -32,7 +32,27 @@ public class FibServlet extends HttpServlet {
 
     /** The log message pattern for displaying the Fibonacci value. */
     public static final String FIBONACCI_VALUE_IS = "Fibonacci value is {}";
-    private static  Logger logger = LoggerFactory.getLogger(FibServlet.class);
+    
+    // Logger is now private and mutable (not final) to allow injection in tests.
+    private static Logger logger = LoggerFactory.getLogger(FibServlet.class);
+
+    /**
+     * Public accessor for the logger.
+     *
+     * @return the logger instance for this class
+     */
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    /**
+     * Package-private setter for the logger. Use this in tests to inject a mock logger.
+     *
+     * @param newLogger the new logger instance
+     */
+    static void setLogger(Logger newLogger) {
+        logger = newLogger;
+    }
 
     /**
      * Retrieves an integer parameter from the request, sets it as an attribute, and returns its value.
