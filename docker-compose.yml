@@ -26,6 +26,7 @@ services:
       - ./jenkins_home:/var/jenkins_home
       - ./:/var/jenkins_project
       - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
     # Jenkins will start using its default entrypoint (jenkins.sh)
     # pipenv, chromium, and chromium-driver are now pre-installed.
 
