@@ -26,7 +26,6 @@ import static com.coveros.training.helpers.CheckUtils.StringMustNotBeNullOrEmpty
  *   <li>Evaluating the password complexity using the Nbvcxz library.</li>
  *   <li>Saving the new user's credentials if all checks pass.</li>
  * </ol>
- * </p>
  */
 public class RegistrationUtils {
 
@@ -59,7 +58,6 @@ public class RegistrationUtils {
      *   <li>Evaluating the password complexity.</li>
      *   <li>Saving the new user's credentials if the password is acceptable.</li>
      * </ol>
-     * </p>
      *
      * @param username the username to register
      * @param password the password to register
@@ -117,10 +115,8 @@ public class RegistrationUtils {
      *   <li>The password must not be too long (more than 100 characters, as analysis slows down beyond this limit).</li>
      *   <li>Entropy analysis is performed using the Nbvcxz library.</li>
      * </ol>
-     * </p>
      * <p>
      * See {@link PasswordResult} for details on the evaluation result.
-     * </p>
      *
      * @param password the password to evaluate
      * @return a {@link PasswordResult} containing the details of the password evaluation

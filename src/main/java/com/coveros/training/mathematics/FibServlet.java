@@ -21,7 +21,6 @@ import java.math.BigInteger;
  *   <li><strong>default</strong>: uses the classic recursive implementation via {@link Fibonacci#calculate(long)}</li>
  * </ul>
  * The computed Fibonacci value is then set as a request attribute and forwarded to a result page.
- * </p>
  */
 @MultipartConfig
 @WebServlet(name = "FibServlet", urlPatterns = {"/fibonacci"}, loadOnStartup = 1)
@@ -49,15 +48,13 @@ public class FibServlet extends HttpServlet {
     /**
      * Processes POST requests to calculate a Fibonacci number.
      * <p>
-     * Based on the "fib_algorithm_choice" parameter, the servlet delegates the computation to one of the
-     * following methods:
+     * Based on the "fib_algorithm_choice" parameter, the servlet delegates the computation to one of the following methods:
      * <ul>
      *   <li>{@link #tailRecursiveAlgo1Calc(HttpServletRequest, int)}</li>
      *   <li>{@link #tailRecursiveAlgo2Calc(HttpServletRequest, int)}</li>
      *   <li>{@link #defaultRecursiveCalculation(HttpServletRequest, int)}</li>
      * </ul>
      * If a non-integer value is provided, an error message is set.
-     * </p>
      *
      * @param request  the HttpServletRequest containing the parameters
      * @param response the HttpServletResponse used to forward the result
@@ -111,7 +108,6 @@ public class FibServlet extends HttpServlet {
      * Forwards the request and response to the result page.
      * <p>
      * This method is wrapped to facilitate easier testing.
-     * </p>
      *
      * @param request  the HttpServletRequest containing the result attribute
      * @param response the HttpServletResponse used for forwarding
@@ -125,7 +121,6 @@ public class FibServlet extends HttpServlet {
      * Computes the Fibonacci number using the default recursive algorithm and sets the result.
      * <p>
      * The recursive algorithm is the classic implementation with exponential time complexity.
-     * </p>
      *
      * @param request the HttpServletRequest to set the result attribute
      * @param n       the Fibonacci number index (n) to compute
