@@ -213,7 +213,7 @@ pipeline {
 
     stage('Build & Push Docker Image') {
       when {
-        branch 'main'
+        branch 'UI_StageTesting'
       }
       steps {
         script {
