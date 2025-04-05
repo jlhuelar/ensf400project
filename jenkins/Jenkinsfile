@@ -20,86 +20,86 @@ pipeline {
 
     // run all the unit tests - these do not require anything else
     // to be running and most run very quickly.
-    // stage('Unit Tests') {
-    //   steps {
-    //     sh './gradlew test'
-    //   }
-    //   post {
-    //     always {
-    //       junit 'build/test-results/test/*.xml'
-    //     }
-    //   }
-    // }
+    stage('Unit Tests') {
+      steps {
+        sh './gradlew test'
+      }
+      post {
+        always {
+          junit 'build/test-results/test/*.xml'
+        }
+      }
+    }
 
     // run the tests which require connection to a
     // running database.
-    // stage('Database Tests') {
-    //   steps {
-    //     sh './gradlew integrate'
-    //   }
-    //   post {
-    //     always {
-    //       junit 'build/test-results/integrate/*.xml'
-    //     }
-    //   }
-    // }
+    stage('Database Tests') {
+      steps {
+        sh './gradlew integrate'
+      }
+      post {
+        always {
+          junit 'build/test-results/integrate/*.xml'
+        }
+      }
+    }
 
     // These are the Behavior Driven Development (BDD) tests
     // See the files in src/bdd_test
     // These tests do not require a running system.
-    // stage('BDD Tests') {
-    //   steps {
-    //     sh './gradlew generateCucumberReports'
-    //     // generate the code coverage report for jacoco
-    //     sh './gradlew jacocoTestReport'
-    //   }
-    //   post {
-    //     always {
-    //       junit 'build/test-results/bdd/*.xml'
-    //     }
-    //   }
-    // }
+    stage('BDD Tests') {
+      steps {
+        sh './gradlew generateCucumberReports'
+        // generate the code coverage report for jacoco
+        sh './gradlew jacocoTestReport'
+      }
+      post {
+        always {
+          junit 'build/test-results/bdd/*.xml'
+        }
+      }
+    }
 
     // Runs an analysis of the code, looking for any
     // patterns that suggest potential bugs.
-    // stage('Static Analysis') {
-    //   steps {
-    //     sh './gradlew sonarqube'
-    //     // wait for sonarqube to finish its analysis
-    //     sleep 5
-    //     sh './gradlew checkQualityGate'
-    //   }
-    // }
+    stage('Static Analysis') {
+      steps {
+        sh './gradlew sonarqube'
+        // wait for sonarqube to finish its analysis
+        sleep 5
+        sh './gradlew checkQualityGate'
+      }
+    }
 
     // Move the binary over to the test environment and
     // get it running, in preparation for tests that
     // require a whole system to be running.
-    // stage('Deploy to Test') {
-    //   steps {
-    //     sh './gradlew deployToTestWindowsLocal'
-    //     // pipenv needs to be installed and on the path for this to work.
-    //     // Since pipenv is now installed system-wide, we just run:
-    //     sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
+    stage('Deploy to Test') {
+      steps {
+        sh './gradlew deployToTestWindowsLocal'
+        // pipenv needs to be installed and on the path for this to work.
+        // Since pipenv is now installed system-wide, we just run:
+        sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
 
-    //     // Wait here until the server tells us it's up and listening
-    //     sh './gradlew waitForHeartBeat'
+        // Wait here until the server tells us it's up and listening
+        sh './gradlew waitForHeartBeat'
 
-    //     // clear Zap's memory for the incoming tests with API key authentication
-    //     sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=f237dcdeec1e9c3fb58afdc68f7c4829" -s --proxy zap:8080'
-    //   }
-    // }
+        // clear Zap's memory for the incoming tests with API key authentication
+        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=f237dcdeec1e9c3fb58afdc68f7c4829" -s --proxy zap:8080'
+      }
+    }
 
     // Run the tests which investigate the functioning of the API.
-    // stage('API Tests') {
-    //   steps {
-    //     sh './gradlew runApiTests'
-    //   }
-    //   post {
-    //     always {
-    //       junit 'build/test-results/api_tests/*.xml'
-    //     }
-    //   }
-    // }
+    stage('API Tests') {
+      steps {
+        sh './gradlew runApiTests'
+      }
+      post {
+        always {
+          junit 'build/test-results/api_tests/*.xml'
+        }
+      }
+    }
 
     // We use a BDD framework for some UI tests, Behave, because Python rules
     // when it comes to experimentation with UI tests.  You can try things and see how they work out.
@@ -107,51 +107,51 @@ pipeline {
     // BDD at the UI level is just to ensure that basic capabilities work,
     // not that every little detail of UI functionality is correct.  For
     // that purpose, see the following stage, "UI Tests"
-  //   stage('UI BDD Tests') {
-  //     environment {
-  //       HTTP_PROXY = ''
-  // }
-  //     steps {
-  //       sh './gradlew runBehaveTests'
-  //       sh './gradlew generateCucumberReport'
-  //     }
-  //     post {
-  //       always {
-  //         junit 'build/test-results/bdd_ui/*.xml'
-  //       }
-  //     }
-  //   }
+    stage('UI BDD Tests') {
+      environment {
+        HTTP_PROXY = ''
+  }
+      steps {
+        sh './gradlew runBehaveTests'
+        sh './gradlew generateCucumberReport'
+      }
+      post {
+        always {
+          junit 'build/test-results/bdd_ui/*.xml'
+        }
+      }
+    }
 
-    // stage('Clear WDM Cache') {
-    //   steps {
-    //     echo "Attempting to clear WebDriverManager cache..."
-    //     // Force remove the cache directory. Adjust path if needed for your specific Jenkins setup on Windows.
-    //     // This path comes from previous logs. If Jenkins runs as a different user or uses a different
-    //     // shell (like PowerShell), this might need adjustment (e.g., using %USERPROFILE% or different command).
-    //     // Added || true to prevent failure if the directory doesn't exist.
-    //     sh 'rm -rf jenkins_home/.cache/selenium || echo "Cache directory not found or could not be removed."'
-    //     echo "WebDriverManager cache clearing attempt finished."
-    //   }
-    // }
+    stage('Clear WDM Cache') {
+      steps {
+        echo "Attempting to clear WebDriverManager cache..."
+        // Force remove the cache directory. Adjust path if needed for your specific Jenkins setup on Windows.
+        // This path comes from previous logs. If Jenkins runs as a different user or uses a different
+        // shell (like PowerShell), this might need adjustment (e.g., using %USERPROFILE% or different command).
+        // Added || true to prevent failure if the directory doesn't exist.
+        sh 'rm -rf jenkins_home/.cache/selenium || echo "Cache directory not found or could not be removed."'
+        echo "WebDriverManager cache clearing attempt finished."
+      }
+    }
 
     // This set of tests investigates the functionality of the UI.
     // Note that this is separate fom the UI BDD Tests, which
     // only focuses on essential capability and therefore only
     // covers a small subset of the possibilities of UI behavior.
-//    stage('UI Tests') {
-//     steps {
-//         sh '''
-//           cd src/ui_tests/java
-//           chmod +x gradlew
-//           ./gradlew clean test --refresh-dependencies        
-//           '''
-//     }
-//     post {
-//         always {
-//             junit 'src/ui_tests/java/build/test-results/test/*.xml'
-//         }
-//     }
-// }
+   stage('UI Tests') {
+    steps {
+        sh '''
+          cd src/ui_tests/java
+          chmod +x gradlew
+          ./gradlew clean test --refresh-dependencies        
+          '''
+    }
+    post {
+        always {
+            junit 'src/ui_tests/java/build/test-results/test/*.xml'
+        }
+    }
+}
 
 
     // Run OWASP's "DependencyCheck". https://owasp.org/www-project-dependency-check/
@@ -167,11 +167,11 @@ pipeline {
     // Standards and Technology (NIST), and checks if the software
     // we are importing has any major known vulnerabilities. If so,
     // the build will halt at this point.
-    // stage('Security: Dependency Analysis') {
-    //   steps {
-    //     sh './gradlew dependencyCheckAnalyze'
-    //   }
-    // }
+    stage('Security: Dependency Analysis') {
+      steps {
+        sh './gradlew dependencyCheckAnalyze'
+      }
+    }
 
     // Run Jmeter performance testing https://jmeter.apache.org/
     // This test simulates 50 users concurrently using our software

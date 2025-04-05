@@ -2,7 +2,7 @@ FROM jenkins/jenkins:lts
 # Switch to root to install packages
 USER root
 
-# Install pipenv, chromium, and chromium-driver #Hi 
+# Install pipenv, chromium, and chromium-driver
 RUN apt-get update && \
     apt-get install -y pipenv chromium chromium-driver && \
     apt-get clean
@@ -23,6 +23,12 @@ RUN wget https://jmeter-plugins.org/get/ -O /opt/apache-jmeter-5.4.3/lib/ext/jme
     wget https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.3/cmdrunner-2.3.jar -O /opt/apache-jmeter-5.4.3/lib/cmdrunner-2.3.jar && \
     java -cp /opt/apache-jmeter-5.4.3/lib/ext/jmeter-plugins-manager.jar org.jmeterplugins.repository.PluginManagerCMDInstaller && \
     /opt/apache-jmeter-5.4.3/bin/PluginsManagerCMD.sh install jpgc-standard jpgc-corrected
+
+# Install Docker (docker.io package) and add the jenkins user to the docker group
+RUN apt-get update && \
+    apt-get install -y docker.io && \
+    apt-get clean && \
+    usermod -aG docker jenkins
 
 # Switch back to the jenkins user
 USER jenkins
