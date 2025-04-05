@@ -6,7 +6,6 @@ package com.coveros.training.expenses;
  * This class computes the portion of the total bill allocated to food and alcohol based on the dinner prices.
  * The calculation takes into account the subtotal, tip, and tax provided by the {@link DinnerPrices} object.
  * It also calculates the food ratio, which is the fraction of the subtotal spent on food.
- * </p>
  */
 public class AlcoholCalculator {
 
@@ -21,7 +20,6 @@ public class AlcoholCalculator {
      *     <li>Determine the food portion of the bill by multiplying the total bill by the food ratio, rounded to two decimal places.</li>
      *     <li>Determine the alcohol portion as the remainder of the total bill after subtracting the food portion, rounded to two decimal places.</li>
      * </ul>
-     * </p>
      *
      * @param dinnerPrices the dinner pricing details including subtotal, food total, tip, and tax
      * @return an {@link AlcoholResult} object containing the calculated food price, alcohol price, and food ratio

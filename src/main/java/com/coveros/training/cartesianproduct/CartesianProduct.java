@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Utility class to calculate the Cartesian product of a list of sets.
+ * <p>
+ * Each combination is represented as a list of strings. The final output is a
+ * comma-separated list of combinations, where each combination is enclosed in parentheses.
+ * </p>
+ */
 public class CartesianProduct {
 
     /**
-     * Calculates the cartesian product of the given list of sets.
-     * Each combination is represented as a list of strings.
-     * The output is formatted as a comma-separated list of combinations,
-     * where each combination is enclosed in parentheses.
+     * Calculates the Cartesian product of the given list of sets.
      *
-     * @param sets a list of sets whose cartesian product is to be computed
-     * @return a String representation of the cartesian product
+     * @param sets a list of sets whose Cartesian product is to be computed
+     * @return a String representation of the Cartesian product
      */
     public static String calculate(List<Set<String>> sets) {
         if (sets == null || sets.isEmpty()) {

@@ -12,7 +12,6 @@ import java.util.stream.Stream;
  * <p>
  * This implementation is adapted from the version available at 
  * <a href="https://rosettacode.org/wiki/Ackermann_function#Java">Rosetta Code</a>.
- * </p>
  */
 public interface AckermannIterative {
 
@@ -104,7 +103,6 @@ public interface AckermannIterative {
          * <p>
          * The operator uses a tail-recursive strategy (via the {@code TailRecursive.tailie} helper method)
          * to iteratively compute the Ackermann function.
-         * </p>
          */
         private static final BinaryOperator<BigInteger> ACKERMANN =
                 TailRecursive.tailie(

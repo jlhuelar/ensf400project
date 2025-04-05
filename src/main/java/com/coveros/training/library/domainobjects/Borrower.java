@@ -4,14 +4,11 @@ import com.coveros.training.helpers.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 
 /**
  * An immutable data value representing the data for a borrower.
  * <p>
  * A borrower is a person who borrows a book from a library.
- * <p>
  * Note that we make our fields public because they are final,
  * so there's no need to have methods wrapping them.
  */
@@ -23,16 +20,23 @@ public final class Borrower {
     public final long id;
 
     /**
-     * The name of the borrower
+     * The name of the borrower.
      */
     public final String name;
 
+    /**
+     * Constructs a Borrower with the given id and name.
+     *
+     * @param id   the identifier for the borrower
+     * @param name the name of the borrower
+     */
     public Borrower(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public final boolean equals(@Nullable Object obj) {
+    @Override
+    public final boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -49,27 +53,42 @@ public final class Borrower {
                 .isEquals();
     }
 
+    @Override
     public final int hashCode() {
-        // you pick a hard-coded, randomly chosen, non-zero, odd number
-        // ideally different for each class
-        return new HashCodeBuilder(17, 37).
-                append(id).
-                append(name).
-                toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .toHashCode();
     }
 
+    /**
+     * Returns the borrower details formatted as a JSON string.
+     *
+     * @return a JSON string representing the borrower
+     */
     public final String toOutputString() {
         return String.format("{\"Name\": \"%s\", \"Id\": \"%s\"}", StringUtils.escapeForJson(name), id);
     }
 
+    @Override
     public final String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    /**
+     * Creates an empty Borrower.
+     *
+     * @return an empty Borrower instance
+     */
     public static Borrower createEmpty() {
         return new Borrower(0, "");
     }
 
+    /**
+     * Checks if the borrower is empty.
+     *
+     * @return {@code true} if this borrower is empty; {@code false} otherwise
+     */
     public boolean isEmpty() {
         return this.equals(createEmpty());
     }

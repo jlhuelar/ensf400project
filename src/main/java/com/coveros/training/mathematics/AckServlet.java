@@ -17,7 +17,6 @@ import java.math.BigInteger;
  * This servlet supports two algorithms: the regular recursive implementation and an iterative tail-recursive approach.
  * Depending on the "ack_algorithm_choice" parameter provided in the POST request, it invokes either the regular
  * or tail-recursive computation.
- * </p>
  * <p>
  * It expects the following parameters:
  * <ul>
@@ -25,7 +24,6 @@ import java.math.BigInteger;
  *   <li><code>ack_param_n</code>: an integer value for the second parameter</li>
  *   <li><code>ack_algorithm_choice</code>: either "tail_recursive" or another value to select the algorithm</li>
  * </ul>
- * </p>
  */
 @MultipartConfig
 @WebServlet(name = "AckServlet", urlPatterns = {"/ackermann"}, loadOnStartup = 1)
@@ -54,7 +52,6 @@ public class AckServlet extends HttpServlet {
      * <p>
      * Depending on the "ack_algorithm_choice" parameter, this method either invokes the tail-recursive or regular
      * recursive implementation.
-     * </p>
      *
      * @param request  the HttpServletRequest containing the parameters
      * @param response the HttpServletResponse used to forward the result
@@ -84,7 +81,6 @@ public class AckServlet extends HttpServlet {
      * Forwards the request and response to a result page.
      * <p>
      * This method wraps a static method call for testing purposes.
-     * </p>
      *
      * @param request  the HttpServletRequest containing the result attribute
      * @param response the HttpServletResponse used for forwarding
@@ -98,7 +94,6 @@ public class AckServlet extends HttpServlet {
      * Computes the Ackermann function using the regular recursive implementation.
      * <p>
      * The result is logged and set as a request attribute.
-     * </p>
      *
      * @param request the HttpServletRequest used to set the result attribute
      * @param itemA   the first parameter for the Ackermann function
@@ -114,7 +109,6 @@ public class AckServlet extends HttpServlet {
      * Computes the Ackermann function using the iterative tail-recursive implementation.
      * <p>
      * The result is logged and set as a request attribute.
-     * </p>
      *
      * @param request the HttpServletRequest used to set the result attribute
      * @param itemA   the first parameter for the Ackermann function

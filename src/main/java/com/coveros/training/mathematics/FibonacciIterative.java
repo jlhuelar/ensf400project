@@ -11,10 +11,8 @@ import java.math.BigInteger;
  *     <li>{@link #fibAlgo2(int)}: A simple iterative approach with linear time complexity.</li>
  * </ul>
  * Both methods return the nth Fibonacci number as a {@link BigInteger}.
- * </p>
  * <p>
  * Source: <a href="https://rosettacode.org/wiki/Fibonacci_sequence#Iterative_35">Rosetta Code</a>
- * </p>
  */
 public class FibonacciIterative {
 
@@ -29,7 +27,6 @@ public class FibonacciIterative {
      * Computes the nth Fibonacci number using an efficient O(log(n)) algorithm.
      * <p>
      * This algorithm leverages matrix exponentiation techniques by repeatedly squaring the transformation matrix.
-     * </p>
      *
      * @param n the index (starting from 0) of the Fibonacci sequence to compute
      * @return the nth Fibonacci number as a {@link BigInteger}
@@ -69,7 +66,6 @@ public class FibonacciIterative {
      * Computes the nth Fibonacci number using a simple iterative approach.
      * <p>
      * This method runs in O(n) time complexity and is straightforward to understand.
-     * </p>
      *
      * @param n the index (starting from 0) of the Fibonacci sequence to compute
      * @return the nth Fibonacci number as a {@link BigInteger}
