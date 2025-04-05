@@ -1,31 +1,32 @@
 package com.coveros.training.helpers;
 
-
 import org.apache.logging.log4j.core.util.JsonUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-
 
 /**
  * Some simple helper methods for Strings.
  */
 public class StringUtils {
 
+    // Private constructor to prevent instantiation.
     private StringUtils() {
         // using a private constructor to hide the implicit public one.
     }
 
     /**
-     * checks the String you pass in; if it's null, return an empty String.
-     * Otherwise, return the unchanged string.
+     * Returns a non-null string.
+     * <p>
+     * If the input string is {@code null}, an empty string ("") is returned; otherwise,
+     * the original string is returned.
+     *
+     * @param s the input string which may be null
+     * @return a non-null string (either the original or an empty string if the input was null)
      */
     public static String makeNotNullable(@Nullable String s) {
         return s == null ? "" : s;
     }
 
-
-    // a table of some of the values that may need to be
-    // escaped in JSON strings
+    // A table of some of the values that may need to be escaped in JSON strings.
     static final byte SINGLE_QUOTE    = 39;
     static final byte DOUBLE_QUOTE    = 34;
     static final byte BACKSLASH       = 92;
@@ -36,16 +37,14 @@ public class StringUtils {
     static final byte FORM_FEED       = 12;
 
     /**
-     * Given a string, replaces characters so that it is safe to use
-     * as JSON
-     * @param value String value to convert
-     * @return a properly escaped string, usable in JSON
+     * Given a string, returns a properly escaped version for safe use in JSON.
+     *
+     * @param value the string value to be escaped
+     * @return a JSON-safe string with necessary characters escaped
      */
     public static String escapeForJson(String value) {
         StringBuilder sb = new StringBuilder();
         JsonUtils.quoteAsString(value, sb);
         return sb.toString();
     }
-
-
 }

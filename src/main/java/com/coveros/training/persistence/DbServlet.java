@@ -25,7 +25,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DbServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1960160729302133928L;
+    
+    /**
+     * The persistence layer used for database operations.
+     */
     private final IPersistenceLayer pl;
+    
     private static final String RESULT = "result";
     private static final Logger logger = LoggerFactory.getLogger(DbServlet.class);
 
