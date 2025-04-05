@@ -2,7 +2,8 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        jcenter() // Optional
+        // remove jcenter() unless you really need it, since it is deprecated
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
 }
 
