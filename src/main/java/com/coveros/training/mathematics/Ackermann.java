@@ -11,6 +11,11 @@ import java.math.BigInteger;
  */
 public class Ackermann {
 
+    // Private constructor to prevent instantiation of this utility class.
+    private Ackermann() {
+        // This constructor is intentionally empty.
+    }
+
     /**
      * Computes the Ackermann function.
      *
