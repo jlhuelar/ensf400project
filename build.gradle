@@ -11,6 +11,18 @@ buildscript {
   }
 }
 
+buildscript {
+    repositories {
+        gradlePluginPortal() // Add this here too
+        mavenCentral()
+    }
+    dependencies {
+        classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.5"
+    }
+}
+
+apply plugin: "info.solidsoft.pitest"
+
 plugins {
     id 'war'
 
