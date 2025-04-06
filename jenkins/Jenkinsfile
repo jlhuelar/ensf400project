@@ -85,7 +85,7 @@ pipeline {
         sh './gradlew waitForHeartBeat'
 
         // clear Zap's memory for the incoming tests with API key authentication
-        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=\e02e6c167c1018f6f087f95a2d64e56c" -s --proxy zap:8080'
+        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=e02e6c167c1018f6f087f95a2d64e56c" -s --proxy zap:8080'
       }
     }
 
@@ -207,7 +207,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=\e02e6c167c1018f6f087f95a2d64e56c" --proxy zap:8080 > build/reports/zap/zap_report.html'
+        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=e02e6c167c1018f6f087f95a2d64e56c" --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 
