@@ -2,17 +2,26 @@ package com.coveros.training.mathematics;
 
 import java.math.BigInteger;
 
-
+/**
+ * Provides an implementation of the Ackermann function.
+ * <p>
+ * This version is adapted from the implementation found at 
+ * <a href="https://rosettacode.org/wiki/Ackermann_function#Java">Rosetta Code</a>.
+ * </p>
+ */
 public class Ackermann {
 
+    // Private constructor to prevent instantiation of this utility class.
     private Ackermann() {
-        throw new IllegalStateException("Utility class");
+        // This constructor is intentionally empty.
     }
 
     /**
-     * Ackerman function.
+     * Computes the Ackermann function.
      *
-     * This version found at https://rosettacode.org/wiki/Ackermann_function#Java
+     * @param m the first parameter of the function
+     * @param n the second parameter of the function
+     * @return the computed Ackermann function value as a {@link BigInteger}
      */
     public static BigInteger ack(BigInteger m, BigInteger n) {
         if (m.equals(BigInteger.ZERO)) {
@@ -25,8 +34,12 @@ public class Ackermann {
     }
 
     /**
-     * A helper method to make it easy to call this with only integers
-     * Calls to {@link #ack}
+     * A convenience method for computing the Ackermann function with integer arguments.
+     * Internally, it converts the provided integers to {@link BigInteger} and calls {@link #ack(BigInteger, BigInteger)}.
+     *
+     * @param m the first parameter as an integer
+     * @param n the second parameter as an integer
+     * @return the computed Ackermann function value as a {@link BigInteger}
      */
     public static BigInteger calculate(int m, int n) {
         BigInteger bigM = BigInteger.valueOf(m);
