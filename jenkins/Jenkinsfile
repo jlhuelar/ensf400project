@@ -67,7 +67,7 @@ pipeline {
         sh './gradlew deployToTestWindowsLocal'
         sh 'PIPENV_IGNORE_VIRTUALENVS=1 pipenv install'
         sh './gradlew waitForHeartBeat'
-        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=e02e6c167c1018f6f087f95a2d64e56c" -s --proxy zap:8080'
+        sh 'curl "http://zap:8080/JSON/core/action/newSession/?apikey=1e3f3bce5f2c650da8558a3d1805c69a" -s --proxy zap:8080'
       }
     }
 
@@ -147,7 +147,7 @@ pipeline {
     stage('Collect Zap Security Report') {
       steps {
         sh 'mkdir -p build/reports/zap'
-        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=e02e6c167c1018f6f087f95a2d64e56c" --proxy zap:8080 > build/reports/zap/zap_report.html'
+        sh 'curl "http://zap:8080/OTHER/core/other/htmlreport/?apikey=1e3f3bce5f2c650da8558a3d1805c69a" --proxy zap:8080 > build/reports/zap/zap_report.html'
       }
     }
 
