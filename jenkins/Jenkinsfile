@@ -7,11 +7,16 @@ pipeline {
    environment {
         // This is set so that the Python API tests will recognize it
         // and go through the Zap proxy waiting at 9888
-        HTTP_PROXY = 'http://127.0.0.1:9888'
-        JAVA_HOME = '/home/codespace/java/current/bin'
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
     }
+  tools{
+    jdk11 'jdk11'
+  }
   stages {
+    stage('Verify Java Version') {
+            steps {
+                sh 'java --version'
+            }
 
     // build the war file (the binary).  This is the only
     // place that happens.
