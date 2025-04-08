@@ -9,7 +9,9 @@ pipeline {
         // and go through the Zap proxy waiting at 9888
         HTTP_PROXY = 'http://127.0.0.1:9888'
    }
-
+   tools {
+    jdk 'jdk11'
+  }
   stages {
 
     // build the war file (the binary).  This is the only
