@@ -170,8 +170,6 @@ All instances of the API key in your configuration (Jenkinsfile and Docker Compo
 ### Ports:
 Ensure that ports 8080, 8090, and 9000 are available and not blocked by other services.
 
-### Security Considerations:
-When adjusting settings (e.g., permissions in Jenkins, or disabling CSRF protection), make sure to understand the security implications.
 
 ## Conclusion
 
@@ -183,4 +181,4 @@ Following this guide, you have:
 - Configured SonarQube with a new project and updated tokens.
 - Set up Jenkins to trigger builds via GitHub webhooks.
 
-Your CI/CD environment should now be fully operational. Happy building!
+
