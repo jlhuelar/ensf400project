@@ -67,6 +67,12 @@ java {
     }
 }
 
+// Add this block to enforce Java 11 bytecode compatibility
+tasks.withType(JavaCompile).configureEach {
+    options.release = 11  // Ensures bytecode is compatible with Java 11 (class version 55)
+    options.compilerArgs << "-Xlint:unchecked"  // Your existing lint flag
+}
+
 // Configure our javadoc to include an overview for our project, a
 // document that provides general ideas of the whole.
 javadoc {
