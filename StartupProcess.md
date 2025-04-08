@@ -152,6 +152,15 @@ Use the output to unlock Jenkins.
   - Configure the project to use GitHub webhooks.
   - Ensure that automated builds are triggered on pull requests.
 - Verify: Confirm that the webhook in your GitHub repository points to your Jenkins endpoint (e.g., http://<your-domain-or-ip>:8090/github-webhook/).
+- Make sure the port 8090 is public not private so it can reach it
+
+### Make sure u configure my docker credentials into jenkins which is in a secure file in submission
+
+Before building Make sure  u run this command to remove permissions for the docker image so it can build successfully
+
+```bash
+sudo chmod 666 /var/run/docker.sock
+```
 
 ## Final Notes
 
@@ -161,8 +170,6 @@ All instances of the API key in your configuration (Jenkinsfile and Docker Compo
 ### Ports:
 Ensure that ports 8080, 8090, and 9000 are available and not blocked by other services.
 
-### Security Considerations:
-When adjusting settings (e.g., permissions in Jenkins, or disabling CSRF protection), make sure to understand the security implications.
 
 ## Conclusion
 
@@ -174,4 +181,4 @@ Following this guide, you have:
 - Configured SonarQube with a new project and updated tokens.
 - Set up Jenkins to trigger builds via GitHub webhooks.
 
-Your CI/CD environment should now be fully operational. Happy building!
+
