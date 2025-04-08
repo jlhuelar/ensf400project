@@ -82,6 +82,20 @@ Bring up your Docker environment by running:
 docker-compose up -d
 ```
 
+Once docker has built everything zap, sonarqube and the demo app should be working. For jeckins u must write this in the terminal 
+
+``` bash
+sudo chown -R 1000:1000 ./jenkins_home
+chmod -R 775 ./jenkins_home
+```
+
+Once thats done,
+
+build jenkins again
+
+```bash
+docker-compose up jenkins -d
+```
 After starting, verify that the following ports are set:
 
 - Demo App: Port 8080
