@@ -152,6 +152,15 @@ Use the output to unlock Jenkins.
   - Configure the project to use GitHub webhooks.
   - Ensure that automated builds are triggered on pull requests.
 - Verify: Confirm that the webhook in your GitHub repository points to your Jenkins endpoint (e.g., http://<your-domain-or-ip>:8090/github-webhook/).
+- Make sure the port 8090 is public not private so it can reach it
+
+### Make sure u configure my docker credentials into jenkins which is in a secure file in submission
+
+Before building Make sure  u run this command to remove permissions for the docker image so it can build successfully
+
+```bash
+sudo chmod 666 /var/run/docker.sock
+```
 
 ## Final Notes
 
