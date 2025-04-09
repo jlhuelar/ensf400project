@@ -3,14 +3,18 @@ pipeline {
     environment {
         IMAGE_NAME = "burtonjong/ensf400fp"
     }
+    tools {
+        jdk 'JDK_11'
+    }
     stages {
-        stage('Checkout') {
+        stage('Check Java Version') {
+
             steps {
-                // Checkout your Git repository
-                checkout scm
+                sh 'java -version'
             }
+
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 script {

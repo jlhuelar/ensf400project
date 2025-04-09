@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.app
     image: burtonjong/ensf400fp:latest
     ports:
-      - "8080:8080"
+      - "8081:8080"
     container_name: gradle-app
     working_dir: /app
     command: ["./gradlew", "appRun", "--no-daemon"]
@@ -17,7 +17,7 @@ services:
     privileged: true
     user: root
     ports:
-      - 8081:8080
+      - 8082:8080
       - 50000:50000
     container_name: jenkins
     volumes:
