@@ -20,7 +20,7 @@ pipeline {
                     sh 'docker build -t $IMAGE_NAME -f Dockerfile.app .'
 
                     // Run the container in detached mode
-                    def containerId = sh(script: 'docker run -d -p 8080:8080 $IMAGE_NAME:latest ./gradlew -Dlog4j2.disableJmx=true -Dlog4j.shutdownHookEnabled=false apprun', returnStdout: true).trim()
+                    def containerId = sh(script: 'docker run -p 8080:8080 $IMAGE_NAME:latest ./gradlew -Dlog4j2.disableJmx=true -Dlog4j.shutdownHookEnabled=false apprun', returnStdout: true).trim()
                     env.CONTAINER_ID = containerId
                 }
             }
