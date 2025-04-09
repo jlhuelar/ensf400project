@@ -3,6 +3,7 @@ FROM jenkins/jenkins:alpine
 USER root
 # install docker on top of the base image, and jdk 11 
 RUN apk add --update docker openrc openjdk11
-# set JAVA_HOME environment variable
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
-ENV PATH=$JAVA_HOME/bin:$PATH
+
+# these are for when you actually run the tests
+# JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+# PATH=$JAVA_HOME/bin:$PATH

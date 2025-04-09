@@ -4,6 +4,14 @@ pipeline {
         IMAGE_NAME = "burtonjong/ensf400fp"
     }
     stages {
+        stage('Change JDK') {
+            steps {
+                //gotta change to jdk 11 or booms
+                JAVA_HOME = '/usr/lib/jvm/java-11-openjdk'
+                PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
+            }
+        }
+
         stage('Checkout') {
             steps {
                 // Checkout your Git repository
