@@ -32,7 +32,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh './gradlew runAllTests'
+                    sh './gradlew check'
                 }
             }
         }
