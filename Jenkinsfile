@@ -10,7 +10,7 @@ pipeline {
         stage('Check Java Version') {
 
             steps {
-                bat 'java -version'
+                sh 'java -version'
             }
 
         }
