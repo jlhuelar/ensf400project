@@ -8,11 +8,9 @@ pipeline {
     }
     stages {
         stage('Check Java Version') {
-
             steps {
                 sh 'java -version'
             }
-
         }
 
         stage('Build and Run Docker Image') {
@@ -20,7 +18,12 @@ pipeline {
                 script {
                     // Build Docker image using Dockerfile.app
                     sh 'docker build -t $IMAGE_NAME -f Dockerfile.app .'
-                    sh 'docker run -d -p 8080:8080 $IMAGE_NAME:latest'
+                    
+                    // Run the container in detached mode and capture the container ID
+                    def containerId = sh(script: 'docker run -d -p 8080:8080 $IMAGE_NAME:latest', returnStdout: true).trim()
+                    
+                    // Set the container ID as an environment variable for later use
+                    env.CONTAINER_ID = containerId
                 }
             }
         }
@@ -29,7 +32,8 @@ pipeline {
             steps {
                 script {
                     sh 'chmod +x ./gradlew'
-                    sh 'docker exec my_container ./gradlew build'
+                    // Run gradlew inside the container using the container ID
+                    sh "docker exec ${env.CONTAINER_ID} ./gradlew build"
                 }
             }
         }
@@ -37,7 +41,8 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh 'docker exec my_container ./gradlew check' 
+                    // Run tests inside the container using the container ID
+                    sh "docker exec ${env.CONTAINER_ID} ./gradlew check"
                 }
             }
         }
