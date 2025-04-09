@@ -76,51 +76,61 @@ docker compose up -d
 
 # Ports
 
-4040: Ngrok web interface
-8080: application
-8081: Jenkins web interface
-9000: SonarQube web interface
+```4040: Ngrok web interface```
+```8080: application```
+```8081: Jenkins web interface```
+```9000: SonarQube web interface```
 
-Open Jenkins and to find the authenticator token use the following lines in your terminal
+Open the Jenkins port and to find the authenticator token use the following lines in your terminal  
+<br />
+1. ```
+   docker ps
+   ```
+   find the jenkins container
+  
+   ```
+   docker logs <container_id>
+   ```
 
-```
-docker ps
-```
-find the proper container
+   *************************************************************
+   Jenkins initial setup is required. An admin user has been created...
+   Admin password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   *************************************************************
+   <br />
+3. - Use that password to login to Jenkins when you open the port
+  
+   - Intall the recommended plugins
+  
+   - Now when you are inside of Jenkins make a new item and name it something like "Demo"
+  
+   - Select Pipeline
+  
+   - Click Ok
+  
+   - Scroll down to Pipeline > Definition and choose:
+  
+   - Check: GitHub hook trigger for GITScm polling
+  
+   - Definition: Pipeline script from SCM
+  
+   - SCM: Git
+  
+   - Repository URL: https://github.com/boumster/ENSF400-Final-Project
+  
+   - branch: main
+  
+   - make sure the jenkins file path is ```jenkins/Jenkinsfile```
+  
+   - Save and click build now on the left side of the screen to make sure it builds.
+  
+   - Now any pushes or pull requests should automate the build.
+   <br />
+4. - You can also access the reports in SonarQube by opening the port
 
-```
-docker logs <container_id>
-```
-
-*************************************************************
-Jenkins initial setup is required. An admin user has been created...
-Admin password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-*************************************************************
-
-Use that password to login to Jenkins
-
-Now when you are inside of Jenkins make a new item and name it something like "Demo"
-
-Select Pipeline
-
-Click Ok
-
-Scroll down to Pipeline > Definition and choose:
-
-Check: GitHub hook trigger for GITScm polling
-
-Definition: Pipeline script from SCM
-
-SCM: Git
-
-Repository URL: https://github.com/boumster/ENSF400-Final-Project
-
-branch: main
-
-Save and click build now on the left side of the screen to make sure it builds.
-
-Now any pushes or pull requests should automate the build.
-
-
+   - Log in with ```username: admin``` ```password: admin```
+  
+   - You will be asked to make a new password it can be ```username: admin``` ```password: password```
+  
+   - Now you can find the code reports in SonarQube
 
 
