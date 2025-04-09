@@ -46,13 +46,16 @@ pipeline {
         //             sh "docker exec ${env.CONTAINER_ID} ./gradlew -Dlog4j2.disableJmx=true -Dlog4j.shutdownHookEnabled=false apprun"
         //         }
         //     }
-        // }
-
-        post {
-            always {
-                sh 'docker stop $CONTAINER_ID || true'
-                sh 'docker rm $CONTAINER_ID || true'
+        // } 
+    }
+    post {
+        always {
+            script {
+                if (env.CONTAINER_ID) {
+                    sh "docker stop ${env.CONTAINER_ID} || true"
+                    sh "docker rm ${env.CONTAINER_ID} || true"
+                }
             }
-        }   
+        }
     }
 }
