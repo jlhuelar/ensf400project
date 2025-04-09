@@ -677,8 +677,6 @@ task runPerfTests(type: Exec) {
     // Use project directory as working directory
     workingDir project.projectDir
 
-     maxHeapSize = "1g"
-
     commandLine '/usr/local/bin/jmeter',
             '-f',
             '-n',
