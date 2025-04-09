@@ -15,11 +15,12 @@ pipeline {
 
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Run Docker Image') {
             steps {
                 script {
                     // Build Docker image using Dockerfile.app
                     sh 'docker build -t $IMAGE_NAME -f Dockerfile.app .'
+                    sh 'docker run -it -p 8080:8080 burtonjong/ensf400fp:latest'
                 }
             }
         }
