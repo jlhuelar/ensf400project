@@ -28,12 +28,13 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Run Build Tests') {
             steps {
                 script {
                     sh 'chmod +x ./gradlew'
                     // Run gradlew inside the container using the container ID
                     sh "docker exec ${env.CONTAINER_ID} ./gradlew build"
+                    sh "docker exec ${env.CONTAINER_ID} ./gradlew check"
                 }
             }
         }
@@ -42,7 +43,7 @@ pipeline {
             steps {
                 script {
                     // Run tests inside the container using the container ID
-                    sh "docker exec ${env.CONTAINER_ID} ./gradlew check"
+                    sh "docker exec ${env.CONTAINER_ID} ./gradlew apprun"
                 }
             }
         }
