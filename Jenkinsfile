@@ -20,7 +20,7 @@ pipeline {
                 script {
                     // Build Docker image using Dockerfile.app
                     sh 'docker build -t $IMAGE_NAME -f Dockerfile.app .'
-                    sh 'docker run -it -p 8080:8080 burtonjong/ensf400fp:latest'
+                    sh 'docker run -d -p 8080:8080 $IMAGE_NAME:latest'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     sh 'chmod +x ./gradlew'
-                    sh './gradlew apprun'
+                    sh 'docker exec my_container ./gradlew build'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh './gradlew check'
+                    sh 'docker exec my_container ./gradlew check' 
                 }
             }
         }
