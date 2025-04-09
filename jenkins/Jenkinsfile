@@ -17,6 +17,7 @@ pipeline {
             steps {
                 sh 'java --version'
             }
+    }
 
     // build the war file (the binary).  This is the only
     // place that happens.
