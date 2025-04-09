@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     // Run tests inside the container using the container ID
-                    sh "docker exec ${env.CONTAINER_ID} ./gradlew apprun"
+                    sh "docker exec ${env.CONTAINER_ID} ./gradlew -Dlog4j2.disableJmx=true -Dlog4j.shutdownHookEnabled=false apprun"
                 }
             }
         }
