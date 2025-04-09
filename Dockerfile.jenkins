@@ -4,6 +4,8 @@ USER root
 # install docker on top of the base image, and jdk 11 
 RUN apk add --update docker openrc openjdk11
 
+ENV JAVA_OPTS="-Dlog4j2.disableJmx=true -Dlog4j.shutdownHookEnabled=false"
+
 # these are for when you actually run the tests
 # JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 # PATH=$JAVA_HOME/bin:$PATH
