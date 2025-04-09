@@ -143,18 +143,4 @@ pipeline {
     }
 
   }
-
-  post {
-        success {
-            script {
-                githubNotify context: 'Jenkins CI', status: 'SUCCESS', description: 'Build passed!'
-            }
-        }
-        failure {
-            script {
-                githubNotify context: 'Jenkins CI', status: 'FAILURE', description: 'Build failed!'
-            }
-        }
-    }
-
 }
