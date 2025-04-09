@@ -24,4 +24,6 @@ COPY --from=build /app .
 EXPOSE 8080
 
 # Command to run the application
-CMD ["./gradlew", "apprun"]
+CMD ["./gradlew", "-Dlog4j2.disableJmx=true", "-Dlog4j.shutdownHookEnabled=false", "apprun"]
+
+
