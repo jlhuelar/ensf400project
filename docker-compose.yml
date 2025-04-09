@@ -12,8 +12,6 @@ services:
     command:
       [
         "./gradlew",
-        "-Dlog4j2.disableJmx=true",
-        "-Dlog4j.shutdownHookEnabled=false",
         "appRun",
         "--no-daemon",
       ]

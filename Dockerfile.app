@@ -1,4 +1,3 @@
-# Stage 1: Build with Gradle 7 and JDK 11
 FROM gradle:7.6-jdk11 AS build
 
 WORKDIR /app
@@ -24,6 +23,4 @@ COPY --from=build /app .
 EXPOSE 8080
 
 # Command to run the application
-CMD ["./gradlew", "-Dlog4j2.disableJmx=true", "-Dlog4j.shutdownHookEnabled=false", "apprun"]
-
-
+CMD ["./gradlew", "apprun"]
