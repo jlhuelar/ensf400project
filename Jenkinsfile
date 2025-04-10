@@ -31,6 +31,7 @@ pipeline {
         //         script {
         //             // Run tests inside the container
         //             sh "docker exec ${env.CONTAINER_ID} ./gradlew test"
+        //test
         //         }
         //     }
         // }
